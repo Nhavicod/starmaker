@@ -1277,40 +1277,53 @@
             photoUrls.push(data.url);
           }
 
-          // Enviamos los datos reales al Google Form proporcionado
-          status.textContent = "Conectando con Google Forms...";
+          // === ENVÍO DIRECTO A EXCEL ONLINE (VÍA NUESTRO BACKEND) ===
+          status.textContent = "Guardando registro de forma segura...";
           
-          const formPayload = new FormData();
-          
-          // Mapeamos los datos de Star Leo a los IDs del formulario que pasaste:
-          // (Como tu formulario tiene menos preguntas que nuestro registro, agruparé algunos datos)
-          formPayload.append("entry.630355344", document.getElementById("reg-name").value); // Nombre
-          formPayload.append("entry.1316865652", document.getElementById("reg-email").value); // Email
-          formPayload.append("entry.1481050198", document.getElementById("reg-phone").value); // Teléfono
-          formPayload.append("entry.956106991", document.getElementById("reg-agency").value); // Agencia
-          formPayload.append("entry.1516808827", photoUrls.join(", ")); // URLs de Fotos (CRÍTICO)
-          formPayload.append("entry.739511303", document.getElementById("reg-video-url").value); // Video
+          // Construimos el objeto JSON estructurado con todos los campos
+          const registroPayload = {
+            nombre: document.getElementById("reg-name").value,
+            email: document.getElementById("reg-email").value,
+            telefono: document.getElementById("reg-phone").value,
+            agencia: document.getElementById("reg-agency").value,
+            tuId: document.getElementById("reg-id").value,
+            agentId: document.getElementById("reg-agent-id").value,
+            nacionalidad: document.getElementById("reg-nationality").value,
+            ciudad: document.getElementById("reg-city").value,
+            talento: document.getElementById("reg-talent").value,
+            genero: document.getElementById("reg-gender").value,
+            plataforma: document.getElementById("reg-platform").value,
+            videoUrl: document.getElementById("reg-video-url").value,
+            fotosUrl: photoUrls.join(" | ") // Separamos los links por un |
+          };
 
-          const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfRRopuwcJGQREUBDpJPmdeL8BQEzYNModaEIu461jkT8fS-w/formResponse";
-
-          // Enviamos a Google
-          await fetch(GOOGLE_FORM_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: formPayload
+          // Llamamos a nuestro propio backend en Vercel (totalmente invisible y sin CORS)
+          const dbResponse = await fetch('/api/submit-excel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(registroPayload)
           });
+
+          const dbResult = await dbResponse.json();
+
+          if (!dbResponse.ok) {
+            throw new Error(dbResult.error || "Fallo de conexión con la base de datos.");
+          }
           
-          // Imprimimos los datos en consola para verificación
-          console.log("DATOS ENVIADOS A GOOGLE FORMS:", Object.fromEntries(formPayload));
+          // Imprimimos confirmación en consola para debug
+          console.log("¡Éxito! Registro guardado en la nube:", registroPayload);
           
-          feedback.textContent = "¡Formulario enviado correctamente a Google Forms!";
+          feedback.textContent = "¡Registro completado y guardado con éxito!";
           feedback.style.display = "block";
           regForm.reset();
           document.getElementById("record-preview").style.display = "none";
           document.getElementById("record-status").textContent = "";
           status.textContent = "";
         } catch(err) {
-          alert("Error al enviar: " + err.message);
+          alert("Error al enviar el registro: " + err.message);
+          feedback.textContent = "Ocurrió un error. Inténtalo nuevamente.";
+          feedback.style.color = "red";
+          feedback.style.display = "block";
         } finally {
           btn.disabled = false;
           btn.textContent = "Enviar Postulación";
