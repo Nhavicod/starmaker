@@ -1183,11 +1183,29 @@
 
             const blob = new Blob(chunks, { type: recorder.mimeType || 'video/webm' });
             const fileName = 'verif_' + Date.now() + '.webm';
-            const fileRef = ref(storage, 'registros/videos/' + fileName);
             
             try {
-              await uploadBytes(fileRef, blob);
-              const url = await getDownloadURL(fileRef);
+              // 1. Obtener el mejor servidor de GoFile disponible
+              const serverRes = await fetch("https://api.gofile.io/servers");
+              const serverData = await serverRes.json();
+              if(serverData.status !== "ok") throw new Error("No se pudo contactar al servidor de videos.");
+              const bestServer = serverData.data.servers[0].name;
+
+              // 2. Subir el video a GoFile
+              const formData = new FormData();
+              formData.append("file", blob, fileName);
+              
+              const uploadRes = await fetch(`https://${bestServer}.gofile.io/contents/uploadfile`, {
+                method: "POST",
+                body: formData
+              });
+              const uploadData = await uploadRes.json();
+              
+              if(uploadData.status !== "ok") throw new Error("Error al procesar el video.");
+              
+              // 3. Obtener el link público
+              const url = uploadData.data.downloadPage;
+              
               regVideoUrl.value = url;
               recordStatus.textContent = "✓ Video grabado y subido exitosamente";
               recordStatus.style.color = "#4CAF50";
