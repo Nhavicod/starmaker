@@ -1247,51 +1247,61 @@
           const files = fileInput.files;
           const photoUrls = [];
 
-          // Upload files to Firebase Storage
+          // Upload files using the secure Vercel Serverless API (/api/upload-image) instead of Firebase Storage directly
           for(let i=0; i < Math.min(files.length, 5); i++) {
             const file = files[i];
-            if (file.size > 100 * 1024 * 1024) throw new Error("Un archivo excede los 100MB");
+            if (file.size > 10 * 1024 * 1024) throw new Error("Un archivo excede los 10MB"); // Limit matched to Vercel config
             
-            const fileRef = ref(storage, 'registros/' + Date.now() + '_' + file.name);
             status.textContent = `Subiendo archivo ${i+1} de ${Math.min(files.length, 5)}...`;
-            await uploadBytes(fileRef, file);
-            const url = await getDownloadURL(fileRef);
-            photoUrls.push(url);
+            
+            // Convert file to base64
+            const base64 = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => resolve(reader.result.split(',')[1]);
+              reader.onerror = error => reject(error);
+            });
+
+            const response = await fetch('/api/upload-image', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                fileBase64: base64,
+                mimeType: file.type,
+                fileName: file.name
+              })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Error al subir imagen");
+            photoUrls.push(data.url);
           }
 
-          // Google Forms requires data to be sent as FormData with specific 'entry.XXX' keys
-          status.textContent = "Guardando datos en Google Forms...";
+          status.textContent = "Simulando conexión con Google Forms para demostración...";
           
-          const formPayload = new FormData();
-          // SUSTITUYE "REEMPLAZAR_X" por los IDs reales de tu Google Form (puedes obtenerlos inspeccionando el form de Google o usando la opción "Obtener enlace prellenado")
-          formPayload.append("entry.REEMPLAZAR_EMAIL", document.getElementById("reg-email").value);
-          formPayload.append("entry.REEMPLAZAR_AGENCY", document.getElementById("reg-agency").value);
-          formPayload.append("entry.REEMPLAZAR_ID", document.getElementById("reg-id").value);
-          formPayload.append("entry.REEMPLAZAR_AGENT_ID", document.getElementById("reg-agent-id").value);
-          formPayload.append("entry.REEMPLAZAR_NAME", document.getElementById("reg-name").value);
-          formPayload.append("entry.REEMPLAZAR_PHONE", document.getElementById("reg-phone").value);
-          formPayload.append("entry.REEMPLAZAR_NATIONALITY", document.getElementById("reg-nationality").value);
-          formPayload.append("entry.REEMPLAZAR_CITY", document.getElementById("reg-city").value);
+          // MOCK DEL FORMULARIO DE GOOGLE:
+          // Aquí iría el fetch real a Google Forms, pero como está bloqueado por el dueño, 
+          // pondremos una pausa de 2 segundos para simular el envío y que puedas grabarlo en video.
+          await new Promise(resolve => setTimeout(resolve, 2000));
           
-          // Enviamos las URLs seguras de Firebase (separadas por comas) al campo de texto de Google Forms
-          formPayload.append("entry.REEMPLAZAR_PHOTOS", photoUrls.join(", "));
-          
-          formPayload.append("entry.REEMPLAZAR_TALENT", document.getElementById("reg-talent").value);
-          formPayload.append("entry.REEMPLAZAR_GENDER", document.getElementById("reg-gender").value);
-          formPayload.append("entry.REEMPLAZAR_PLATFORM", document.getElementById("reg-platform").value);
-          formPayload.append("entry.REEMPLAZAR_VIDEO", document.getElementById("reg-video-url").value);
-
-          // URL de tu formulario (asegúrate de que termine en /formResponse)
-          const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/TU_ID_DE_FORMULARIO_AQUI/formResponse";
-
-          // Usamos mode: "no-cors" para que Google no bloquee la petición desde tu dominio
-          await fetch(GOOGLE_FORM_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: formPayload
+          // Imprimimos los datos en consola para que veas que la recolección funciona perfecto
+          console.log("DATOS LISTOS PARA GOOGLE FORMS:", {
+            email: document.getElementById("reg-email").value,
+            agency: document.getElementById("reg-agency").value,
+            tuId: document.getElementById("reg-id").value,
+            agentId: document.getElementById("reg-agent-id").value,
+            name: document.getElementById("reg-name").value,
+            phone: document.getElementById("reg-phone").value,
+            nationality: document.getElementById("reg-nationality").value,
+            city: document.getElementById("reg-city").value,
+            photos: photoUrls.join(", "),
+            talent: document.getElementById("reg-talent").value,
+            gender: document.getElementById("reg-gender").value,
+            platform: document.getElementById("reg-platform").value,
+            video: document.getElementById("reg-video-url").value
           });
           
-          feedback.textContent = "¡Formulario enviado correctamente!";
+          feedback.textContent = "¡Formulario enviado correctamente! (Modo Demostración)";
           feedback.style.display = "block";
           regForm.reset();
           document.getElementById("record-preview").style.display = "none";
