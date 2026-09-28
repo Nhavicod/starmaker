@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 Diseños de Tarjetas Desplegables (Acordeones)</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --coral: #ff4d4d;
+    --fuchsia: #e64381;
+    --cyan: #00f3ff;
+  }
+  body {
+    background: var(--bg); color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 60px;
+  }
+  h1 { text-align: center; font-size: 2rem; margin-bottom: 10px; color: #fff; }
+  p.intro { text-align: center; color: #aaa; margin-bottom: 40px; max-width: 600px; line-height: 1.5; }
+  
+  .container { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 40px; }
+  .design-title { font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: var(--coral); margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+  
+  /* GRID & INNER BASE FOR ALL */
+  .grid { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.6s cubic-bezier(0.19, 1, 0.22, 1); }
+  .grid.is-open { grid-template-rows: 1fr; }
+  .inner { overflow: hidden; opacity: 0; transform: translateY(-10px) scale(0.98); transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1); }
+  .grid.is-open .inner { opacity: 1; transform: translateY(0) scale(1); padding-top: 15px; }
+  .content-box { padding: 30px; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); color: #ccc; font-size: 14px; line-height: 1.6; }
+
+  /* 1. CYBERPUNK NEÓN */
+  .acc-1 { background: #050505; border: 1px solid #333; padding: 25px; cursor: pointer; position: relative; overflow: hidden; transition: 0.3s; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%); }
+  .acc-1::before { content: ""; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--cyan); transition: 0.3s; }
+  .acc-1:hover { border-color: var(--cyan); background: rgba(0, 243, 255, 0.05); }
+  .acc-1.is-active::before { width: 100%; opacity: 0.1; }
+  .acc-1 h2 { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1px; color: #fff; text-transform: uppercase; }
+  .acc-1 .icon { float: right; color: var(--cyan); font-family: monospace; }
+
+  /* 2. GLASSMORPHISM PURO */
+  .acc-2 { background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; cursor: pointer; transition: 0.4s; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
+  .acc-2:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.3); transform: translateY(-3px); }
+  .acc-2 h2 { margin: 0; font-size: 22px; font-weight: 600; background: linear-gradient(90deg, #fff, #aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .acc-2 .icon { display: inline-block; margin-left: 10px; transition: 0.4s; }
+  .acc-2.is-active .icon { transform: rotate(180deg); color: var(--coral); }
+
+  /* 3. BRUTALISMO MONOCROMO */
+  .acc-3 { background: #fff; border: 4px solid #000; border-radius: 0; padding: 20px 30px; cursor: pointer; transition: 0.2s; box-shadow: 6px 6px 0 #ff4d4d; display: flex; justify-content: space-between; align-items: center; }
+  .acc-3:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 #ff4d4d; }
+  .acc-3.is-active { background: #ff4d4d; box-shadow: 4px 4px 0 #000; }
+  .acc-3 h2 { margin: 0; font-size: 26px; font-weight: 900; color: #000; text-transform: uppercase; }
+  .acc-3 .icon { color: #000; font-weight: 900; font-size: 24px; transition: 0.3s; }
+  .acc-3.is-active .icon { transform: rotate(45deg); }
+  .acc-3-content .content-box { background: #fff; color: #000; border: 4px solid #000; border-radius: 0; box-shadow: 6px 6px 0 #000; font-weight: bold; }
+
+  /* 4. HOLOGRÁFICO FLOTANTE */
+  .acc-4 { background: linear-gradient(135deg, rgba(230,67,129,0.1), rgba(0,243,255,0.1)); border: 1px solid rgba(255,255,255,0.2); border-radius: 100px; padding: 20px 40px; cursor: pointer; transition: 0.5s; text-align: center; position: relative; overflow: hidden; }
+  .acc-4::after { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent); transform: rotate(45deg) translateY(-100%); transition: 0.6s; }
+  .acc-4:hover { box-shadow: 0 10px 40px rgba(0,243,255,0.2); }
+  .acc-4:hover::after { transform: rotate(45deg) translateY(100%); }
+  .acc-4.is-active { border-radius: 30px; background: linear-gradient(135deg, rgba(230,67,129,0.2), rgba(0,243,255,0.2)); }
+  .acc-4 h2 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 2px; }
+
+  /* 5. CAJA FUERTE (VAULT) */
+  .acc-5 { background: #111; border: 2px solid #222; border-radius: 8px; padding: 25px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: space-between; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+  .acc-5::before { content: "🔒"; font-size: 20px; filter: grayscale(1); transition: 0.4s; }
+  .acc-5:hover { border-color: #555; }
+  .acc-5.is-active { border-color: #ffaa00; background: #1a1505; }
+  .acc-5.is-active::before { content: "🔓"; filter: grayscale(0); }
+  .acc-5 h2 { margin: 0; font-size: 18px; font-family: monospace; color: #888; text-transform: uppercase; }
+  .acc-5.is-active h2 { color: #ffaa00; }
+
+  /* 6. NEUMORFISMO OSCURO */
+  .acc-6 { background: #121212; border-radius: 15px; padding: 25px; cursor: pointer; transition: 0.3s; box-shadow: 5px 5px 10px #070707, -5px -5px 10px #1d1d1d; border: none; text-align: center; }
+  .acc-6:active { box-shadow: inset 5px 5px 10px #070707, inset -5px -5px 10px #1d1d1d; }
+  .acc-6.is-active { box-shadow: inset 5px 5px 10px #070707, inset -5px -5px 10px #1d1d1d; color: var(--fuchsia); }
+  .acc-6 h2 { margin: 0; font-size: 18px; font-weight: 500; }
+
+  /* 7. BORDE GRADIENTE ANIMADO */
+  .acc-7 { position: relative; background: #0a0a0f; padding: 25px; cursor: pointer; border-radius: 12px; text-align: center; z-index: 1; }
+  .acc-7::before { content: ""; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, #ff4d4d, #e64381, #00f3ff, #ff4d4d); background-size: 400%; z-index: -1; border-radius: 14px; animation: rgb-spin 4s linear infinite; opacity: 0.3; transition: 0.3s; }
+  @keyframes rgb-spin { 0% { background-position: 0 0; } 100% { background-position: 400% 0; } }
+  .acc-7:hover::before { opacity: 1; }
+  .acc-7.is-active::before { opacity: 1; animation: rgb-spin 2s linear infinite; }
+  .acc-7 h2 { margin: 0; font-size: 20px; font-weight: bold; }
+
+  /* 8. HUD INTERFAZ SCI-FI */
+  .acc-8 { background: transparent; border: 1px solid rgba(0, 243, 255, 0.3); border-left: 5px solid var(--cyan); padding: 20px; cursor: pointer; transition: 0.3s; display: flex; justify-content: space-between; font-family: monospace; color: var(--cyan); }
+  .acc-8:hover { background: rgba(0, 243, 255, 0.05); box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1); }
+  .acc-8.is-active { background: rgba(0, 243, 255, 0.15); border-left-width: 15px; }
+  .acc-8 h2 { margin: 0; font-size: 16px; font-weight: normal; letter-spacing: 2px; }
+  .acc-8 .hud-data { font-size: 10px; opacity: 0.5; }
+
+  /* 9. TERMINAL RETRO */
+  .acc-9 { background: #000; border: 1px dashed #0f0; padding: 20px; cursor: pointer; transition: 0.3s; color: #0f0; font-family: 'Courier New', Courier, monospace; }
+  .acc-9:hover { background: #001100; }
+  .acc-9 h2 { margin: 0; font-size: 16px; font-weight: normal; }
+  .acc-9 h2::before { content: "> "; }
+  .acc-9.is-active h2::after { content: "_"; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* 10. ORGÁNICO LÍQUIDO */
+  .acc-10 { background: #1a1225; border-radius: 50% 50% 10px 10px / 20px 20px 10px 10px; padding: 30px; cursor: pointer; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; border: 1px solid rgba(230,67,129,0.2); }
+  .acc-10:hover { border-radius: 10px; background: #231832; }
+  .acc-10.is-active { border-radius: 10px; border-color: var(--fuchsia); background: rgba(230,67,129,0.1); }
+  .acc-10 h2 { margin: 0; font-size: 22px; color: #ffb3c6; font-weight: 500; }
+
+  /* 11. ETIQUETA / RIBBON */
+  .acc-11 { background: #fff; color: #000; padding: 20px 40px; cursor: pointer; position: relative; margin-left: -20px; border-radius: 0 10px 10px 0; display: inline-block; width: calc(100% - 20px); box-shadow: 5px 5px 15px rgba(0,0,0,0.5); transition: 0.3s; }
+  .acc-11::after { content: ""; position: absolute; left: 0; bottom: -10px; border-width: 10px 10px 0 0; border-style: solid; border-color: #999 transparent transparent transparent; }
+  .acc-11:hover { transform: translateX(10px); background: #f0f0f0; }
+  .acc-11.is-active { background: var(--coral); color: #fff; }
+  .acc-11.is-active::after { border-color: #a00 transparent transparent transparent; }
+  .acc-11 h2 { margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* 12. MINIMALISMO JAPONÉS */
+  .acc-12 { background: transparent; border-bottom: 1px solid #555; padding: 20px 0; cursor: pointer; transition: 0.4s; display: flex; justify-content: space-between; align-items: flex-end; }
+  .acc-12:hover { border-bottom-color: #fff; padding-left: 10px; }
+  .acc-12 h2 { margin: 0; font-size: 28px; font-weight: 300; font-family: serif; color: #eee; }
+  .acc-12 .icon { font-size: 24px; font-weight: 100; transition: 0.5s; }
+  .acc-12.is-active { border-bottom-color: var(--fuchsia); padding-bottom: 30px; }
+  .acc-12.is-active .icon { transform: rotate(180deg); color: var(--fuchsia); }
+
+  /* 13. TARJETA FLOTANTE 3D */
+  .acc-13 { background: rgba(30, 30, 40, 0.8); border-radius: 12px; padding: 30px; cursor: pointer; transition: transform 0.4s, box-shadow 0.4s; transform-style: preserve-3d; transform: perspective(1000px) rotateX(0deg); text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+  .acc-13:hover { transform: perspective(1000px) rotateX(5deg) translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.2); }
+  .acc-13.is-active { transform: perspective(1000px) rotateX(0deg) scale(1.02); box-shadow: 0 10px 30px rgba(255, 77, 77, 0.2); border-color: var(--coral); }
+  .acc-13 h2 { margin: 0; font-size: 22px; font-weight: 600; transform: translateZ(20px); }
+
+  /* 14. GLITCH ART */
+  .acc-14 { background: #000; border: 2px solid #fff; padding: 20px; cursor: pointer; position: relative; text-align: center; transition: 0.1s; }
+  .acc-14 h2 { margin: 0; font-size: 24px; font-weight: 900; color: #fff; text-transform: uppercase; position: relative; display: inline-block; }
+  .acc-14:hover h2::before { content: "REGISTRO"; position: absolute; left: 2px; text-shadow: -2px 0 red; top: 0; color: #fff; overflow: hidden; clip: rect(0, 900px, 0, 0); animation: glitch-anim-1 0.4s infinite linear alternate-reverse; }
+  .acc-14:hover h2::after { content: "REGISTRO"; position: absolute; left: -2px; text-shadow: -2px 0 cyan; top: 0; color: #fff; overflow: hidden; clip: rect(0, 900px, 0, 0); animation: glitch-anim-2 0.3s infinite linear alternate-reverse; }
+  @keyframes glitch-anim-1 { 0% { clip: rect(20px, 9999px, 15px, 0); } 100% { clip: rect(5px, 9999px, 10px, 0); } }
+  @keyframes glitch-anim-2 { 0% { clip: rect(10px, 9999px, 20px, 0); } 100% { clip: rect(25px, 9999px, 5px, 0); } }
+  .acc-14.is-active { background: #fff; }
+  .acc-14.is-active h2 { color: #000; }
+
+  /* 15. OBSIDIANA (LUXURY DARK) */
+  .acc-15 { background: linear-gradient(145deg, #181818, #0a0a0a); border: 1px solid #2a2a2a; border-radius: 8px; padding: 25px 35px; cursor: pointer; transition: 0.5s; box-shadow: 5px 5px 15px #000, -2px -2px 10px rgba(255,255,255,0.02); display: flex; justify-content: space-between; align-items: center; }
+  .acc-15:hover { border-color: #444; background: linear-gradient(145deg, #222, #0f0f0f); }
+  .acc-15.is-active { border-color: #a78bfa; box-shadow: 0 0 20px rgba(167, 139, 250, 0.1); }
+  .acc-15 h2 { margin: 0; font-size: 18px; font-weight: 400; letter-spacing: 3px; color: #eaeaea; }
+  .acc-15 .icon { color: #555; transition: 0.5s; font-size: 20px; }
+  .acc-15.is-active .icon { color: #a78bfa; transform: rotate(90deg); }
+
+</style>
+</head>
+<body>
+
+  <h1>15 Diseños de Tarjetas Desplegables</h1>
+  <p class="intro">Aquí tienes 15 iteraciones únicas para las tarjetas de contenido (acordeones) como la de "Registro y Convocatoria". Haz clic en cualquiera de ellas para ver la animación de despliegue.</p>
+  
+  <div class="container">
+
+    <div>
+      <div class="design-title">Diseño 1: Cyberpunk Neón</div>
+      <div class="acc-1" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        <span class='icon'>+</span>
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 2: Glassmorphism Puro</div>
+      <div class="acc-2" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        <span class='icon'>+</span>
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 3: Brutalismo Monocromo</div>
+      <div class="acc-3" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        <span class='icon'>+</span>
+        
+      </div>
+      <div class="grid acc-3-content">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 4: Holográfico Flotante</div>
+      <div class="acc-4" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 5: Caja Fuerte (Vault)</div>
+      <div class="acc-5" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 6: Neumorfismo Oscuro</div>
+      <div class="acc-6" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 7: Borde Gradiente Animado</div>
+      <div class="acc-7" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 8: HUD Interfaz Sci-Fi</div>
+      <div class="acc-8" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        <span class='hud-data'>SEC_04</span>
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 9: Terminal Retro</div>
+      <div class="acc-9" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 10: Orgánico Líquido</div>
+      <div class="acc-10" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 11: Etiqueta / Ribbon</div>
+      <div class="acc-11" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 12: Minimalismo Japonés</div>
+      <div class="acc-12" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        <span class='icon'>+</span>
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 13: Tarjeta Flotante 3D</div>
+      <div class="acc-13" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 14: Glitch Art</div>
+      <div class="acc-14" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="design-title">Diseño 15: Obsidiana (Luxury Dark)</div>
+      <div class="acc-15" onclick="this.classList.toggle('is-active'); this.nextElementSibling.classList.toggle('is-open');">
+        <h2>REGISTRO</h2>
+        <span class='icon'>+</span>
+        
+      </div>
+      <div class="grid ">
+        <div class="inner">
+          <div class="content-box">
+            Contenido oculto desbloqueado. Aquí va el formulario, el video del personaje o cualquier otro elemento interactivo que desees mostrar al usuario al expandir la tarjeta.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

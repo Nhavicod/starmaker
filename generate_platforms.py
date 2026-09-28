@@ -1,0 +1,326 @@
+html = """<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 Plataformas / Escenarios para Personajes</title>
+<style>
+  :root {
+    --bg: #050508;
+    --fuchsia: #e64381;
+    --cyan: #00f3ff;
+    --coral: #ff4d4d;
+    --gold: #f5c518;
+  }
+  body {
+    background: var(--bg); color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; gap: 100px;
+    overflow-x: hidden;
+  }
+  h1 { text-align: center; font-size: 2.5rem; margin-bottom: 10px; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+  p.intro { text-align: center; color: #aaa; margin-bottom: 60px; max-width: 700px; line-height: 1.6; font-size: 1.1rem; }
+  
+  .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 120px; }
+  .design-title { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; color: var(--cyan); margin-bottom: 40px; border-bottom: 1px solid rgba(0, 243, 255, 0.2); padding-bottom: 15px; text-shadow: 0 0 10px rgba(0,243,255,0.5); }
+  
+  /* BASE STAGE */
+  .stage-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Amplio espacio para el personaje */
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    perspective: 1200px;
+    margin-bottom: 40px;
+  }
+
+  /* DUMMY CHARACTER (TO SHOW SCALE & PLACEMENT) */
+  .dummy-character {
+    position: absolute;
+    bottom: 40px;
+    width: 120px;
+    height: 280px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+    border-radius: 60px 60px 20px 20px;
+    z-index: 10;
+    pointer-events: none;
+    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 20px;
+    animation: float 4s ease-in-out infinite;
+  }
+  .dummy-character::before { content: "PERSONAJE"; font-size: 10px; color: #000; font-weight: bold; letter-spacing: 1px; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+  /* FLOATING BUTTONS FOR INTERACTION */
+  .stage-btn {
+    position: absolute; z-index: 15; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 10px 20px; border-radius: 30px;
+    font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.3s;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .stage-btn:hover { background: var(--fuchsia); border-color: var(--fuchsia); box-shadow: 0 0 20px var(--fuchsia); transform: scale(1.1); }
+  .btn-left { left: 10%; top: 40%; }
+  .btn-right { right: 10%; top: 50%; }
+  .btn-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+  .btn-bottom:hover { transform: translateX(-50%) scale(1.1); }
+
+  /* --- 1. CYBER-ALTAR ISOMÉTRICO --- */
+  .plat-1 { position: absolute; bottom: 0; width: 400px; height: 400px; background: repeating-linear-gradient(transparent, transparent 39px, rgba(0,243,255,0.3) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0,243,255,0.3) 40px); background-color: rgba(0,10,20,0.8); transform: rotateX(70deg) rotateZ(45deg); border: 2px solid var(--cyan); box-shadow: 0 0 50px rgba(0,243,255,0.2), inset 0 0 50px rgba(0,243,255,0.2); }
+  .plat-1::after { content: ""; position: absolute; inset: -20px; border: 1px dashed var(--cyan); animation: spin 20s linear infinite; }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  /* --- 2. DIORAMA DE CRISTAL (VITRINA) --- */
+  .plat-2-base { position: absolute; bottom: 0; width: 500px; height: 100px; background: rgba(255,255,255,0.05); transform: rotateX(60deg); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
+  .plat-2-wall-left, .plat-2-wall-right { position: absolute; bottom: 50px; width: 100px; height: 300px; background: linear-gradient(to top, rgba(255,255,255,0.1), transparent); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
+  .plat-2-wall-left { left: 15%; transform: skewY(15deg); }
+  .plat-2-wall-right { right: 15%; transform: skewY(-15deg); }
+
+  /* --- 3. PISTA SYNTHWAVE RETRO --- */
+  .plat-3 { position: absolute; bottom: 0; width: 100%; height: 200px; background: repeating-linear-gradient(transparent, transparent 19px, rgba(230,67,129,0.5) 20px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(230,67,129,0.5) 40px); transform: rotateX(80deg); transform-origin: bottom; }
+  .plat-3-sun { position: absolute; bottom: 10px; width: 200px; height: 200px; background: linear-gradient(to bottom, #ffcc00, #ff4d4d); border-radius: 50%; z-index: 1; box-shadow: 0 0 100px rgba(255,77,77,0.5); }
+
+  /* --- 4. ANILLOS ORBITALES HOLOGRÁFICOS --- */
+  .plat-4 { position: absolute; bottom: 0; display: flex; align-items: center; justify-content: center; transform: rotateX(65deg); }
+  .plat-4 .ring { position: absolute; border: 2px solid rgba(0, 243, 255, 0.8); border-radius: 50%; box-shadow: 0 0 20px var(--cyan), inset 0 0 20px var(--cyan); }
+  .plat-4 .r1 { width: 400px; height: 400px; animation: spin-rev 15s linear infinite; border-style: dashed; }
+  .plat-4 .r2 { width: 300px; height: 300px; animation: spin 10s linear infinite; }
+  .plat-4 .r3 { width: 150px; height: 150px; background: rgba(0, 243, 255, 0.2); }
+  @keyframes spin-rev { 100% { transform: rotate(-360deg); } }
+
+  /* --- 5. CILINDRO DE CONTENCIÓN --- */
+  .plat-5-base { position: absolute; bottom: 20px; width: 250px; height: 80px; background: #111; border-radius: 50%; border: 4px solid var(--fuchsia); box-shadow: 0 20px 0 #000, 0 0 50px var(--fuchsia); }
+  .plat-5-glass { position: absolute; bottom: 60px; width: 250px; height: 350px; background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.2) 10%, transparent 50%, rgba(255,255,255,0.2) 90%, rgba(255,255,255,0.05) 100%); border-radius: 20px 20px 0 0; z-index: 20; pointer-events: none; }
+
+  /* --- 6. ESPEJO DE AGUA LIQUIDO --- */
+  .plat-6 { position: absolute; bottom: -50px; width: 100%; height: 150px; background: linear-gradient(to bottom, rgba(0,0,0,0.5), var(--bg)); transform: rotateX(60deg); border-top: 1px solid rgba(255,255,255,0.1); }
+  .dummy-character.reflect { -webkit-box-reflect: below 0px linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4)); }
+
+  /* --- 7. ESCENARIO TEATRAL (SPOTLIGHTS) --- */
+  .plat-7-floor { position: absolute; bottom: 0; width: 400px; height: 100px; background: radial-gradient(ellipse at center, rgba(255,255,255,0.2) 0%, transparent 70%); }
+  .plat-7-light-1 { position: absolute; top: -100px; left: 10%; width: 200px; height: 500px; background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent); clip-path: polygon(50% 0, 100% 100%, 0 100%); transform: rotate(15deg); z-index: 5; pointer-events: none;}
+  .plat-7-light-2 { position: absolute; top: -100px; right: 10%; width: 200px; height: 500px; background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent); clip-path: polygon(50% 0, 100% 100%, 0 100%); transform: rotate(-15deg); z-index: 5; pointer-events: none;}
+
+  /* --- 8. HEXÁGONO MECHA INDUSTRIAL --- */
+  .plat-8 { position: absolute; bottom: 20px; width: 300px; height: 100px; background: #222; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); border-bottom: 20px solid #111; transform: rotateX(60deg); box-shadow: 0 50px 50px rgba(0,0,0,0.8); }
+  .plat-8-stripe { position: absolute; width: 100%; height: 100%; background: repeating-linear-gradient(45deg, #222, #222 10px, #f5c518 10px, #f5c518 20px); opacity: 0.2; }
+
+  /* --- 9. PIEDRAS ANTI-GRAVEDAD --- */
+  .plat-9 { position: absolute; bottom: 0; display: flex; align-items: center; justify-content: center; }
+  .plat-9-rock { position: absolute; background: #1a1a24; border-top: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+  .plat-9 .r1 { width: 150px; height: 50px; border-radius: 50%; bottom: 30px; animation: float 3s ease-in-out infinite alternate; }
+  .plat-9 .r2 { width: 80px; height: 30px; border-radius: 40%; right: 150px; bottom: 80px; animation: float 4s ease-in-out infinite alternate-reverse; }
+  .plat-9 .r3 { width: 60px; height: 20px; border-radius: 30%; left: 150px; bottom: 60px; animation: float 2.5s ease-in-out infinite alternate; }
+
+  /* --- 10. HUD DATA SPHERE --- */
+  .plat-10 { position: absolute; bottom: 100px; display: flex; align-items: center; justify-content: center; z-index: 20; pointer-events: none; }
+  .plat-10 .arc { position: absolute; border: 2px solid transparent; border-top-color: var(--cyan); border-bottom-color: var(--cyan); border-radius: 50%; }
+  .plat-10 .a1 { width: 250px; height: 250px; animation: spin-rev 8s linear infinite; border-left-color: var(--cyan); }
+  .plat-10 .a2 { width: 280px; height: 280px; animation: spin 12s linear infinite; opacity: 0.5; border-right-color: var(--fuchsia); }
+
+  /* --- 11. RAMPA ESPACIAL --- */
+  .plat-11 { position: absolute; bottom: -50px; width: 200px; height: 400px; background: linear-gradient(to top, #000, #333); transform: rotateX(60deg); border-left: 5px solid var(--cyan); border-right: 5px solid var(--cyan); box-shadow: 0 -50px 100px rgba(0,243,255,0.2); }
+
+  /* --- 12. PORTAL DE ENERGÍA --- */
+  .plat-12-portal { position: absolute; bottom: 40px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, transparent 50%, rgba(230,67,129,0.8) 90%, #fff 100%); box-shadow: 0 0 50px var(--fuchsia); z-index: 5; animation: pulse 2s infinite alternate; pointer-events: none; }
+  .plat-12-floor { position: absolute; bottom: 0; width: 400px; height: 100px; background: radial-gradient(ellipse, var(--fuchsia) 0%, transparent 70%); transform: rotateX(70deg); }
+  @keyframes pulse { 100% { transform: scale(1.05); opacity: 0.8; } }
+
+  /* --- 13. ZÓCALO DE MÁRMOL (LUXURY) --- */
+  .plat-13 { position: absolute; bottom: 20px; width: 300px; height: 100px; background: #080808; border-radius: 10px; transform: rotateX(50deg); border: 1px solid #333; box-shadow: 0 30px 0 #000, 0 35px 20px rgba(0,0,0,0.8); }
+  .plat-13::after { content: ""; position: absolute; inset: 10px; border: 1px solid var(--gold); border-radius: 5px; opacity: 0.5; }
+
+  /* --- 14. MATRIX CODE GRID --- */
+  .plat-14 { position: absolute; bottom: 0; width: 100%; height: 200px; transform: rotateX(75deg); background: repeating-linear-gradient(0deg, rgba(0,255,0,0.2) 0, rgba(0,255,0,0.2) 2px, transparent 2px, transparent 20px), repeating-linear-gradient(90deg, rgba(0,255,0,0.2) 0, rgba(0,255,0,0.2) 2px, transparent 2px, transparent 20px); }
+  .plat-14-rain { position: absolute; top: 0; width: 100%; height: 400px; background: linear-gradient(to bottom, transparent, rgba(0,255,0,0.1)); z-index: 2; pointer-events: none; }
+
+  /* --- 15. ESTACIÓN APPLE-STYLE (BLANCA) --- */
+  .plat-15 { position: absolute; bottom: 30px; width: 350px; height: 150px; background: #fff; border-radius: 50%; transform: rotateX(60deg); box-shadow: 0 20px 0 #ddd, 0 40px 50px rgba(255,255,255,0.1); }
+  .plat-15::after { content: ""; position: absolute; top: 20px; left: 20px; right: 20px; bottom: 20px; border-radius: 50%; background: #f0f0f0; box-shadow: inset 0 0 20px rgba(0,0,0,0.1); }
+
+</style>
+</head>
+<body>
+
+  <h1>15 Plataformas / Escenarios Interactivos</h1>
+  <p class="intro">Cada diseño está pensado para actuar como un "escenario" en 3D. El personaje simulado no está cortado por los bordes (gracias a <code>overflow: visible</code>) y los botones flotan a su alrededor creando una verdadera experiencia interactiva y espacial.</p>
+  
+  <div class="container">
+    
+    <!-- 1 -->
+    <div>
+      <div class="design-title">1. Cyber-Altar Isométrico (3D Grid)</div>
+      <div class="stage-wrapper">
+        <div class="plat-1"></div>
+        <div class="dummy-character"></div>
+        <button class="stage-btn btn-left">Ver Info</button>
+        <button class="stage-btn btn-right">Siguiente</button>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div>
+      <div class="design-title">2. Diorama de Cristal (Vitrina Abierta)</div>
+      <div class="stage-wrapper">
+        <div class="plat-2-base"></div>
+        <div class="plat-2-wall-left"></div>
+        <div class="plat-2-wall-right"></div>
+        <div class="dummy-character" style="z-index: 5;"></div>
+        <button class="stage-btn btn-bottom">Desbloquear</button>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div>
+      <div class="design-title">3. Pista Synthwave Retro</div>
+      <div class="stage-wrapper" style="overflow: hidden;">
+        <div class="plat-3-sun"></div>
+        <div class="plat-3"></div>
+        <div class="dummy-character"></div>
+        <button class="stage-btn btn-left">Inscribirse</button>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div>
+      <div class="design-title">4. Anillos Orbitales Holográficos</div>
+      <div class="stage-wrapper">
+        <div class="plat-4">
+          <div class="ring r1"></div>
+          <div class="ring r2"></div>
+          <div class="ring r3"></div>
+        </div>
+        <div class="dummy-character"></div>
+        <button class="stage-btn btn-right">Acceder</button>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div>
+      <div class="design-title">5. Cilindro de Contención Biológica</div>
+      <div class="stage-wrapper">
+        <div class="plat-5-base"></div>
+        <div class="plat-5-glass"></div>
+        <div class="dummy-character" style="z-index: 10;"></div>
+        <button class="stage-btn btn-left" style="top: 20%;">Escanear</button>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div>
+      <div class="design-title">6. Espejo de Agua (Reflejo Líquido)</div>
+      <div class="stage-wrapper">
+        <div class="plat-6"></div>
+        <div class="dummy-character reflect"></div>
+        <button class="stage-btn btn-bottom" style="bottom: -20px;">Explorar</button>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div>
+      <div class="design-title">7. Escenario Teatral con Reflectores</div>
+      <div class="stage-wrapper">
+        <div class="plat-7-light-1"></div>
+        <div class="plat-7-light-2"></div>
+        <div class="plat-7-floor"></div>
+        <div class="dummy-character"></div>
+        <button class="stage-btn btn-right" style="background: rgba(255,255,255,0.9); color:#000;">Aplaudir</button>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div>
+      <div class="design-title">8. Plataforma Hexagonal Mecha</div>
+      <div class="stage-wrapper">
+        <div class="plat-8"><div class="plat-8-stripe"></div></div>
+        <div class="dummy-character"></div>
+        <button class="stage-btn btn-left">Activar Sistema</button>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div>
+      <div class="design-title">9. Gravedad Cero (Piedras Flotantes)</div>
+      <div class="stage-wrapper">
+        <div class="plat-9">
+          <div class="plat-9-rock r1"></div>
+          <div class="plat-9-rock r2"></div>
+          <div class="plat-9-rock r3"></div>
+        </div>
+        <div class="dummy-character"></div>
+        <button class="stage-btn btn-bottom">Saltar</button>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div>
+      <div class="design-title">10. Esfera de Datos HUD (Iron-Man)</div>
+      <div class="stage-wrapper">
+        <div class="plat-10">
+          <div class="arc a1"></div>
+          <div class="arc a2"></div>
+        </div>
+        <div class="dummy-character"></div>
+        <button class="stage-btn btn-right">Analizar Info</button>
+      </div>
+    </div>
+
+    <!-- 11 -->
+    <div>
+      <div class="design-title">11. Rampa de Lanzamiento Espacial</div>
+      <div class="stage-wrapper">
+        <div class="plat-11"></div>
+        <div class="dummy-character" style="transform: scale(1.2); bottom: 60px;"></div>
+        <button class="stage-btn btn-left" style="transform: skewX(-10deg);">Despegar</button>
+      </div>
+    </div>
+
+    <!-- 12 -->
+    <div>
+      <div class="design-title">12. Portal de Energía Stargate</div>
+      <div class="stage-wrapper">
+        <div class="plat-12-portal"></div>
+        <div class="plat-12-floor"></div>
+        <div class="dummy-character" style="z-index: 10;"></div>
+        <button class="stage-btn btn-bottom" style="z-index: 20;">Cruzar Portal</button>
+      </div>
+    </div>
+
+    <!-- 13 -->
+    <div>
+      <div class="design-title">13. Zócalo de Mármol (Museo / Luxury)</div>
+      <div class="stage-wrapper">
+        <div class="plat-13"></div>
+        <div class="dummy-character"></div>
+        <button class="stage-btn btn-right" style="border-color: var(--gold); color: var(--gold);">Admirar</button>
+      </div>
+    </div>
+
+    <!-- 14 -->
+    <div>
+      <div class="design-title">14. Matrix Code Grid</div>
+      <div class="stage-wrapper">
+        <div class="plat-14-rain"></div>
+        <div class="plat-14"></div>
+        <div class="dummy-character" style="background: rgba(0,255,0,0.5);"></div>
+        <button class="stage-btn btn-left" style="color: #0f0; border-color: #0f0;">Hackear</button>
+      </div>
+    </div>
+
+    <!-- 15 -->
+    <div>
+      <div class="design-title">15. Estación Minimalista (Estilo Apple)</div>
+      <div class="stage-wrapper">
+        <div class="plat-15"></div>
+        <div class="dummy-character" style="background: rgba(0,0,0,0.8);"></div>
+        <button class="stage-btn btn-bottom" style="background: #fff; color: #000;">Descubrir más</button>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
+"""
+
+with open("15_platforms_preview.html", "w", encoding="utf-8") as f:
+    f.write(html)

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10 Diseños de Docks Verticales Minimalistas</title>
+  <style>
+    :root {
+      --bg: #050507;
+      --text: #fff;
+      --coral: #F18D79;
+      --fuchsia: #E64381;
+      --violet: #743F9B;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 40px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+    }
+    .demo-container {
+      position: relative;
+      height: 400px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .demo-title {
+      padding: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #aaa;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .demo-canvas {
+      flex: 1;
+      position: relative;
+    }
+
+    /* Reset default links */
+    a { text-decoration: none; color: inherit; }
+
+    /* 1. Pill Minimalista (Expande suavemente) */
+    .dock-1 {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      width: 6px; height: 100px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+    }
+    .dock-1:hover {
+      width: 140px; height: auto; padding: 15px 0;
+      background: rgba(15,12,20,0.9);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .dock-1 a {
+      padding: 10px 15px; font-size: 11px; font-weight: bold; opacity: 0; transform: translateX(10px);
+      transition: 0.3s;
+    }
+    .dock-1:hover a { opacity: 1; transform: translateX(0); }
+    .dock-1 a:hover { color: var(--fuchsia); }
+
+    /* 2. Puntos Flotantes (Dots to text) */
+    .dock-2 {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 15px;
+    }
+    .dock-2 a {
+      display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+      font-size: 11px; font-weight: bold; color: transparent; transition: 0.3s;
+    }
+    .dock-2 a::after {
+      content: ""; width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3);
+      transition: 0.3s;
+    }
+    .dock-2:hover a { color: #fff; }
+    .dock-2 a:hover::after { background: var(--coral); transform: scale(1.5); }
+
+    /* 3. Linea de Cristal (Drawers) */
+    .dock-3 {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      width: 2px; height: 150px; background: rgba(255,255,255,0.2);
+      display: flex; flex-direction: column; justify-content: space-evenly;
+      transition: 0.4s;
+    }
+    .dock-3:hover { background: rgba(255,255,255,0.5); }
+    .dock-3 a {
+      position: absolute; right: 10px; font-size: 11px; font-weight: bold;
+      background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 12px;
+      opacity: 0; transform: translateX(20px); transition: 0.4s; pointer-events: none;
+      backdrop-filter: blur(10px);
+    }
+    .dock-3:hover a { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .dock-3 a:nth-child(1) { top: 10%; } .dock-3 a:nth-child(2) { top: 35%; }
+    .dock-3 a:nth-child(3) { top: 60%; } .dock-3 a:nth-child(4) { top: 85%; }
+    .dock-3 a:hover { background: var(--fuchsia); }
+
+    /* 4. Burbujas Independientes */
+    .dock-4 {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .dock-4 a {
+      width: 35px; height: 35px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: transparent; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden; white-space: nowrap;
+    }
+    .dock-4 a::before { content: "●"; color: rgba(255,255,255,0.5); font-size: 10px; position: absolute; transition: 0.2s; }
+    .dock-4 a:hover { width: 120px; border-radius: 20px; color: #fff; background: rgba(230,67,129,0.2); border-color: var(--fuchsia); }
+    .dock-4 a:hover::before { opacity: 0; }
+
+    /* 5. Isla Dinámica Vertical (Dynamic Island) */
+    .dock-5 {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      width: 12px; height: 40px; border-radius: 20px;
+      background: #000; box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 10px 20px rgba(0,0,0,0.8);
+      transition: 0.5s cubic-bezier(0.5, 1.5, 0.4, 1);
+      display: flex; flex-direction: column; overflow: hidden; justify-content: center;
+    }
+    .dock-5:hover { width: 130px; height: 180px; }
+    .dock-5 a {
+      padding: 10px 15px; font-size: 11px; font-weight: bold; color: #aaa;
+      opacity: 0; transition: 0.3s; text-align: center;
+    }
+    .dock-5:hover a { opacity: 1; }
+    .dock-5 a:hover { color: #fff; }
+
+    /* 6. Pestaña lateral (Sidebar tab) */
+    .dock-6 {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
+      border-radius: 15px 0 0 15px; padding: 15px 5px;
+      transition: 0.3s; border-left: 1px solid rgba(255,255,255,0.1);
+      display: flex; flex-direction: column; gap: 15px; width: 25px;
+    }
+    .dock-6:hover { width: 140px; }
+    .dock-6 a {
+      font-size: 11px; font-weight: bold; color: transparent;
+      white-space: nowrap; transition: 0.3s; display: flex; align-items: center;
+    }
+    .dock-6 a::before {
+      content: ""; min-width: 15px; height: 2px; background: rgba(255,255,255,0.3);
+      display: inline-block; margin-right: 10px; transition: 0.3s;
+    }
+    .dock-6:hover a { color: #fff; }
+    .dock-6 a:hover::before { background: var(--fuchsia); width: 25px; }
+
+    /* 7. Gotas Organicas (Morphing Blob) */
+    .dock-7 {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      width: 20px; height: 100px;
+      background: rgba(116,63,155,0.2);
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      transition: 0.5s ease;
+      display: flex; flex-direction: column; justify-content: center; overflow: hidden;
+      border: 1px solid rgba(116,63,155,0.5);
+    }
+    .dock-7:hover {
+      width: 140px; border-radius: 20px; background: rgba(116,63,155,0.4);
+    }
+    .dock-7 a {
+      padding: 12px; font-size: 11px; font-weight: bold; text-align: center;
+      opacity: 0; transition: 0.3s;
+    }
+    .dock-7:hover a { opacity: 1; }
+    .dock-7 a:hover { background: rgba(255,255,255,0.1); }
+
+    /* 8. Texto Rotado (Stealth Text) */
+    .dock-8 {
+      position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 30px;
+    }
+    .dock-8 a {
+      font-size: 9px; font-weight: 900; letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3); transform: rotate(-90deg); transition: 0.3s;
+    }
+    .dock-8:hover a { transform: rotate(0deg); color: #fff; font-size: 11px; margin: 5px 0; text-align: right; }
+    .dock-8 a:hover { color: var(--coral); }
+
+    /* 9. Indicador Neón Cyberpunk */
+    .dock-9 {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 20px;
+      border-right: 1px solid rgba(230,67,129,0.2); padding-right: 10px;
+    }
+    .dock-9 a {
+      font-size: 10px; font-weight: bold; text-transform: uppercase; color: transparent;
+      transition: 0.3s; position: relative; display: flex; align-items: center; justify-content: flex-end;
+    }
+    .dock-9 a::after {
+      content: ""; position: absolute; right: -13px; width: 5px; height: 5px;
+      background: var(--fuchsia); box-shadow: 0 0 10px var(--fuchsia);
+      transform: rotate(45deg); transition: 0.3s;
+    }
+    .dock-9:hover a { color: rgba(255,255,255,0.8); }
+    .dock-9 a:hover { color: #fff; text-shadow: 0 0 8px var(--fuchsia); }
+    .dock-9 a:hover::after { transform: scale(2) rotate(45deg); background: #fff; }
+
+    /* 10. Cápsula Flotante Transparente */
+    .dock-10 {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      padding: 5px; border-radius: 30px; background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.05);
+      display: flex; flex-direction: column; gap: 5px; transition: 0.4s;
+    }
+    .dock-10 a {
+      width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.1);
+      transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: transparent; overflow: hidden;
+    }
+    .dock-10:hover { padding: 10px; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+    .dock-10:hover a { width: 120px; height: 30px; border-radius: 8px; color: #fff; background: transparent; }
+    .dock-10 a:hover { background: rgba(255,255,255,0.1); }
+
+  </style>
+</head>
+<body>
+
+  <!-- 1 -->
+  <div class="demo-container">
+    <div class="demo-title">1. Pill Minimalista Expansible</div>
+    <div class="demo-canvas">
+      <div class="dock-1">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="demo-container">
+    <div class="demo-title">2. Puntos a Texto (Hover)</div>
+    <div class="demo-canvas">
+      <div class="dock-2">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="demo-container">
+    <div class="demo-title">3. Línea de Cristal (Cajones)</div>
+    <div class="demo-canvas">
+      <div class="dock-3">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="demo-container">
+    <div class="demo-title">4. Burbujas Independientes</div>
+    <div class="demo-canvas">
+      <div class="dock-4">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="demo-container">
+    <div class="demo-title">5. Isla Dinámica Vertical</div>
+    <div class="demo-canvas">
+      <div class="dock-5">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="demo-container">
+    <div class="demo-title">6. Pestaña Lateral (Tab)</div>
+    <div class="demo-canvas">
+      <div class="dock-6">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="demo-container">
+    <div class="demo-title">7. Gota Orgánica (Morph)</div>
+    <div class="demo-canvas">
+      <div class="dock-7">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="demo-container">
+    <div class="demo-title">8. Texto Oculto Rotado</div>
+    <div class="demo-canvas">
+      <div class="dock-8">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="demo-container">
+    <div class="demo-title">9. Neón Cyberpunk</div>
+    <div class="demo-canvas">
+      <div class="dock-9">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="demo-container">
+    <div class="demo-title">10. Cápsula Flotante Glass</div>
+    <div class="demo-canvas">
+      <div class="dock-10">
+        <a href="#">Inicio</a><a href="#">Formulario</a><a href="#">Tutoriales</a><a href="#">Soporte</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

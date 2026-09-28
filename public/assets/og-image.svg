@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#050507"/>
+  <circle cx="200" cy="150" r="280" fill="#E64381" opacity="0.15" filter="blur(80px)"/>
+  <circle cx="1000" cy="500" r="320" fill="#743F9B" opacity="0.2" filter="blur(90px)"/>
+  <text x="600" y="280" fill="#FFFFFF" font-family="'Space Grotesk', sans-serif" font-size="76" font-weight="bold" text-anchor="middle" letter-spacing="8">STARMAKER</text>
+  <text x="600" y="360" fill="#F18D79" font-family="'Plus Jakarta Sans', sans-serif" font-size="28" font-weight="600" text-anchor="middle" letter-spacing="4">PLATAFORMA ESPACIAL SERVERLESS</text>
+  <text x="600" y="420" fill="rgba(255,255,255,0.7)" font-family="'Plus Jakarta Sans', sans-serif" font-size="20" text-anchor="middle">Experiencia inmersiva y reactiva en tiempo real</text>
+</svg>

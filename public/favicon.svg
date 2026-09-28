@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="starmaker-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F18D79" />
+      <stop offset="50%" stop-color="#E64381" />
+      <stop offset="100%" stop-color="#743F9B" />
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="24" fill="#050507" />
+  <path d="M50 15 L58 38 L82 42 L64 58 L70 82 L50 68 L30 82 L36 58 L18 42 L42 38 Z" fill="url(#starmaker-grad)" />
+</svg>

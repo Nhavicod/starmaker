@@ -1,0 +1,24 @@
+{
+  "name": "starmaker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "STARMAKER — Plataforma Web Serverless Premium con experiencia inmersiva y reactiva en tiempo real",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.4",
+    "ffmpeg-static": "^5.3.0",
+    "firebase": "^10.14.0",
+    "puppeteer": "^25.12.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.8"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

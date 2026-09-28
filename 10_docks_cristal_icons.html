@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10 Variaciones: Línea de Cristal con Iconos</title>
+  <style>
+    :root {
+      --bg: #050507; --text: #fff; --coral: #F18D79; --fuchsia: #E64381; --violet: #743F9B;
+    }
+    body {
+      background: var(--bg); color: var(--text); font-family: system-ui, sans-serif;
+      margin: 0; padding: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;
+    }
+    .demo-container {
+      position: relative; height: 350px; background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;
+    }
+    .demo-title { padding: 15px; font-size: 14px; font-weight: 600; color: #aaa; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
+    .demo-canvas { flex: 1; position: relative; }
+    a { text-decoration: none; color: inherit; }
+
+    /* SVG Utilities */
+    .icon { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    
+    /* 1. Línea de Cristal Original con Iconos */
+    .dock-1 {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      width: 2px; height: 180px; background: rgba(255,255,255,0.2);
+      display: flex; flex-direction: column; justify-content: space-evenly; transition: 0.4s;
+    }
+    .dock-1:hover { background: rgba(255,255,255,0.5); width: 4px; }
+    .dock-1 a {
+      position: absolute; right: 15px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: bold;
+      background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 12px;
+      opacity: 0; transform: translateX(20px); transition: 0.4s; pointer-events: none; backdrop-filter: blur(10px);
+    }
+    .dock-1:hover a { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .dock-1 a:nth-child(1) { top: 10%; } .dock-1 a:nth-child(2) { top: 35%; }
+    .dock-1 a:nth-child(3) { top: 60%; } .dock-1 a:nth-child(4) { top: 85%; }
+    .dock-1 a:hover { background: var(--fuchsia); }
+
+    /* 2. Nodos de Cristal (Nodos visibles siempre) */
+    .dock-2 {
+      position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+      width: 2px; height: 180px; background: rgba(255,255,255,0.1);
+      display: flex; flex-direction: column; justify-content: space-evenly; align-items: center;
+    }
+    .dock-2 a {
+      position: relative; width: 32px; height: 32px; background: #1a1525; border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      transition: 0.3s; color: rgba(255,255,255,0.6);
+    }
+    .dock-2 a span {
+      position: absolute; right: 40px; font-size: 11px; background: rgba(0,0,0,0.8); padding: 5px 10px; border-radius: 8px;
+      opacity: 0; transform: translateX(10px); transition: 0.3s; pointer-events: none; white-space: nowrap;
+    }
+    .dock-2 a:hover { background: var(--coral); color: #fff; border-color: var(--coral); transform: scale(1.1); }
+    .dock-2 a:hover span { opacity: 1; transform: translateX(0); }
+
+    /* 3. Columna de Vidrio Expansible */
+    .dock-3 {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      width: 6px; height: 180px; background: rgba(255,255,255,0.05); backdrop-filter: blur(5px);
+      border-left: 1px solid rgba(255,255,255,0.1); transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; overflow: hidden;
+    }
+    .dock-3:hover { width: 140px; border-radius: 20px 0 0 20px; background: rgba(20,15,30,0.8); }
+    .dock-3 a {
+      display: flex; align-items: center; gap: 10px; width: 100%; padding: 0 15px; box-sizing: border-box;
+      opacity: 0; transition: 0.3s; color: #aaa;
+    }
+    .dock-3:hover a { opacity: 1; }
+    .dock-3 a:hover { color: var(--fuchsia); transform: translateX(-5px); }
+
+    /* 4. Línea Neón con Iconos Flotantes */
+    .dock-4 {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      width: 2px; height: 150px; background: var(--fuchsia); box-shadow: 0 0 10px var(--fuchsia);
+      display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0;
+    }
+    .dock-4 a {
+      position: absolute; right: 15px; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.5);
+      transition: 0.3s;
+    }
+    .dock-4 a span { font-size: 11px; opacity: 0; transform: translateX(10px); transition: 0.3s; }
+    .dock-4 a:nth-child(1) { top: 10%; } .dock-4 a:nth-child(2) { top: 35%; }
+    .dock-4 a:nth-child(3) { top: 60%; } .dock-4 a:nth-child(4) { top: 85%; }
+    .dock-4 a:hover { color: #fff; right: 20px; }
+    .dock-4 a:hover span { opacity: 1; transform: translateX(0); }
+
+    /* 5. Cajones Diagonales (Cyberpunk Glass) */
+    .dock-5 {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 180px; background: linear-gradient(to bottom, var(--coral), var(--fuchsia));
+    }
+    .dock-5 a {
+      position: absolute; right: 10px; background: rgba(10,5,15,0.9); border: 1px solid rgba(255,255,255,0.1);
+      padding: 8px; display: flex; align-items: center; gap: 10px; border-radius: 8px 0 0 8px;
+      transform: translateX(100%); opacity: 0; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dock-5:hover a { transform: translateX(0); opacity: 1; }
+    .dock-5 a:nth-child(1) { top: 10%; transition-delay: 0s; }
+    .dock-5 a:nth-child(2) { top: 35%; transition-delay: 0.05s; }
+    .dock-5 a:nth-child(3) { top: 60%; transition-delay: 0.1s; }
+    .dock-5 a:nth-child(4) { top: 85%; transition-delay: 0.15s; }
+    .dock-5 a span { font-size: 11px; }
+    .dock-5 a:hover { background: rgba(230,67,129,0.2); border-color: var(--fuchsia); }
+
+    /* 6. Iconos Integrados en Línea */
+    .dock-6 {
+      position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+      width: 1px; height: 200px; background: rgba(255,255,255,0.3);
+      display: flex; flex-direction: column; justify-content: space-around; align-items: center;
+    }
+    .dock-6 a {
+      background: var(--bg); padding: 5px; color: #888; transition: 0.3s;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+    }
+    .dock-6 a span { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; max-height: 0; opacity: 0; transition: 0.3s; overflow: hidden; }
+    .dock-6 a:hover { color: var(--coral); transform: scale(1.2); }
+    .dock-6 a:hover span { max-height: 20px; opacity: 1; margin-top: 5px; }
+
+    /* 7. Slide Elegante Minimal */
+    .dock-7 {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      width: 4px; height: 160px; background: rgba(255,255,255,0.1); border-radius: 4px 0 0 4px;
+      transition: 0.3s;
+    }
+    .dock-7:hover { width: 40px; background: rgba(255,255,255,0.05); border-left: 1px solid rgba(255,255,255,0.1); }
+    .dock-7 a {
+      position: absolute; right: 5px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: 0.3s; color: #aaa;
+    }
+    .dock-7:hover a { opacity: 1; }
+    .dock-7 a:nth-child(1) { top: 10px; } .dock-7 a:nth-child(2) { top: 50px; }
+    .dock-7 a:nth-child(3) { top: 90px; } .dock-7 a:nth-child(4) { top: 130px; }
+    .dock-7 a:hover { color: #fff; background: rgba(255,255,255,0.1); border-radius: 8px; }
+
+    /* 8. Cápsula de Vidrio con Tooltips */
+    .dock-8 {
+      position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.03); backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 30px;
+      padding: 15px 8px; display: flex; flex-direction: column; gap: 20px;
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.02);
+    }
+    .dock-8 a {
+      position: relative; color: rgba(255,255,255,0.5); transition: 0.3s; display: flex; justify-content: center;
+    }
+    .dock-8 a span {
+      position: absolute; right: 35px; background: #fff; color: #000; font-size: 10px; font-weight: bold;
+      padding: 4px 8px; border-radius: 6px; opacity: 0; pointer-events: none; transform: translateX(10px); transition: 0.3s; white-space: nowrap;
+    }
+    .dock-8 a:hover { color: var(--fuchsia); transform: scale(1.1); }
+    .dock-8 a:hover span { opacity: 1; transform: translateX(0); }
+
+    /* 9. Pestañas Desplegables Laterales */
+    .dock-9 {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      height: 180px; width: 2px; background: rgba(255,255,255,0.2);
+    }
+    .dock-9 a {
+      position: absolute; right: 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-right: none; padding: 10px; border-radius: 12px 0 0 12px; display: flex; align-items: center; gap: 10px;
+      color: #aaa; transition: 0.4s; transform: translateX(calc(100% - 4px));
+    }
+    .dock-9 a span { font-size: 11px; font-weight: bold; opacity: 0; transition: 0.3s; }
+    .dock-9 a:nth-child(1) { top: 10%; } .dock-9 a:nth-child(2) { top: 35%; }
+    .dock-9 a:nth-child(3) { top: 60%; } .dock-9 a:nth-child(4) { top: 85%; }
+    .dock-9 a:hover { transform: translateX(0); background: rgba(20,15,30,0.9); color: #fff; border-color: var(--fuchsia); }
+    .dock-9 a:hover span { opacity: 1; }
+
+    /* 10. Morph de Cristal */
+    .dock-10 {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      width: 4px; height: 150px; background: rgba(255,255,255,0.2); border-radius: 10px;
+      transition: 0.4s cubic-bezier(0.5, 1.5, 0.4, 1);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; overflow: hidden;
+    }
+    .dock-10:hover { width: 50px; height: 220px; background: rgba(255,255,255,0.08); backdrop-filter: blur(10px); right: 15px; border: 1px solid rgba(255,255,255,0.1); }
+    .dock-10 a {
+      color: rgba(255,255,255,0.5); transition: 0.3s; opacity: 0; transform: scale(0.5);
+    }
+    .dock-10:hover a { opacity: 1; transform: scale(1); }
+    .dock-10 a:hover { color: var(--coral); filter: drop-shadow(0 0 8px var(--coral)); }
+
+  </style>
+</head>
+<body>
+
+  <!-- SVG Icons Template -->
+  <svg style="display:none;">
+    <defs>
+      <g id="icon-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></g>
+      <g id="icon-form"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></g>
+      <g id="icon-video"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></g>
+      <g id="icon-support"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></g>
+    </defs>
+  </svg>
+
+  <script>
+    // Generador de los 10 contenedores para no repetir HTML manualmente
+    const container = document.body;
+    const names = [
+      "1. Cristal Original c/ Iconos", "2. Nodos de Cristal Estáticos", "3. Columna de Vidrio Expansible",
+      "4. Neón con Iconos Flotantes", "5. Cajones Cyberpunk (Stagger)", "6. Iconos Integrados en Línea",
+      "7. Slide Elegante Minimal", "8. Cápsula Glass con Tooltips", "9. Pestañas Desplegables", "10. Morphing Bubble Glass"
+    ];
+
+    for(let i=1; i<=10; i++) {
+      const demo = document.createElement('div');
+      demo.className = 'demo-container';
+      
+      let itemsHTML = `
+        <a href="#"><svg class="icon"><use href="#icon-home"></use></svg> <span>Inicio</span></a>
+        <a href="#"><svg class="icon"><use href="#icon-form"></use></svg> <span>Formulario</span></a>
+        <a href="#"><svg class="icon"><use href="#icon-video"></use></svg> <span>Tutoriales</span></a>
+        <a href="#"><svg class="icon"><use href="#icon-support"></use></svg> <span>Soporte</span></a>
+      `;
+
+      demo.innerHTML = `
+        <div class="demo-title">${names[i-1]}</div>
+        <div class="demo-canvas">
+          <div class="dock-${i}">
+            ${itemsHTML}
+          </div>
+        </div>
+      `;
+      container.appendChild(demo);
+    }
+  </script>
+</body>
+</html>
