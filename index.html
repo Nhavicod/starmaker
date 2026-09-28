@@ -1259,30 +1259,43 @@
             photoUrls.push(url);
           }
 
-          // Save document to Firestore
-          status.textContent = "Guardando datos...";
-          const formData = {
-            email: document.getElementById("reg-email").value,
-            agency: document.getElementById("reg-agency").value,
-            tuId: document.getElementById("reg-id").value,
-            agentId: document.getElementById("reg-agent-id").value,
-            fullName: document.getElementById("reg-name").value,
-            phone: document.getElementById("reg-phone").value,
-            nationality: document.getElementById("reg-nationality").value,
-            city: document.getElementById("reg-city").value,
-            photos: photoUrls,
-            talent: document.getElementById("reg-talent").value,
-            gender: document.getElementById("reg-gender").value,
-            platform: document.getElementById("reg-platform").value,
-            verificationVideo: document.getElementById("reg-video-url").value,
-            timestamp: new Date().toISOString()
-          };
+          // Google Forms requires data to be sent as FormData with specific 'entry.XXX' keys
+          status.textContent = "Guardando datos en Google Forms...";
+          
+          const formPayload = new FormData();
+          // SUSTITUYE "REEMPLAZAR_X" por los IDs reales de tu Google Form (puedes obtenerlos inspeccionando el form de Google o usando la opción "Obtener enlace prellenado")
+          formPayload.append("entry.REEMPLAZAR_EMAIL", document.getElementById("reg-email").value);
+          formPayload.append("entry.REEMPLAZAR_AGENCY", document.getElementById("reg-agency").value);
+          formPayload.append("entry.REEMPLAZAR_ID", document.getElementById("reg-id").value);
+          formPayload.append("entry.REEMPLAZAR_AGENT_ID", document.getElementById("reg-agent-id").value);
+          formPayload.append("entry.REEMPLAZAR_NAME", document.getElementById("reg-name").value);
+          formPayload.append("entry.REEMPLAZAR_PHONE", document.getElementById("reg-phone").value);
+          formPayload.append("entry.REEMPLAZAR_NATIONALITY", document.getElementById("reg-nationality").value);
+          formPayload.append("entry.REEMPLAZAR_CITY", document.getElementById("reg-city").value);
+          
+          // Enviamos las URLs seguras de Firebase (separadas por comas) al campo de texto de Google Forms
+          formPayload.append("entry.REEMPLAZAR_PHOTOS", photoUrls.join(", "));
+          
+          formPayload.append("entry.REEMPLAZAR_TALENT", document.getElementById("reg-talent").value);
+          formPayload.append("entry.REEMPLAZAR_GENDER", document.getElementById("reg-gender").value);
+          formPayload.append("entry.REEMPLAZAR_PLATFORM", document.getElementById("reg-platform").value);
+          formPayload.append("entry.REEMPLAZAR_VIDEO", document.getElementById("reg-video-url").value);
 
-          await addDoc(collection(db, "registros_form"), formData);
+          // URL de tu formulario (asegúrate de que termine en /formResponse)
+          const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/TU_ID_DE_FORMULARIO_AQUI/formResponse";
+
+          // Usamos mode: "no-cors" para que Google no bloquee la petición desde tu dominio
+          await fetch(GOOGLE_FORM_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: formPayload
+          });
           
           feedback.textContent = "¡Formulario enviado correctamente!";
           feedback.style.display = "block";
           regForm.reset();
+          document.getElementById("record-preview").style.display = "none";
+          document.getElementById("record-status").textContent = "";
           status.textContent = "";
         } catch(err) {
           alert("Error al enviar: " + err.message);
