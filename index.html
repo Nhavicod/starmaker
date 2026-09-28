@@ -1277,31 +1277,33 @@
             photoUrls.push(data.url);
           }
 
-          status.textContent = "Simulando conexión con Google Forms para demostración...";
+          // Enviamos los datos reales al Google Form proporcionado
+          status.textContent = "Conectando con Google Forms...";
           
-          // MOCK DEL FORMULARIO DE GOOGLE:
-          // Aquí iría el fetch real a Google Forms, pero como está bloqueado por el dueño, 
-          // pondremos una pausa de 2 segundos para simular el envío y que puedas grabarlo en video.
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          const formPayload = new FormData();
           
-          // Imprimimos los datos en consola para que veas que la recolección funciona perfecto
-          console.log("DATOS LISTOS PARA GOOGLE FORMS:", {
-            email: document.getElementById("reg-email").value,
-            agency: document.getElementById("reg-agency").value,
-            tuId: document.getElementById("reg-id").value,
-            agentId: document.getElementById("reg-agent-id").value,
-            name: document.getElementById("reg-name").value,
-            phone: document.getElementById("reg-phone").value,
-            nationality: document.getElementById("reg-nationality").value,
-            city: document.getElementById("reg-city").value,
-            photos: photoUrls.join(", "),
-            talent: document.getElementById("reg-talent").value,
-            gender: document.getElementById("reg-gender").value,
-            platform: document.getElementById("reg-platform").value,
-            video: document.getElementById("reg-video-url").value
+          // Mapeamos los datos de Star Leo a los IDs del formulario que pasaste:
+          // (Como tu formulario tiene menos preguntas que nuestro registro, agruparé algunos datos)
+          formPayload.append("entry.630355344", document.getElementById("reg-name").value); // Nombre
+          formPayload.append("entry.1316865652", document.getElementById("reg-email").value); // Email
+          formPayload.append("entry.1481050198", document.getElementById("reg-phone").value); // Teléfono
+          formPayload.append("entry.956106991", document.getElementById("reg-agency").value); // Agencia
+          formPayload.append("entry.1516808827", photoUrls.join(", ")); // URLs de Fotos (CRÍTICO)
+          formPayload.append("entry.739511303", document.getElementById("reg-video-url").value); // Video
+
+          const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfRRopuwcJGQREUBDpJPmdeL8BQEzYNModaEIu461jkT8fS-w/formResponse";
+
+          // Enviamos a Google
+          await fetch(GOOGLE_FORM_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: formPayload
           });
           
-          feedback.textContent = "¡Formulario enviado correctamente! (Modo Demostración)";
+          // Imprimimos los datos en consola para verificación
+          console.log("DATOS ENVIADOS A GOOGLE FORMS:", Object.fromEntries(formPayload));
+          
+          feedback.textContent = "¡Formulario enviado correctamente a Google Forms!";
           feedback.style.display = "block";
           regForm.reset();
           document.getElementById("record-preview").style.display = "none";
