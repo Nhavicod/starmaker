@@ -847,21 +847,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
           <span id="val-video-y" style="font-size: 11px; color: var(--muted);">0px</span>
         </div>
 
-        <div class="admin-field">
-          <label>Color de Acento Primario:</label>
-          <input type="color" id="editor-theme-color" value="#E64381" style="height:40px;width:60px;border:none;background:transparent;cursor:pointer;" />
-        </div>
 
-        </div>
-
-        <div class="admin-field">
-          <label>Título Tarjeta Principal:</label>
-          <input type="text" class="admin-input" id="editor-c1-title" value="León" />
-        </div>
-        <div class="admin-field">
-          <label>Descripción Tarjeta Principal:</label>
-          <input type="text" class="admin-input" id="editor-c1-desc" value="Mascota Holográfica" />
-        </div>
 
 
 
@@ -881,7 +867,10 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         
         <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
           <label class="admin-label">VIDEO PERSONAJE - REGISTRO (.webm transparente o MP4 fondo negro)</label>
-          <input type="text" class="admin-input" id="admin-registro-video" placeholder="URL del video (ej. https://.../video.webm)" style="margin-bottom: 6px;" />
+          <label style="background:var(--pink);color:#fff;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">
+            SUBIR VIDEO DE REGISTRO
+            <input type="file" id="admin-registro-video-file" accept="video/webm,video/mp4" style="display:none;" />
+          </label>
         </div>
 
         <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
@@ -891,7 +880,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
           <label style="background:var(--cyan);color:#000;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">SUBIR TUTORIAL 3<input type="file" id="admin-tut-3-file" accept="video/*" style="display:none;" /></label>
         </div>
 
-        <button type="button" class="btn btn-primary" id="btn-save-firestore" style="display:none;" style="width:100%;justify-content:center;margin-top:14px;">
+        <button type="button" class="btn btn-primary" id="btn-save-firestore" style="width:100%;justify-content:center;margin-top:14px;background:#4CAF50;border:none;">
           GUARDAR EN FIRESTORE EN TIEMPO REAL
         </button>
         <button type="button" class="btn btn-primary" id="btn-modo-editor" style="background:var(--cyan); margin-top:14px; width:100%; justify-content:center;">
@@ -1175,30 +1164,14 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         videoX: parseInt(document.getElementById("admin-video-x")?.value || 0),
         videoY: parseInt(document.getElementById("admin-video-y")?.value || 0)
       };
-      const newTheme = { primary: document.getElementById("editor-theme-color").value };
-      const newCards = [
-        { 
-          id: "card-streamer", 
-          title: document.getElementById("editor-c1-title").value, 
-          subtitle: document.getElementById("editor-c1-desc").value, 
-          badge: "LIVE HUB", 
-          link: "#formulario-registro",
-          videoUrl: "/leonsito.webm"
-        }
-      ];
+
 
       const whatsapp = [
         document.getElementById("admin-wa-1")?.value || "",
         document.getElementById("admin-wa-2")?.value || "",
         document.getElementById("admin-wa-3")?.value || ""
       ];
-            const registroVideo = document.getElementById("admin-registro-video")?.value || "";
 
-      const tutorials = [
-        document.getElementById("admin-tut-1")?.value || "",
-        document.getElementById("admin-tut-2")?.value || "",
-        document.getElementById("admin-tut-3")?.value || ""
-      ];
       const cleanState = JSON.parse(JSON.stringify({ theme: newTheme, cards: newCards, whatsapp, tutorials, layout, registroVideo }));
 
       try {
@@ -1469,6 +1442,25 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     // ==========================================
     // LÓGICA DEL MODO EDITOR VISUAL (FLOTANTE)
     // ==========================================
+    
+    const regVideoInput = document.getElementById("admin-registro-video-file");
+    if (regVideoInput) {
+      regVideoInput.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        regVideoInput.parentElement.innerHTML = "⏳ SUBIENDO...";
+        try {
+          const url = await uploadToGoFile(file);
+          await setDoc(stateDocRef, { registroVideo: url }, { merge: true });
+          alert("¡Video de Registro actualizado con éxito!");
+        } catch(err) {
+          alert("Error al subir Video: " + err.message);
+        } finally {
+          location.reload();
+        }
+      });
+    }
+
     const btnModoEditor = document.getElementById("btn-modo-editor");
     const editorToolbar = document.getElementById("visual-editor-toolbar");
     const editorExitBtn = document.getElementById("editor-exit-btn");
