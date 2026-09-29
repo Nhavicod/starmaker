@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Mascot Showroom - AAA Experience (Single Portal)">
+    <title>Mascot Showroom | StarMaker</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Paleta StarMaker Base */
+            --bg-base: #06050b;
+            --text-main: #F5F3FF;
+            
+            --pointer-x: 50vw;
+            --pointer-y: 50vh;
+            --shadow-offset-x: 0px;
+            --shadow-offset-y: 30px;
+            
+            --glass-bg: rgba(14, 11, 22, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-blur: 24px;
+
+            /* Escala Global */
+            --scene-scale: 1;
+            --scene-z: 0px;
+            --ambient-color: 124, 58, 237; /* Default purple ambient */
+
+            /* --- PANEL DE CONTROL FÁCIL --- */
+            --ancho-portal: 28vw; /* Cambia esto para hacer el portal más ancho/angosto */
+            --max-ancho-portal: 400px; /* Límite máximo de crecimiento */
+            --escala-video: 1.2; /* Aumentado por defecto para llenar mejor el canvas */
+            --escala-global-movil: 0.85; /* Ajustado para que el personaje único se vea grande en celular */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            cursor: none;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        #scene-root {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            transform: scale(var(--scene-scale)) translateZ(var(--scene-z));
+            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform-style: preserve-3d;
+            perspective: 1200px;
+        }
+
+        .depth-layer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            will-change: transform;
+            transform-style: preserve-3d;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        /* --- STAGE MODIFICADO --- */
+        .stage-container {
+            position: relative;
+            width: 90vw;
+            max-width: 1200px;
+            height: 60vh;
+            transform: translateY(22vh) rotateX(75deg);
+            transform-style: preserve-3d;
+        }
+
+        .stage-surface {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(20, 10, 30, 0.6) 0%, rgba(5, 5, 10, 0.8) 100%);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                inset 0 0 80px rgba(var(--ambient-color), 0.3),
+                var(--shadow-offset-x) var(--shadow-offset-y) 80px -10px rgba(0,0,0,0.9),
+                0 0 150px rgba(var(--ambient-color), 0.2);
+            transition: box-shadow 0.8s ease, border-color 0.8s ease;
+        }
+
+        .stage-orbit {
+            position: absolute;
+            inset: -5%;
+            border-radius: 50%;
+            border: 1px solid rgba(var(--ambient-color), 0.4);
+            opacity: 0.5;
+            transform: translateZ(-20px);
+            transition: border-color 0.8s ease;
+            box-shadow: inset 0 0 30px rgba(var(--ambient-color), 0.1);
+        }
+        .stage-orbit.outer { 
+            inset: -12%; 
+            opacity: 0.2; 
+            transform: translateZ(-45px); 
+            border: 1px dashed rgba(var(--ambient-color), 0.5);
+        }
+
+        /* --- PORTAL ÚNICO --- */
+        .portals-group {
+            position: relative;
+            width: 100%;
+            max-width: 1400px;
+            height: 75vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            pointer-events: auto;
+            margin-bottom: 5vh;
+        }
+
+        .portal-item {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            width: var(--ancho-portal);
+            max-width: var(--max-ancho-portal);
+            height: 100%;
+            cursor: pointer;
+            outline: none;
+            transform-style: preserve-3d;
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, filter, opacity;
+        }
+
+        /* Composición Cinematográfica del personaje central */
+        .portal-item.pos-center { transform: translateZ(20px) scale(1.1); z-index: 5; }
+
+        /* Aura base del personaje */
+        .portal-aura {
+            position: absolute;
+            bottom: 5%;
+            width: 60%;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--portal-color);
+            filter: blur(35px);
+            opacity: 0.25;
+            transition: all 0.5s ease;
+            pointer-events: none;
+        }
+
+        /* Ocultar el video original, mostraremos el canvas procesado */
+        .media-video-source {
+            display: none;
+        }
+
+        /* El canvas que muestra el video con fondo eliminado */
+        .media-canvas {
+            height: 100%;
+            width: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            transform: scale(var(--escala-video));
+            filter: drop-shadow(0px 30px 40px rgba(0,0,0,0.8));
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            image-rendering: optimizeSpeed; /* Ayuda al rendimiento */
+        }
+
+        /* --- ESTADOS INTERACTIVOS (HOVER / FOCUS) --- */
+        .portal-item:hover, .portal-item:focus-visible, .portal-item.is-hovered {
+            z-index: 10;
+        }
+        
+        .portal-item.pos-center:hover, .portal-item.pos-center.is-hovered { transform: translateZ(120px) scale(1.18); }
+
+        .portal-item:hover .portal-aura, .portal-item.is-hovered .portal-aura {
+            opacity: 0.6;
+            filter: blur(45px);
+            transform: scale(1.5);
+        }
+        .portal-item:hover .media-canvas, .portal-item.is-hovered .media-canvas {
+            filter: drop-shadow(0px 10px 50px rgba(var(--portal-rgb), 0.4)) brightness(1.1);
+        }
+
+        /* --- ESTADOS CINEMATOGRÁFICOS (AL HACER CLIC) --- */
+        .portals-group.is-transitioning { pointer-events: none; }
+
+        .portals-group.is-transitioning .portal-item.is-selected {
+            transform: translateZ(350px) translateY(8vh) scale(1.4);
+            z-index: 100;
+        }
+        .portals-group.is-transitioning .portal-item.is-selected .media-canvas {
+            filter: drop-shadow(0px 0px 80px rgba(var(--portal-rgb), 0.8)) brightness(1.2);
+        }
+        .portals-group.is-transitioning .portal-item.is-selected .portal-aura {
+            opacity: 1; filter: blur(60px); transform: scale(2.5);
+        }
+        .portals-group.is-transitioning .portal-item.is-selected .portal-ui {
+            opacity: 0;
+        }
+
+        /* --- UI CONTEXTUAL DEL PORTAL --- */
+        .portal-ui {
+            position: absolute;
+            bottom: 8%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .portal-item:hover .portal-ui, .portal-item:focus-visible .portal-ui, .portal-item.is-hovered .portal-ui {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ui-line {
+            width: 2px; height: 35px;
+            background: linear-gradient(to top, var(--portal-color), transparent);
+            margin-bottom: 8px;
+            box-shadow: 0 0 10px var(--portal-color);
+        }
+
+        .ui-content {
+            background: rgba(10, 8, 15, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 8px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(var(--portal-rgb), 0.2);
+            border-bottom: 1px solid var(--portal-color);
+        }
+
+        .ui-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--portal-color);
+            box-shadow: 0 0 10px var(--portal-color);
+            animation: pulse 1.5s infinite;
+        }
+
+        .ui-text {
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 2.5px;
+            text-transform: uppercase; color: #FFF;
+            text-shadow: 0 0 10px rgba(var(--portal-rgb), 0.5);
+        }
+
+        /* Ambient Light Base */
+        .interactive-light {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle 600px at var(--pointer-x) var(--pointer-y), rgba(var(--ambient-color), 0.08), transparent);
+            pointer-events: none;
+            mix-blend-mode: screen;
+            transition: background 0.8s ease;
+        }
+
+        /* Cursor */
+        #ring-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
+            mix-blend-mode: screen;
+            backdrop-filter: blur(2px);
+        }
+        #ring-cursor.is-hovering {
+            width: 70px; height: 70px;
+            background: rgba(var(--ambient-color), 0.15);
+            border-color: rgba(var(--ambient-color), 0.8);
+            box-shadow: 0 0 30px rgba(var(--ambient-color), 0.4);
+        }
+        #ring-cursor.is-selecting {
+            width: 10px; height: 10px;
+            background: rgba(255,255,255,1);
+            border-color: transparent;
+            box-shadow: 0 0 50px rgba(255,255,255,0.8);
+        }
+
+        /* Loader */
+        #loader-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-base);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            transition: opacity 0.8s, visibility 0.8s;
+        }
+        #loader-overlay.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .loader-ring {
+            width: 44px; height: 44px;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-top-color: #A78BFA;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        .loader-label { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; opacity: 0.7; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { opacity: 0.5; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.5; transform: scale(0.8); } }
+
+        /* Retrasamos la animación de la capa de actores para dar tiempo al ChromaKey */
+        body.app-ready #scene-root { visibility: visible; }
+        body.app-ready #layer-stage { animation: fxRevealStage 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        body.app-ready #layer-actor { animation: fxRevealActor 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both; } 
+
+        @keyframes fxRevealStage { from { opacity: 0; transform: translate(-50%, -30%) rotateX(90deg) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) rotateX(0deg) scale(1); } }
+        @keyframes fxRevealActor { from { opacity: 0; filter: blur(20px); transform: translate(-50%, -45%) scale(0.9); } to { opacity: 1; filter: blur(0px); transform: translate(-50%, -50%) scale(1); } }
+
+        .compat-badge {
+            position: fixed;
+            top: 24px;
+            left: 28px;
+            background: rgba(14, 11, 24, 0.5);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.6);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        /* --- RESPONSIVE AJUSTADO PARA UN SOLO PERSONAJE --- */
+        @media (max-width: 900px) {
+            .portals-group {
+                transform: scale(var(--escala-global-movil)); 
+                margin-top: 15vh;
+            }
+            .stage-container { 
+                height: 40vh; 
+                transform: translateY(10vh) rotateX(70deg) scale(0.9); /* Aumentado levemente para empatar con el personaje */
+            }
+            
+            .portal-item.pos-center:hover, .portal-item.pos-center.is-hovered { transform: translateZ(80px) scale(1.15); }
+        }
+
+        /* --- REDUCED MOTION --- */
+        @media (prefers-reduced-motion: reduce) {
+            .portal-item { transition: opacity 0.4s; transform: none !important; }
+            #scene-root { transition: opacity 0.4s; transform: none !important; }
+            .portals-group.is-transitioning .portal-item.is-selected { transform: scale(1.1) !important; }
+            .ui-dot { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div style="position:absolute; top:20px; left:20px; z-index:99999; display:flex; gap:10px;">
+        <button id="btn-mode-b" style="padding:10px; background:var(--coral, #E64381); color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Opción B: Panel Flotante (Recomendada)</button>
+        <button id="btn-mode-a" style="padding:10px; background:#4ade80; color:#000; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Opción A: Transición Completa</button>
+    </div>
+
+    <!-- PANEL FLOTANTE (OPCIÓN B) -->
+    <div id="demo-panel" style="position:absolute; top:0; right:-100%; width: 50vw; min-width: 400px; height: 100vh; background: rgba(14, 11, 22, 0.85); backdrop-filter: blur(24px); border-left: 1px solid rgba(255,255,255,0.1); z-index:9999; transition: right 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); display:flex; flex-direction:column; padding: 40px; box-sizing: border-box;">
+        <button id="btn-close-demo" style="position:absolute; top:20px; left:20px; background:transparent; border:none; color:#fff; font-size:24px; cursor:pointer;">✕</button>
+        <h2 style="font-size:32px; font-weight:900; margin-top:40px; color:#E64381;">REGISTRO DE AGENTES</h2>
+        <p style="color:#aaa; margin-top:20px;">Aquí viviría tu formulario de registro (el que ya tienes en index.html) integrado mágicamente encima del entorno 3D.</p>
+        <div style="width:100%; height: 50px; background: rgba(255,255,255,0.1); border-radius:8px; margin-top: 30px;"></div>
+        <div style="width:100%; height: 50px; background: rgba(255,255,255,0.1); border-radius:8px; margin-top: 15px;"></div>
+        <div style="width:100%; height: 50px; background: rgba(255,255,255,0.1); border-radius:8px; margin-top: 15px;"></div>
+    </div>
+
+    <!-- VISTA COMPLETA (OPCIÓN A) -->
+    <div id="demo-full" style="position:absolute; top:0; left:0; width: 100vw; height: 100vh; background: #06050b; z-index:9998; opacity:0; pointer-events:none; transition: opacity 0.6s; display:flex; justify-content:center; align-items:center;">
+        <div style="text-align:center;">
+            <h2 style="font-size:48px; font-weight:900; color:#E64381;">NUEVA PÁGINA (ESTILO NETFLIX)</h2>
+            <p style="color:#aaa; margin-top:20px; font-size: 18px;">Has salido del menú 3D y ahora estás en una vista plana y enfocada.</p>
+            <button id="btn-close-full" style="padding:15px 30px; background:#fff; color:#000; border:none; border-radius:30px; font-weight:bold; margin-top:30px; cursor:pointer;">Volver al Inicio 3D</button>
+        </div>
+    </div>
+
+
+    <div id="loader-overlay">
+        <div class="loader-ring"></div>
+        <div class="loader-label">INICIALIZANDO EXPERIENCIA...</div>
+    </div>
+
+    <div id="ring-cursor"></div>
+
+    <div class="compat-badge">
+        <span class="ui-dot" style="background: #4ade80; box-shadow: 0 0 10px #4ade80; animation: none;"></span>
+        <span id="compatText">StarMaker Engine</span>
+    </div>
+
+    <main id="scene-root">
+        <!-- Fondos y Ambiente -->
+        <div id="layer-bg" class="depth-layer"><canvas id="ctx-background"></canvas></div>
+        <div id="layer-atmos" class="depth-layer"><div style="width:100%; height:100%; background: radial-gradient(circle at center, transparent 35%, rgba(6,5,11,0.95) 100%);"></div></div>
+        
+        <!-- Plataforma Base Unificada -->
+        <div id="layer-stage" class="depth-layer">
+            <div class="stage-container">
+                <div class="stage-surface"></div>
+                <div class="stage-orbit"></div>
+                <div class="stage-orbit outer"></div>
+            </div>
+        </div>
+        
+        <!-- El Menú: Personaje Único -->
+        <div id="layer-actor" class="depth-layer">
+            <div class="portals-group" id="portals-container">
+
+                <!-- León Star (Video MP4 adaptado) -->
+                <div class="portal-item pos-center" tabindex="0" data-id="streamers" aria-label="Registro y Convocatoria" style="--portal-color: #7C3AED; --portal-rgb: 124, 58, 237;">
+                    <div class="portal-aura"></div>
+                    
+                    <!-- Video Original (Oculto) -->
+                    <video id="vid-source-streamers" class="media-video-source" muted loop playsinline autoplay crossorigin="anonymous">
+                        <!-- Reemplaza con la ruta a tu video MP4 -->
+                        <source src="leon_video.mp4" type="video/mp4">
+                    </video>
+                    
+                    <!-- Canvas (Visible, donde se renderiza el video sin fondo) -->
+                    <canvas id="vid-canvas-streamers" class="media-canvas" width="512" height="1024"></canvas>
+                    
+                    <div class="portal-ui">
+                        <div class="ui-line"></div>
+                        <div class="ui-content"><span class="ui-dot"></span><span class="ui-text">LEÓN STAR</span></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Partículas Frontales e Iluminación -->
+        <div id="layer-fg" class="depth-layer"><canvas id="ctx-foreground"></canvas><div class="interactive-light"></div></div>
+    </main>
+
+    <script>
+        'use strict';
+        (function() {
+            // =========================================================
+            // RUTAS DE DESTINO (RELLENAR CON URLS REALES)
+            // =========================================================
+            const PORTAL_DESTINATIONS = {
+                streamers: null  // Ejemplo: '/registro'
+            };
+
+            const AppConfig = {
+                portals: {
+                    streamers: { colorRGB: '124, 58, 237' }
+                },
+                parallax: { bg: 15, stage: 8, actor: -15, fg: 35 }
+            };
+
+            const State = {
+                mouse: { targetX: 0.5, targetY: 0.5, currentX: 0.5, currentY: 0.5 },
+                viewport: { w: window.innerWidth, h: window.innerHeight },
+                audioEnabled: false,
+                isTransitioning: false,
+                targetPortalCenter: null, // Para atraer partículas
+                prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            };
+
+            class AudioEngine {
+                constructor() {
+                    this.ctx = null;
+                    ['pointerdown', 'keydown'].forEach(e => window.addEventListener(e, () => {
+                        if (!this.ctx) {
+                            const AC = window.AudioContext || window.webkitAudioContext;
+                            if (AC) { this.ctx = new AC(); State.audioEnabled = true; }
+                        }
+                    }, { once: true, passive: true }));
+                }
+                playTone(t, s, e, d, v) {
+                    if (!State.audioEnabled || !this.ctx) return;
+                    try {
+                        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+                        o.type = t; o.frequency.setValueAtTime(s, this.ctx.currentTime);
+                        o.frequency.exponentialRampToValueAtTime(e, this.ctx.currentTime + d);
+                        g.gain.setValueAtTime(0, this.ctx.currentTime);
+                        g.gain.linearRampToValueAtTime(v, this.ctx.currentTime + (d * 0.2));
+                        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + d);
+                        o.connect(g); g.connect(this.ctx.destination);
+                        o.start(); o.stop(this.ctx.currentTime + d);
+                    } catch(_) {}
+                }
+                sfxHover() { this.playTone('sine', 650, 1100, 0.1, 0.03); }
+                sfxSelect() { this.playTone('triangle', 320, 60, 0.2, 0.08); }
+                sfxEnter() { this.playTone('sine', 150, 450, 1.2, 0.1); } // Sonido profundo de portal
+            }
+
+            class ParticleEngine {
+                constructor() {
+                    this.cBg = document.getElementById('ctx-background');
+                    this.cFg = document.getElementById('ctx-foreground');
+                    if(!this.cBg || !this.cFg) return;
+                    this.ctxBg = this.cBg.getContext('2d', { alpha: true });
+                    this.ctxFg = this.cFg.getContext('2d', { alpha: true });
+                    this.particles = [];
+                    this.currentColor = '255, 255, 255'; // Color neutro base
+                    this.resize();
+                    this.spawnParticles();
+                }
+                resize() {
+                    const d = window.devicePixelRatio || 1, w = State.viewport.w, h = State.viewport.h;
+                    this.cBg.width = w * d; this.cBg.height = h * d;
+                    this.cFg.width = w * d; this.cFg.height = h * d;
+                    this.cBg.style.width = `${w}px`; this.cBg.style.height = `${h}px`;
+                    this.cFg.style.width = `${w}px`; this.cFg.style.height = `${h}px`;
+                    this.ctxBg.scale(d, d); this.ctxFg.scale(d, d);
+                }
+                setColor(rgbString) { this.currentColor = rgbString; }
+                spawnParticles() {
+                    this.particles = [];
+                    const c = window.innerWidth < 768 ? 60 : 120;
+                    for(let i=0; i<c; i++) {
+                        this.particles.push({
+                            x: Math.random() * State.viewport.w, y: Math.random() * State.viewport.h,
+                            size: Math.random() * 2 + 0.5, speed: Math.random() * 0.8 + 0.2,
+                            isFg: Math.random() > 0.65, opacity: Math.random() * 0.6 + 0.2,
+                            angle: Math.random() * Math.PI * 2, wobbleSpd: Math.random() * 0.02 + 0.01, wobbleDist: Math.random() * 1.5 + 0.5
+                        });
+                    }
+                }
+                render() {
+                    this.ctxBg.clearRect(0, 0, State.viewport.w, State.viewport.h);
+                    this.ctxFg.clearRect(0, 0, State.viewport.w, State.viewport.h);
+                    
+                    const wind = (State.mouse.currentX - 0.5) * 6;
+                    
+                    this.particles.forEach(p => {
+                        // Lógica de atracción durante transición
+                        if (State.isTransitioning && State.targetPortalCenter) {
+                            const dx = State.targetPortalCenter.x - p.x;
+                            const dy = State.targetPortalCenter.y - p.y;
+                            p.x += dx * 0.03 * (p.isFg ? 1.5 : 0.8);
+                            p.y += dy * 0.03 * (p.isFg ? 1.5 : 0.8);
+                            p.speed *= 1.05; // Aceleran hacia el centro
+                        } else {
+                            p.y -= p.speed * 0.4;
+                            p.x += Math.sin(p.angle) * p.wobbleDist + wind * (p.isFg ? 1 : 0.3);
+                        }
+                        
+                        p.angle += p.wobbleSpd;
+                        if (p.y < -20) p.y = State.viewport.h + 20;
+                        if (p.x < -20) p.x = State.viewport.w + 20;
+                        if (p.x > State.viewport.w + 20) p.x = -20;
+                        
+                        const ctx = p.isFg ? this.ctxFg : this.ctxBg;
+                        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.shadowBlur = p.isFg ? 14 : 6;
+                        ctx.shadowColor = `rgba(${this.currentColor}, 0.9)`;
+                        ctx.fillStyle = p.isFg ? `rgba(255, 255, 255, ${p.opacity})` : `rgba(${this.currentColor}, ${p.opacity * 0.7})`;
+                        ctx.fill();
+                    });
+                }
+            }
+
+            class VideoProcessor {
+                constructor(videoId, canvasId) {
+                    this.video = document.getElementById(videoId);
+                    this.canvas = document.getElementById(canvasId);
+                    
+                    if (!this.video || !this.canvas) {
+                        console.error(`VideoProcessor: Elementos no encontrados para ${videoId} o ${canvasId}`);
+                        return;
+                    }
+                    
+                    this.ctx = this.canvas.getContext('2d', { willReadFrequently: true }); // Optimizado para leer pixeles
+                    this.isPlaying = false;
+
+                    // Ajustar tamaño del canvas cuando el video cargue metadatos
+                    this.video.addEventListener('loadedmetadata', () => {
+                        // Limitamos la resolución para rendimiento. Si el video es muy grande, pesará mucho procesarlo.
+                        const maxW = 512;
+                        const ratio = this.video.videoWidth / this.video.videoHeight;
+                        this.canvas.width = Math.min(this.video.videoWidth, maxW);
+                        this.canvas.height = this.canvas.width / ratio;
+                    });
+
+                    this.video.addEventListener('play', () => {
+                        this.isPlaying = true;
+                        this.processFrame();
+                    });
+
+                    this.video.addEventListener('pause', () => this.isPlaying = false);
+                    this.video.addEventListener('ended', () => this.isPlaying = false);
+                }
+
+                processFrame() {
+                    if (!this.isPlaying || this.video.paused || this.video.ended) {
+                        return;
+                    }
+
+                    // 1. Dibujar el frame actual del video en el canvas
+                    this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+
+                    // 2. Extraer los píxeles (pesado para la CPU)
+                    const frameData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+                    const l = frameData.data.length / 4;
+
+                    // 3. Evaluar cada píxel (Chroma Key Básico)
+                    // NOTA: Esta es una configuración DEMO para intentar quitar colores muy claros (grises/blancos)
+                    // Si usas un video con fondo negro puro (rgb 0,0,0): if (r < 20 && g < 20 && b < 20)
+                    // Si usas fondo verde puro (rgb 0,255,0): if (g > 150 && r < 100 && b < 100)
+                    
+                    for (let i = 0; i < l; i++) {
+                        let r = frameData.data[i * 4 + 0];
+                        let g = frameData.data[i * 4 + 1];
+                        let b = frameData.data[i * 4 + 2];
+                        
+                        // --- CONFIGURACIÓN PARA FONDO CLARO / CUADRICULADO (Aproximación) ---
+                        // Intenta borrar píxeles que son predominantemente grises claros o blancos.
+                        // Esto NO será perfecto en los bordes. Recomiendo fuertemente renderizar 
+                        // tus MP4 con fondo negro (#000000) o verde sólido (#00FF00).
+                        if (r > 190 && g > 190 && b > 190) {
+                             // Si es muy claro/gris, hacerlo transparente
+                            frameData.data[i * 4 + 3] = 0; 
+                        } else if (r > 150 && g > 150 && b > 150) {
+                             // Si es medio claro, hacerlo semi-transparente para suavizar bordes
+                            frameData.data[i * 4 + 3] = 100;
+                        }
+                    }
+
+                    // 4. Volver a pintar los píxeles modificados en el canvas
+                    this.ctx.putImageData(frameData, 0, 0);
+
+                    // 5. Solicitar el siguiente frame
+                    requestAnimationFrame(() => this.processFrame());
+                }
+                
+                play() {
+                    this.video.play().catch(e => console.warn("Autoplay prevenido", e));
+                }
+            }
+
+            class ApplicationCore {
+                constructor() {
+                    this.audio = new AudioEngine();
+                    this.particles = new ParticleEngine();
+                    this.videoProcessors = [];
+                    this.cacheDOM();
+                    this.checkBrowser();
+                    this.initVideoProcessing();
+                    this.bindEvents();
+                    this.initLoader();
+                    this.lastTime = performance.now();
+                    this.lastTappedId = null; // Touch control
+                    requestAnimationFrame((t) => this.loop(t));
+                }
+                cacheDOM() {
+                    this.root = document.documentElement;
+                    this.body = document.body;
+                    this.sceneRoot = document.getElementById('scene-root');
+                    this.portalsGroup = document.getElementById('portals-container');
+                    this.portals = document.querySelectorAll('.portal-item');
+                    // Ya no usamos .media-video directamente para animaciones, ahora usamos .media-canvas o .portal-item en CSS
+                    this.sourceVideos = document.querySelectorAll('.media-video-source');
+                    this.cursor = document.getElementById('ring-cursor');
+                    this.layers = {
+                        bg: document.getElementById('layer-bg'), stage: document.getElementById('layer-stage'),
+                        actor: document.getElementById('layer-actor'), fg: document.getElementById('layer-fg')
+                    };
+                }
+                checkBrowser() {
+                    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                    document.getElementById('compatText').innerText = "Motor ChromaKey Activo (Canvas)";
+                }
+                
+                initVideoProcessing() {
+                     // Inicializar el procesador de video para el león
+                     this.videoProcessors.push(new VideoProcessor('vid-source-streamers', 'vid-canvas-streamers'));
+                }
+
+                bindEvents() {
+                    // Mouse Parallax & Cursor
+                    window.addEventListener('pointermove', (e) => {
+                        State.mouse.targetX = e.clientX / State.viewport.w;
+                        State.mouse.targetY = e.clientY / State.viewport.h;
+                        this.root.style.setProperty('--pointer-x', `${e.clientX}px`);
+                        this.root.style.setProperty('--pointer-y', `${e.clientY}px`);
+                        if (this.cursor) { this.cursor.style.left = `${e.clientX}px`; this.cursor.style.top = `${e.clientY}px`; }
+                    }, { passive: true });
+
+                    // Portals Interaction
+                    this.portals.forEach(portal => {
+                        const id = portal.getAttribute('data-id');
+                        const rgb = AppConfig.portals[id].colorRGB;
+
+                        const handleFocus = () => {
+                            if(State.isTransitioning) return;
+                            this.audio.sfxHover();
+                            this.cursor.classList.add('is-hovering');
+                            this.root.style.setProperty('--ambient-color', rgb);
+                            this.particles.setColor(rgb);
+                            portal.classList.add('is-hovered');
+                        };
+
+                        const handleBlur = () => {
+                            this.cursor.classList.remove('is-hovering');
+                            portal.classList.remove('is-hovered');
+                            // Retornar al color neutro/púrpura por defecto
+                            this.root.style.setProperty('--ambient-color', '124, 58, 237');
+                            this.particles.setColor('255, 255, 255');
+                        };
+
+                        portal.addEventListener('mouseenter', handleFocus);
+                        portal.addEventListener('mouseleave', handleBlur);
+                        portal.addEventListener('focus', handleFocus);
+                        portal.addEventListener('blur', handleBlur);
+
+                        portal.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            if (State.isTransitioning) return;
+
+                            // Lógica para dispositivos táctiles (1 tap ver info, 2 tap entrar)
+                            if (window.matchMedia('(hover: none)').matches) {
+                                if (this.lastTappedId !== id) {
+                                    this.portals.forEach(p => p.classList.remove('is-hovered'));
+                                    this.lastTappedId = id;
+                                    handleFocus(); // Simula hover
+                                    this.audio.sfxSelect();
+                                    return; // Cancela el click para requerir segundo tap
+                                }
+                            }
+                            
+                            this.executeTransition(portal, id);
+                        });
+                    });
+                }
+                
+                executeTransition(selectedPortal, id) {
+                    State.isTransitioning = true;
+                    this.audio.sfxEnter();
+                    this.cursor.classList.replace('is-hovering', 'is-selecting');
+                    
+                    // Bloquear contenedor
+                    this.portalsGroup.classList.add('is-transitioning');
+                    
+                    // Obtener centro del portal para atraer partículas
+                    const rect = selectedPortal.getBoundingClientRect();
+                    State.targetPortalCenter = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+
+                    // Aplicar estados
+                    this.portals.forEach(p => {
+                        if (p === selectedPortal) p.classList.add('is-selected');
+                    });
+
+                    // Zoom Parallax global
+                    if(!State.prefersReducedMotion) {
+                        this.root.style.setProperty('--scene-scale', '1.15');
+                        this.root.style.setProperty('--scene-z', '100px');
+                    }
+
+                    // Navegación post-transición (1200ms = 1.2s Cinematic)
+                    setTimeout(() => {
+                        if (currentMode === 'B') {
+                           // MODO PANEL FLOTANTE
+                           document.getElementById('demo-panel').style.right = '0';
+                        } else {
+                           // MODO FULLSCREEN
+                           document.getElementById('demo-full').style.opacity = '1';
+                           document.getElementById('demo-full').style.pointerEvents = 'all';
+                        }
+                    }, 600);
+                }
+
+                resetTransition() {
+                    State.isTransitioning = false;
+                    State.targetPortalCenter = null;
+                    this.lastTappedId = null;
+                    this.portalsGroup.classList.remove('is-transitioning');
+                    this.portals.forEach(p => { p.classList.remove('is-selected', 'is-hovered'); });
+                    this.cursor.classList.remove('is-selecting');
+                    this.root.style.setProperty('--scene-scale', '1');
+                    this.root.style.setProperty('--scene-z', '0px');
+                }
+
+                initLoader() {
+                    setTimeout(() => {
+                        document.getElementById('loader-overlay').classList.add('is-hidden');
+                        this.body.classList.add('app-ready');
+                        
+                        
+            // DEMO LOGIC
+            let currentMode = 'B'; // Default to floating
+            document.getElementById('btn-mode-b').onclick = () => {
+                currentMode = 'B';
+                alert("Modo cambiado a Opción B. ¡Haz clic en el portal León Star para verlo!");
+            };
+            document.getElementById('btn-mode-a').onclick = () => {
+                currentMode = 'A';
+                alert("Modo cambiado a Opción A. ¡Haz clic en el portal León Star para verlo!");
+            };
+            document.getElementById('btn-close-demo').onclick = () => {
+                document.getElementById('demo-panel').style.right = '-100%';
+                window.AppCore.resetTransition();
+            };
+            document.getElementById('btn-close-full').onclick = () => {
+                document.getElementById('demo-full').style.opacity = '0';
+                document.getElementById('demo-full').style.pointerEvents = 'none';
+                window.AppCore.resetTransition();
+            };
+
+                        // Iniciar reproducción a través del procesador
+                        this.videoProcessors.forEach(vp => vp.play());
+                        // Fallback por si los procesadores fallan, intentar forzar los videos fuente
+                        this.sourceVideos.forEach(vid => { vid.play().catch(() => {}); });
+                        
+                    }, 1200); // Un poco más de tiempo para asegurar que el canvas procese el primer frame
+                }
+
+                loop(time) {
+                    this.lastTime = time;
+                    if(!State.isTransitioning && !State.prefersReducedMotion) {
+                        State.mouse.currentX += (State.mouse.targetX - State.mouse.currentX) * 0.05;
+                        State.mouse.currentY += (State.mouse.targetY - State.mouse.currentY) * 0.05;
+                        const dx = (State.mouse.currentX - 0.5) * 2, dy = (State.mouse.currentY - 0.5) * 2;
+                        
+                        this.root.style.setProperty('--shadow-offset-x', `${-dx * 60}px`);
+                        this.root.style.setProperty('--shadow-offset-y', `${30 - (dy * 40)}px`);
+                        
+                        const p = AppConfig.parallax;
+                        this.layers.bg.style.transform = `translate(calc(-50% + ${dx * p.bg}px), calc(-50% + ${dy * p.bg}px))`;
+                        this.layers.stage.style.transform = `translate(calc(-50% + ${dx * p.stage}px), calc(-50% + ${dy * p.stage}px))`;
+                        this.layers.actor.style.transform = `translate(calc(-50% + ${dx * p.actor}px), calc(-50% + ${dy * p.actor}px))`;
+                        this.layers.fg.style.transform = `translate(calc(-50% + ${dx * p.fg}px), calc(-50% + ${dy * p.fg}px))`;
+                    }
+                    this.particles.render();
+                    requestAnimationFrame((t) => this.loop(t));
+                }
+            }
+
+            window.addEventListener('DOMContentLoaded', () => { window.AppCore = new ApplicationCore(); });
+        })();
+    </script>
+</body>
+</html>
