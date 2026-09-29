@@ -779,12 +779,12 @@
         
         <form id="form-auth-login">
           <div class="admin-field">
-            <label>Correo Electrónico:</label>
-            <input type="email" class="admin-input" id="auth-email" value="sosbamban@gmail.com" required autocomplete="username" />
+            <label>Usuario:</label>
+            <input type="text" class="admin-input" id="auth-email" value="" placeholder="Usuario" required autocomplete="username" />
           </div>
           <div class="admin-field">
             <label>Contraseña:</label>
-            <input type="password" class="admin-input" id="auth-password" value="Starmaker2026!" required autocomplete="current-password" />
+            <input type="password" class="admin-input" id="auth-password" value="" placeholder="Contraseña" required autocomplete="current-password" />
           </div>
           <p id="auth-error-msg" style="color:var(--pink);font-size:12px;margin-bottom:12px;display:none;"></p>
           <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
@@ -1096,10 +1096,16 @@
     const loginView = document.getElementById("admin-login-view");
     const panelView = document.getElementById("admin-panel-view");
 
+    let isHardcodedAuthenticated = false;
     function openAdmin() {
       modal.classList.add("is-open");
-      if(loginView) loginView.style.display = "none";
-      panelView.style.display = "block";
+      if (!isHardcodedAuthenticated) {
+        if(loginView) loginView.style.display = "block";
+        panelView.style.display = "none";
+      } else {
+        if(loginView) loginView.style.display = "none";
+        panelView.style.display = "block";
+      }
     }
 
     openBtn.onclick = openAdmin;
@@ -1117,12 +1123,14 @@
       const em = document.getElementById("auth-email").value.trim();
       const pw = document.getElementById("auth-password").value;
 
-      try {
-        await signInWithEmailAndPassword(auth, em, pw);
+      if (em === "SANTIstp" && pw === "Namekusein123") {
+        isHardcodedAuthenticated = true;
         loginView.style.display = "none";
         panelView.style.display = "block";
-      } catch (err) {
-        authError.textContent = "Error de acceso: " + err.message;
+        document.getElementById("auth-email").value = "";
+        document.getElementById("auth-password").value = "";
+      } else {
+        authError.textContent = "Usuario o contraseña incorrectos.";
         authError.style.display = "block";
       }
     };
