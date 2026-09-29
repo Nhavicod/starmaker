@@ -1455,7 +1455,7 @@
           const oldLabel = input.parentElement.innerHTML;
           input.parentElement.innerHTML = "⏳ SUBIENDO...";
           try {
-            const url = await uploadToCatbox(file);
+            const url = await uploadToGoFile(file);
             const key = 'tut' + (index + 1); // e.g. tut1, tut2, tut3
             await setDoc(stateDocRef, { [key]: url }, { merge: true });
             alert("Tutorial " + (index+1) + " subido con éxito!");
@@ -1497,18 +1497,27 @@
       });
     }
     
-    // Función genérica para subir a Catbox
-    async function uploadToCatbox(file) {
+    // Función genérica para subir a GoFile (Directo desde el navegador, sin problemas de CORS)
+    async function uploadToGoFile(file) {
+      const srvRes = await fetch("https://api.gofile.io/servers");
+      const srvData = await srvRes.json();
+      const server = srvData.data.servers[0].name;
+
       const formData = new FormData();
-      formData.append("reqtype", "fileupload");
-      formData.append("fileToUpload", file);
-      
-      const res = await fetch("https://catbox.moe/user/api.php", {
+      formData.append("file", file);
+      formData.append("token", "LBRXKRTeYjMsKssLNP2ndcCb6SUi3rBP");
+
+      const res = await fetch(`https://${server}.gofile.io/contents/uploadfile`, {
         method: "POST",
         body: formData
       });
-      if(!res.ok) throw new Error("Error subiendo a Catbox");
-      return await res.text();
+      
+      const uploadData = await res.json();
+      if (uploadData.status !== "ok") throw new Error("Error al subir a GoFile");
+      
+      // GoFile devuelve un downloadPage. Intentamos extraer el link directo si la API lo provee, 
+      // de lo contrario usamos la página de descarga.
+      return uploadData.data.downloadPage;
     }
 
     if (uploadPngInput) {
@@ -1520,7 +1529,7 @@
         uploadPngInput.parentElement.innerHTML = "⏳ SUBIENDO...";
         
         try {
-          const url = await uploadToCatbox(file);
+          const url = await uploadToGoFile(file);
           await setDoc(stateDocRef, { bg1: url, bg2: url }, { merge: true });
           alert("¡Fondo PNG actualizado con éxito!");
         } catch(err) {
@@ -1540,7 +1549,7 @@
         uploadVideoInput.parentElement.innerHTML = "⏳ SUBIENDO...";
         
         try {
-          const url = await uploadToCatbox(file);
+          const url = await uploadToGoFile(file);
           await setDoc(stateDocRef, { videoUrl: url }, { merge: true });
           alert("¡Video Holográfico actualizado con éxito!");
         } catch(err) {
