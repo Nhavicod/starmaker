@@ -7,7 +7,6 @@ export default async function uploadHandler(request, response) {
     const jsonResponse = await handleUpload({
       body,
       request,
-      token: "vercel_blob_rw_SaCRzKTMMfc9Kbi3_eBlfez5Rm47N6eeyJ3joT2aqTftG6N",
       onBeforeGenerateToken: async (pathname) => {
         return {
           allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm', 'video/quicktime'],
