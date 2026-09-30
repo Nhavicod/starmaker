@@ -897,6 +897,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     import { initializeApp } from "firebase/app";
     import { getFirestore, doc, onSnapshot, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+    import { upload } from "@vercel/blob/client";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC3iwfeStY1ANVcGIsH8rJD-8rJ5n_p_fE",
@@ -1455,7 +1456,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         if(!file) return;
         regVideoInput.parentElement.innerHTML = "⏳ SUBIENDO...";
         try {
-          const url = await uploadToGoFile(file);
+          const url = await uploadToBlob(file);
           await setDoc(stateDocRef, { registroVideo: url }, { merge: true });
           alert("¡Video de Registro actualizado con éxito!");
         } catch(err) {
@@ -1526,6 +1527,15 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     }
     
     // Función genérica para subir a GoFile (Directo desde el navegador, sin problemas de CORS)
+    
+    async function uploadToBlob(file) {
+      const newBlob = await upload(file.name, file, {
+        access: 'public',
+        handleUploadUrl: '/api/upload',
+      });
+      return newBlob.url;
+    }
+
     async function uploadToGoFile(file) {
       const srvRes = await fetch("https://api.gofile.io/servers");
       const srvData = await srvRes.json();
@@ -1557,7 +1567,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         uploadPngInput.parentElement.innerHTML = "⏳ SUBIENDO...";
         
         try {
-          const url = await uploadToGoFile(file);
+          const url = await uploadToBlob(file);
           await setDoc(stateDocRef, { bg1: url, bg2: url }, { merge: true });
           alert("¡Fondo PNG actualizado con éxito!");
         } catch(err) {
@@ -1577,7 +1587,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         uploadVideoInput.parentElement.innerHTML = "⏳ SUBIENDO...";
         
         try {
-          const url = await uploadToGoFile(file);
+          const url = await uploadToBlob(file);
           await setDoc(stateDocRef, { videoUrl: url }, { merge: true });
           alert("¡Video Holográfico actualizado con éxito!");
         } catch(err) {

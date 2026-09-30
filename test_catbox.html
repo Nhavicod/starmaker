@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <input type="file" id="f">
+  <button id="b">Upload</button>
+  <script>
+    document.getElementById('b').onclick = async () => {
+      const formData = new FormData();
+      formData.append("reqtype", "fileupload");
+      formData.append("fileToUpload", document.getElementById('f').files[0]);
+      try {
+        const res = await fetch("https://catbox.moe/user/api.php", { method: "POST", body: formData });
+        console.log(await res.text());
+      } catch(e) {
+        console.error(e);
+      }
+    };
+  </script>
+</body>
+</html>

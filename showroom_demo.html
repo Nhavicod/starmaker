@@ -1,889 +1,1670 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Mascot Showroom - AAA Experience (Single Portal)">
-    <title>Mascot Showroom | StarMaker</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            /* Paleta StarMaker Base */
-            --bg-base: #06050b;
-            --text-main: #F5F3FF;
-            
-            --pointer-x: 50vw;
-            --pointer-y: 50vh;
-            --shadow-offset-x: 0px;
-            --shadow-offset-y: 30px;
-            
-            --glass-bg: rgba(14, 11, 22, 0.55);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-blur: 24px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="STARMAKER — experiencia digital espacial, holográfica y premium." />
+  <meta name="theme-color" content="#050507" />
+  <title>STARMAKER — Universo Digital</title>
+  <style>
 
-            /* Escala Global */
-            --scene-scale: 1;
-            --scene-z: 0px;
-            --ambient-color: 124, 58, 237; /* Default purple ambient */
+    /* MODO EDITOR VISUAL */
+    .editor-active [contenteditable="true"] {
+      outline: 2px dashed var(--cyan) !important;
+      outline-offset: 4px;
+      cursor: text;
+      transition: outline 0.2s;
+    }
+    .editor-active [contenteditable="true"]:hover {
+      outline: 2px solid var(--coral) !important;
+      background: rgba(230, 67, 129, 0.1);
+    }
+    #visual-editor-toolbar {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.9);
+      border: 2px solid var(--cyan);
+      padding: 10px 20px;
+      border-radius: 30px;
+      z-index: 999999;
+      gap: 10px;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
 
-            /* --- PANEL DE CONTROL FÁCIL --- */
-            --ancho-portal: 28vw; /* Cambia esto para hacer el portal más ancho/angosto */
-            --max-ancho-portal: 400px; /* Límite máximo de crecimiento */
-            --escala-video: 1.2; /* Aumentado por defecto para llenar mejor el canvas */
-            --escala-global-movil: 0.85; /* Ajustado para que el personaje único se vea grande en celular */
-        }
+    :root{
+      /* Reglas exactas de la paleta espacial STARMAKER */
+      --coral-suave: #F18D79;       /* Superior derecha */
+      --rosa-intenso: #EB5279;      /* Superior izquierda */
+      --rosa-fucsia: #E64381;       /* Centro inferior */
+      --magenta-violeta: #AD3E98;   /* Transición inferior */
+      --violeta: #743F9B;           /* Inferior */
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+      --coral: var(--coral-suave);
+      --pink: var(--rosa-intenso);
+      --fuchsia: var(--rosa-fucsia);
+      --magenta: var(--magenta-violeta);
+      --violet: var(--violeta);
+
+      --black-1:#050507;
+      --black-2:#08080B;
+      --surface:rgba(16,14,22,.66);
+      --surface-strong:rgba(20,17,28,.88);
+      --line:rgba(255,255,255,.11);
+      --line-bright:rgba(255,255,255,.18);
+      --text:#fff9fb;
+      --muted:#b9b0ba;
+      --dim:#77707d;
+      --shadow:0 28px 80px rgba(0,0,0,.52);
+      --radius:26px;
+      --ease:cubic-bezier(.2,.8,.2,1);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;background:var(--black-1)}
+    body{
+      min-height:100vh;
+      overflow-x:hidden;
+      color:var(--text);
+      background:
+        /* Coral suave · Superior derecha */
+        radial-gradient(900px 700px at 85% 10%, rgba(241, 141, 121, .22), transparent 70%),
+        /* Rosa intenso · Superior izquierda */
+        radial-gradient(850px 650px at 15% 15%, rgba(235, 82, 121, .22), transparent 70%),
+        /* Rosa fucsia · Centro inferior */
+        radial-gradient(800px 600px at 50% 65%, rgba(230, 67, 129, .20), transparent 70%),
+        /* Magenta violeta · Transición inferior */
+        radial-gradient(900px 600px at 50% 85%, rgba(173, 62, 152, .22), transparent 70%),
+        /* Violeta · Inferior */
+        radial-gradient(1000px 700px at 50% 100%, rgba(116, 63, 155, .25), transparent 70%),
+        linear-gradient(180deg, var(--black-1), var(--black-2) 60%, #060609);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:50;
+      opacity:.035;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+    }
+
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    ::selection{background:rgba(230,67,129,.38);color:#fff}
+    :focus-visible{outline:2px solid var(--coral);outline-offset:4px}
+
+    .stars,.stars::before,.stars::after{
+      position:fixed;inset:0;content:"";pointer-events:none;z-index:0;
+      background-image:
+        radial-gradient(circle at 10% 20%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 70% 12%,rgba(255,255,255,.45) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 42% 66%,rgba(255,255,255,.38) 0 1px,transparent 1.5px),
+        radial-gradient(circle at 88% 72%,rgba(255,255,255,.35) 0 1px,transparent 1.5px);
+      background-size:260px 240px,340px 310px,410px 370px,520px 460px;
+    }
+    .stars::before{opacity:.45;transform:scale(1.2)}
+    .stars::after{opacity:.3;filter:blur(1px);transform:scale(.9)}
+
+    .orb{
+      position:fixed;border-radius:50%;pointer-events:none;filter:blur(70px);opacity:.2;z-index:0;
+      animation:float 12s ease-in-out infinite;
+    }
+    .orb.one{width:340px;height:340px;background:var(--fuchsia);top:12%;left:-180px}
+    .orb.two{width:300px;height:300px;background:var(--violet);right:-130px;top:48%;animation-delay:-5s}
+    @keyframes float{50%{transform:translate3d(30px,-25px,0) scale(1.08)}}
+
+    .shell{position:relative;z-index:1}
         
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            -webkit-font-smoothing: antialiased;
-            cursor: none;
-        }
 
-        body::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            opacity: 0.04;
-            pointer-events: none;
-            z-index: 999;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
+    .brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.18em}
+    .brand-mark{
+      width:31px;height:31px;border-radius:10px;position:relative;
+      background:linear-gradient(135deg,var(--coral),var(--fuchsia) 50%,var(--violet));
+      box-shadow:0 0 28px rgba(230,67,129,.4);
+    }
+    .brand-mark::after{content:"✦";position:absolute;inset:0;display:grid;place-items:center;font-size:15px;color:white}
+    .nav-links{display:flex;gap:28px;color:#aaa2ad;font-size:13px}
+    .nav-links a{transition:.25s}
+    .nav-links a:hover{color:#fff}
+    
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .nav-cta{
+      padding:11px 17px;border:1px solid rgba(255,255,255,.14);border-radius:13px;
+      background:rgba(255,255,255,.05);font-size:11px;font-weight:700;cursor:pointer;transition:.25s;
+    }
+    .nav-cta:hover{background:rgba(255,255,255,.12)}
+    .nav-admin-btn{
+      padding:11px 17px;border:1px solid rgba(230,67,129,.4);border-radius:13px;
+      background:rgba(230,67,129,.15);color:var(--coral);font-size:11px;font-weight:800;cursor:pointer;transition:.25s;
+    }
+    .nav-admin-btn:hover{background:var(--fuchsia);color:#fff;box-shadow:0 0 25px rgba(230,67,129,.45)}
 
-        #scene-root {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            visibility: hidden;
-            transform: scale(var(--scene-scale)) translateZ(var(--scene-z));
-            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-            transform-style: preserve-3d;
-            perspective: 1200px;
-        }
+    .hero{
+      min-height:100svh;display:grid;place-items:center;
+      padding:150px 24px 90px;overflow:hidden;
+    }
+    .hero-inner{width:min(1180px,100%);display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid var(--line);
+      background:rgba(255,255,255,.035);border-radius:999px;color:#d7cfd8;font-size:11px;
+      text-transform:uppercase;letter-spacing:.16em;font-weight:800;margin-bottom:24px;
+    }
+    .pulse{width:7px;height:7px;border-radius:50%;background:var(--coral);box-shadow:0 0 14px var(--coral)}
+    h1{
+      font-size:clamp(58px,8vw,112px);line-height:.87;letter-spacing:-.075em;
+      font-weight:900;max-width:800px;
+    }
+    .gradient-text{
+      background:linear-gradient(110deg,#fff 10%,var(--coral) 45%,var(--fuchsia) 68%,#a77be0 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .hero-copy{max-width:600px;margin-top:28px;color:var(--muted);font-size:18px;line-height:1.7}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
+    .btn{
+      border:0;cursor:pointer;border-radius:14px;padding:15px 21px;font-weight:800;font-size:14px;
+      transition:transform .25s var(--ease),box-shadow .25s,border-color .25s;display:inline-flex;align-items:center;
+    }
+    .btn:hover{transform:translateY(-3px)}
+    .btn-primary{
+      color:white;background:linear-gradient(120deg,var(--pink),var(--fuchsia),var(--violet));
+      box-shadow:0 14px 40px rgba(230,67,129,.25);
+    }
+    .btn-secondary{color:#eee;background:rgba(255,255,255,.055);border:1px solid var(--line-bright)}
 
-        .depth-layer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            will-change: transform;
-            transform-style: preserve-3d;
-        }
+    .hero-stage{position:relative;min-height:500px;display:grid;place-items:center}
+    
+    .slideshow-container {
+      width: min(390px, 72vw);
+      aspect-ratio: 1;
+      position: relative;
+      overflow: visible;
+    }
+    .slide {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background-size: contain; background-repeat: no-repeat; background-position: center;
+      opacity: 0; transition: opacity 2s ease-in-out;
+    }
+    .slide-1 {
+      background-image: url('/bg1.png');
+      animation: kenburns 14s infinite ease-in-out, fade1 14s infinite;
+    }
+    .slide-2 {
+      background-image: url('/bg2.png');
+      animation: kenburns 14s infinite ease-in-out reverse, fade2 14s infinite;
+    }
+    .particles {
+      position: absolute; top: 0; left: 0; width: 200%; height: 200%;
+      background-image: radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px);
+      background-size: 25px 25px; opacity: 0.3;
+      animation: moveParticles 30s linear infinite; pointer-events: none; z-index: 5;
+    }
+    @keyframes fade1 {
+      0%, 40% { opacity: 1; }
+      50%, 90% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes fade2 {
+      0%, 40% { opacity: 0; }
+      50%, 90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes kenburns {
+      0% { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.15) translate(2%, 2%); }
+    }
+    @keyframes moveParticles {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-10%, -10%) scale(1.1); }
+    }
 
-        canvas {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-        }
+    .float-card{
+      position:absolute;border:1px solid rgba(255,255,255,.13);background:rgba(15,12,20,.66);
+      backdrop-filter:blur(18px);border-radius:18px;padding:15px 17px;box-shadow:var(--shadow);
+      animation:floatCard 6s ease-in-out infinite; z-index: 20;
+    }
+    .float-card.small{right:4%;top:16%}.float-card.tiny{left:4%;bottom:18%;animation-delay:-3s}
+    .fc-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#8f8692}
+    .fc-value{font-weight:800;font-size:15px;margin-top:5px}
+    @keyframes floatCard{50%{transform:translateY(-10px)}}
 
-        /* --- STAGE MODIFICADO --- */
-        .stage-container {
-            position: relative;
-            width: 90vw;
-            max-width: 1200px;
-            height: 60vh;
-            transform: translateY(22vh) rotateX(75deg);
-            transform-style: preserve-3d;
-        }
 
-        .stage-surface {
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(20, 10, 30, 0.6) 0%, rgba(5, 5, 10, 0.8) 100%);
-            backdrop-filter: blur(var(--glass-blur));
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 
-                inset 0 0 80px rgba(var(--ambient-color), 0.3),
-                var(--shadow-offset-x) var(--shadow-offset-y) 80px -10px rgba(0,0,0,0.9),
-                0 0 150px rgba(var(--ambient-color), 0.2);
-            transition: box-shadow 0.8s ease, border-color 0.8s ease;
-        }
+    section{padding:105px 24px}
+    .section-inner{width:min(1180px,100%);margin:auto}
+    .section-head{display:flex;justify-content:space-between;gap:30px;align-items:flex-end;margin-bottom:34px}
+    .kicker{color:var(--coral);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    h2{font-size:clamp(35px,5vw,60px);letter-spacing:-.055em;line-height:.95;margin-top:10px}
+    .section-desc{max-width:450px;color:var(--muted);line-height:1.65;font-size:14px}
 
-        .stage-orbit {
-            position: absolute;
-            inset: -5%;
-            border-radius: 50%;
-            border: 1px solid rgba(var(--ambient-color), 0.4);
-            opacity: 0.5;
-            transform: translateZ(-20px);
-            transition: border-color 0.8s ease;
-            box-shadow: inset 0 0 30px rgba(var(--ambient-color), 0.1);
-        }
-        .stage-orbit.outer { 
-            inset: -12%; 
-            opacity: 0.2; 
-            transform: translateZ(-45px); 
-            border: 1px dashed rgba(var(--ambient-color), 0.5);
-        }
+    .cards{display:grid;grid-template-columns:repeat(3, minmax(0, 230px));justify-content:center;gap:24px}
+    .card{
+      --rx:0deg;--ry:0deg;
+      position:relative;min-height:370px;overflow:hidden;border:1px solid var(--line);
+      border-radius:var(--radius);background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+      transform:perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
+      transition:transform .16s ease,border-color .3s,box-shadow .3s;
+      box-shadow:0 18px 55px rgba(0,0,0,.25);
+      isolation:isolate;
+    }
+    .card:hover{border-color:rgba(235,82,121,.38);box-shadow:0 28px 75px rgba(0,0,0,.48),0 0 45px rgba(230,67,129,.08)}
+    .card::before{
+      content:"";position:absolute;inset:0;background:
+        radial-gradient(500px 250px at 50% 10%,rgba(230,67,129,.15),transparent 60%),
+        linear-gradient(180deg,transparent 35%,rgba(3,3,5,.9) 90%);
+      z-index:1;pointer-events:none;
+    }
+    .card-art{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden}
+    
+    .card-content{position:absolute;z-index:2;left:15px;right:15px;bottom:20px}
+    .card-index{font-size:10px;color:#9e94a1;letter-spacing:.16em;margin-bottom:10px}
+    .card h3{font-size:22px;letter-spacing:-.045em}
+    .card p{font-size:11px;color:#b7aeb9;line-height:1.55;margin-top:8px}
+    .card-link{display:inline-flex;gap:8px;margin-top:17px;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#fff}
 
-        /* --- PORTAL ÚNICO --- */
-        .portals-group {
-            position: relative;
-            width: 100%;
-            max-width: 1400px;
-            height: 75vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform-style: preserve-3d;
-            pointer-events: auto;
-            margin-bottom: 5vh;
-        }
+    .activity{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+    .panel{
+      border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:var(--radius);
+      padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.2);backdrop-filter:blur(16px)
+    }
+    .feed{display:grid;gap:13px;margin-top:22px}
+    .feed-item{display:flex;gap:13px;align-items:center;padding:14px;border:1px solid rgba(255,255,255,.07);border-radius:15px;background:rgba(255,255,255,.025)}
+    .avatar{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--violet));font-weight:900}
+    .feed-main{flex:1}.feed-main strong{font-size:13px}.feed-main span{display:block;color:#827985;font-size:11px;margin-top:3px}
+    .status{font-size:10px;color:#b8e7ca;border:1px solid rgba(139,226,174,.18);padding:6px 8px;border-radius:999px;background:rgba(139,226,174,.05)}
 
-        .portal-item {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            width: var(--ancho-portal);
-            max-width: var(--max-ancho-portal);
-            height: 100%;
-            cursor: pointer;
-            outline: none;
-            transform-style: preserve-3d;
-            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: transform, filter, opacity;
-        }
+    .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
+    .stat{padding:20px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(0,0,0,.15)}
+    .stat strong{font-size:32px;letter-spacing:-.06em}.stat span{display:block;margin-top:5px;color:#8e8591;font-size:11px;text-transform:uppercase;letter-spacing:.1em}
 
-        /* Composición Cinematográfica del personaje central */
-        .portal-item.pos-center { transform: translateZ(20px) scale(1.1); z-index: 5; }
+    footer{padding:50px 24px 70px;border-top:1px solid rgba(255,255,255,.06)}
+    .footer-inner{width:min(1180px,100%);margin:auto;display:flex;justify-content:space-between;gap:20px;color:#716a75;font-size:12px}
+    .footer-brand{color:#bcb4bf;font-weight:800;letter-spacing:.12em}
 
-        /* Aura base del personaje */
-        .portal-aura {
-            position: absolute;
-            bottom: 5%;
-            width: 60%;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--portal-color);
-            filter: blur(35px);
-            opacity: 0.25;
-            transition: all 0.5s ease;
-            pointer-events: none;
-        }
+    /* MODAL ADMIN */
+    .admin-modal{
+      display:none;position:fixed;bottom:80px;right:20px;background:transparent;
+      z-index:1000;align-items:flex-end;justify-content:flex-end;pointer-events:none;
+    }
+    .admin-modal.is-open{display:flex}
+    .admin-box{
+      width:100%;min-width:320px;max-width:580px;max-height:80vh;overflow-y:auto;padding:26px;border-radius:22px;
+      border:1px solid var(--line-bright);background:rgba(18,15,26,.96);box-shadow: 0 20px 50px rgba(0,0,0,0.8); pointer-events:auto;
+    }
+    .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:12px}
+    .admin-close{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer}
+    .admin-field{margin-bottom:15px}
+    .admin-field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
+    .admin-input{width:100%;background:rgba(0,0,0,.5);border:1px solid var(--line);color:white;padding:10px 14px;border-radius:8px;font-size:14px}
+    .admin-input:focus{border-color:var(--coral);outline:none}
 
-        /* Ocultar el video original, mostraremos el canvas procesado */
-        .media-video-source {
-            display: none;
-        }
+    @media(max-width:900px){
+      .nav-links{display:none}
+      .hero-inner{grid-template-columns:1fr;text-align:center}
+      .hero-copy{margin-left:auto;margin-right:auto}
+      .actions{justify-content:center}
+      .hero-stage{min-height:390px}
+      .cards{grid-template-columns:repeat(2, minmax(0, 230px));justify-content:center}
+      .cards .card:last-child{grid-column:1/-1}
+      .activity{grid-template-columns:1fr}
+    }
+    @media(max-width:620px){
+      
+      .nav-cta,.nav-admin-btn{padding:8px 11px;font-size:11px}
+      .hero{padding:125px 18px 65px}
+      h1{font-size:clamp(51px,16vw,76px)}
+      .hero-copy{font-size:15px}
+      .hero-stage{min-height:320px}
+      .planet{width:260px}
+      .float-card{transform:scale(.85)}
+      section{padding:75px 18px}
+      .section-head{display:block}
+      .section-desc{margin-top:18px}
+      .cards{grid-template-columns:minmax(0, 230px);justify-content:center}
+      .cards .card:last-child{grid-column:auto}
+      .card{min-height:370px}
+      .panel{padding:20px}
+      .footer-inner{flex-direction:column}
+    }
+  
+    /* PERSONAJE HOLOGRÁFICO TRANSPARENTE (LEONSITO) */
+    .hero-stage {
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      isolation: isolate;
+    }
 
-        /* El canvas que muestra el video con fondo eliminado */
-        .media-canvas {
-            height: 100%;
-            width: 100%;
-            max-width: 100%;
-            object-fit: contain;
-            transform: scale(var(--escala-video));
-            filter: drop-shadow(0px 30px 40px rgba(0,0,0,0.8));
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none;
-            image-rendering: optimizeSpeed; /* Ayuda al rendimiento */
-        }
+    /* Pedestal holográfico de energía cósmica debajo del personaje */
+    .mascot-pedestal {
+      position: absolute;
+      bottom: 25px;
+      width: min(340px, 70vw);
+      height: 90px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(230, 67, 129, 0.45) 0%, rgba(116, 63, 155, 0.3) 40%, transparent 75%);
+      box-shadow: 0 0 50px rgba(230, 67, 129, 0.4), inset 0 0 30px rgba(241, 141, 121, 0.3);
+      border: 1px solid rgba(235, 82, 121, 0.3);
+      transform: rotateX(65deg);
+      pointer-events: none;
+      animation: pedestalPulse 4s ease-in-out infinite;
+      z-index: 1;
+    }
 
-        /* --- ESTADOS INTERACTIVOS (HOVER / FOCUS) --- */
-        .portal-item:hover, .portal-item:focus-visible, .portal-item.is-hovered {
-            z-index: 10;
-        }
-        
-        .portal-item.pos-center:hover, .portal-item.pos-center.is-hovered { transform: translateZ(120px) scale(1.18); }
+    @keyframes pedestalPulse {
+      0%, 100% { transform: rotateX(65deg) scale(1); opacity: 0.8; }
+    }
 
-        .portal-item:hover .portal-aura, .portal-item.is-hovered .portal-aura {
-            opacity: 0.6;
-            filter: blur(45px);
-            transform: scale(1.5);
-        }
-        .portal-item:hover .media-canvas, .portal-item.is-hovered .media-canvas {
-            filter: drop-shadow(0px 10px 50px rgba(var(--portal-rgb), 0.4)) brightness(1.1);
-        }
+    /* Video del personaje con eliminación de fondo negro para móviles */
+    .hero-mascot-video {
+      width: min(380px, 80vw);
+      height: auto;
+      max-height: 500px;
+      object-fit: cover;
+      z-index: 2;
+      position: relative;
+      pointer-events: none;
+      /* REGLA DE ORO PARA CELULARES (iOS y Android): */
+      /* Elimina cualquier fondo negro convirtiéndolo en 100% transparente sobre el fondo espacial */
+      mix-blend-mode: screen;
+      animation: mascotFloat 5s ease-in-out infinite;
+      transform-origin: center bottom;
+      will-change: transform;
+    }
 
-        /* --- ESTADOS CINEMATOGRÁFICOS (AL HACER CLIC) --- */
-        .portals-group.is-transitioning { pointer-events: none; }
+    @keyframes mascotFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
 
-        .portals-group.is-transitioning .portal-item.is-selected {
-            transform: translateZ(350px) translateY(8vh) scale(1.4);
-            z-index: 100;
-        }
-        .portals-group.is-transitioning .portal-item.is-selected .media-canvas {
-            filter: drop-shadow(0px 0px 80px rgba(var(--portal-rgb), 0.8)) brightness(1.2);
-        }
-        .portals-group.is-transitioning .portal-item.is-selected .portal-aura {
-            opacity: 1; filter: blur(60px); transform: scale(2.5);
-        }
-        .portals-group.is-transitioning .portal-item.is-selected .portal-ui {
-            opacity: 0;
-        }
+    @media (max-width: 620px) {
+      .hero-stage { min-height: 400px; }
+      .hero-mascot-video { width: 290px; max-height: 380px; }
+      .mascot-pedestal { width: 240px; height: 70px; bottom: 15px; }
+    }
+    /* DYNAMIC SYNC EFFECTS */
+    .meteor-glow {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 3;
+      /* Glow is transparent normally, but lights up based on JS */
+      background: radial-gradient(
+        circle 120px at var(--meteor-x, -50%) var(--meteor-y, 20%),
+        rgba(255, 200, 100, var(--meteor-opacity, 0)),
+        transparent 70%
+      );
+      mix-blend-mode: overlay;
+      transition: opacity 0.1s;
+    }
+    
+    .interactive-btn {
+      display: inline-block;
+      margin: 10px 0;
+      background: linear-gradient(135deg, #ff4d4d, #b30000);
+      color: white;
+      border: 1px solid rgba(255, 100, 100, 0.5);
+      border-radius: 30px;
+      padding: 10px 24px;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      opacity: 0.5;
+      pointer-events: none;
+      box-shadow: 0 0 0 rgba(255, 77, 77, 0);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      text-transform: uppercase;
+      text-align: center;
+      width: fit-content;
+    }
+    
+    .interactive-btn.pulse-active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 77, 77, 0.8), 0 0 40px rgba(255, 77, 77, 0.4);
+      animation: buttonPulse 0.8s infinite alternate;
+      cursor: pointer;
+    }
+    
+    @keyframes buttonPulse {
+      0% { box-shadow: 0 0 10px rgba(255, 77, 77, 0.6); transform: scale(1); }
+      100% { box-shadow: 0 0 30px rgba(255, 77, 77, 1), 0 0 60px rgba(255, 77, 77, 0.6); transform: scale(1.05); }
+    }
+  
+    .nav-links { display: none !important; }
+    .nav-cta { display: none !important; }
 
-        /* --- UI CONTEXTUAL DEL PORTAL --- */
-        .portal-ui {
-            position: absolute;
-            bottom: 8%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none;
-            z-index: 20;
-        }
+    
 
-        .portal-item:hover .portal-ui, .portal-item:focus-visible .portal-ui, .portal-item.is-hovered .portal-ui {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .floating-brand {
+      position: fixed;
+      top: 24px;
+      left: 32px;
+      z-index: 1000;
+    }
+    .floating-admin-btn {
+      position: fixed;
+      top: 24px;
+      right: 32px;
+      z-index: 1000;
+    }
+    @media(max-width:620px){
+      .floating-brand { top: 16px; left: 16px; font-size: 13px; }
+      .floating-admin-btn { top: 16px; right: 16px; padding: 8px 11px; font-size: 11px; }
+    }
 
-        .ui-line {
-            width: 2px; height: 35px;
-            background: linear-gradient(to top, var(--portal-color), transparent);
-            margin-bottom: 8px;
-            box-shadow: 0 0 10px var(--portal-color);
-        }
 
-        .ui-content {
-            background: rgba(10, 8, 15, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 8px 20px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(var(--portal-rgb), 0.2);
-            border-bottom: 1px solid var(--portal-color);
-        }
+</style>
 
-        .ui-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: var(--portal-color);
-            box-shadow: 0 0 10px var(--portal-color);
-            animation: pulse 1.5s infinite;
-        }
+<script>
+window.onerror = function(msg, url, lineNo, columnNo, error) {
+  var errDiv = document.getElementById('debug-error');
+  if (!errDiv) {
+    errDiv = document.createElement('div');
+    errDiv.id = 'debug-error';
+    errDiv.style.position = 'fixed';
+    errDiv.style.top = '0';
+    errDiv.style.left = '0';
+    errDiv.style.width = '100%';
+    errDiv.style.background = 'red';
+    errDiv.style.color = 'white';
+    errDiv.style.zIndex = '99999999';
+    errDiv.style.padding = '10px';
+    errDiv.style.fontFamily = 'monospace';
+    document.body.appendChild(errDiv);
+  }
+  errDiv.innerHTML += '<p>' + msg + ' at ' + lineNo + ':' + columnNo + '</p>';
+  return false;
+};
+</script>
 
-        .ui-text {
-            font-size: 0.7rem; font-weight: 800; letter-spacing: 2.5px;
-            text-transform: uppercase; color: #FFF;
-            text-shadow: 0 0 10px rgba(var(--portal-rgb), 0.5);
-        }
-
-        /* Ambient Light Base */
-        .interactive-light {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle 600px at var(--pointer-x) var(--pointer-y), rgba(var(--ambient-color), 0.08), transparent);
-            pointer-events: none;
-            mix-blend-mode: screen;
-            transition: background 0.8s ease;
-        }
-
-        /* Cursor */
-        #ring-cursor {
-            position: fixed;
-            top: 0; left: 0;
-            width: 24px; height: 24px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(255, 255, 255, 0.6);
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
-            mix-blend-mode: screen;
-            backdrop-filter: blur(2px);
-        }
-        #ring-cursor.is-hovering {
-            width: 70px; height: 70px;
-            background: rgba(var(--ambient-color), 0.15);
-            border-color: rgba(var(--ambient-color), 0.8);
-            box-shadow: 0 0 30px rgba(var(--ambient-color), 0.4);
-        }
-        #ring-cursor.is-selecting {
-            width: 10px; height: 10px;
-            background: rgba(255,255,255,1);
-            border-color: transparent;
-            box-shadow: 0 0 50px rgba(255,255,255,0.8);
-        }
-
-        /* Loader */
-        #loader-overlay {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-base);
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--text-main);
-            transition: opacity 0.8s, visibility 0.8s;
-        }
-        #loader-overlay.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-        .loader-ring {
-            width: 44px; height: 44px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-top-color: #A78BFA;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        .loader-label { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; opacity: 0.7; }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0% { opacity: 0.5; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.5; transform: scale(0.8); } }
-
-        /* Retrasamos la animación de la capa de actores para dar tiempo al ChromaKey */
-        body.app-ready #scene-root { visibility: visible; }
-        body.app-ready #layer-stage { animation: fxRevealStage 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        body.app-ready #layer-actor { animation: fxRevealActor 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both; } 
-
-        @keyframes fxRevealStage { from { opacity: 0; transform: translate(-50%, -30%) rotateX(90deg) scale(0.8); } to { opacity: 1; transform: translate(-50%, -50%) rotateX(0deg) scale(1); } }
-        @keyframes fxRevealActor { from { opacity: 0; filter: blur(20px); transform: translate(-50%, -45%) scale(0.9); } to { opacity: 1; filter: blur(0px); transform: translate(-50%, -50%) scale(1); } }
-
-        .compat-badge {
-            position: fixed;
-            top: 24px;
-            left: 28px;
-            background: rgba(14, 11, 24, 0.5);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 8px 16px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: rgba(255,255,255,0.6);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 100;
-        }
-
-        /* --- RESPONSIVE AJUSTADO PARA UN SOLO PERSONAJE --- */
-        @media (max-width: 900px) {
-            .portals-group {
-                transform: scale(var(--escala-global-movil)); 
-                margin-top: 15vh;
-            }
-            .stage-container { 
-                height: 40vh; 
-                transform: translateY(10vh) rotateX(70deg) scale(0.9); /* Aumentado levemente para empatar con el personaje */
-            }
-            
-            .portal-item.pos-center:hover, .portal-item.pos-center.is-hovered { transform: translateZ(80px) scale(1.15); }
-        }
-
-        /* --- REDUCED MOTION --- */
-        @media (prefers-reduced-motion: reduce) {
-            .portal-item { transition: opacity 0.4s; transform: none !important; }
-            #scene-root { transition: opacity 0.4s; transform: none !important; }
-            .portals-group.is-transitioning .portal-item.is-selected { transform: scale(1.1) !important; }
-            .ui-dot { animation: none; }
-        }
-    </style>
 </head>
 <body>
 
-    <div style="position:absolute; top:20px; left:20px; z-index:99999; display:flex; gap:10px;">
-        <button id="btn-mode-b" style="padding:10px; background:var(--coral, #E64381); color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Opción B: Panel Flotante (Recomendada)</button>
-        <button id="btn-mode-a" style="padding:10px; background:#4ade80; color:#000; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">Opción A: Transición Completa</button>
-    </div>
+  <!-- TOOLBAR MODO EDITOR -->
+  <div id="visual-editor-toolbar">
+    <span style="color:var(--cyan); font-weight:bold; font-size:12px; letter-spacing:1px;">MODO EDITOR</span>
+    <label style="background:#fff; color:#000; padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">
+      📷 SUBIR FONDO PNG
+      <input type="file" id="editor-upload-png" accept="image/png, image/jpeg" style="display:none;" />
+    </label>
+    <label style="background:#fff; color:#000; padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">
+      🎥 SUBIR VIDEO LEON
+      <input type="file" id="editor-upload-video" accept="video/webm, video/mp4" style="display:none;" />
+    </label>
+    <button id="editor-save-btn" style="background:var(--coral); color:#fff; border:none; padding:8px 12px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">💾 GUARDAR TEXTOS</button>
+    <button id="editor-exit-btn" style="background:transparent; color:#fff; border:1px solid #fff; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:12px;">SALIR</button>
+  </div>
 
-    <!-- PANEL FLOTANTE (OPCIÓN B) -->
-    <div id="demo-panel" style="position:absolute; top:0; right:-100%; width: 50vw; min-width: 400px; height: 100vh; background: rgba(14, 11, 22, 0.85); backdrop-filter: blur(24px); border-left: 1px solid rgba(255,255,255,0.1); z-index:9999; transition: right 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); display:flex; flex-direction:column; padding: 40px; box-sizing: border-box;">
-        <button id="btn-close-demo" style="position:absolute; top:20px; left:20px; background:transparent; border:none; color:#fff; font-size:24px; cursor:pointer;">✕</button>
-        <h2 style="font-size:32px; font-weight:900; margin-top:40px; color:#E64381;">REGISTRO DE AGENTES</h2>
-        <p style="color:#aaa; margin-top:20px;">Aquí viviría tu formulario de registro (el que ya tienes en index.html) integrado mágicamente encima del entorno 3D.</p>
-        <div style="width:100%; height: 50px; background: rgba(255,255,255,0.1); border-radius:8px; margin-top: 30px;"></div>
-        <div style="width:100%; height: 50px; background: rgba(255,255,255,0.1); border-radius:8px; margin-top: 15px;"></div>
-        <div style="width:100%; height: 50px; background: rgba(255,255,255,0.1); border-radius:8px; margin-top: 15px;"></div>
-    </div>
+  <div class="stars"></div>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
 
-    <!-- VISTA COMPLETA (OPCIÓN A) -->
-    <div id="demo-full" style="position:absolute; top:0; left:0; width: 100vw; height: 100vh; background: #06050b; z-index:9998; opacity:0; pointer-events:none; transition: opacity 0.6s; display:flex; justify-content:center; align-items:center;">
-        <div style="text-align:center;">
-            <h2 style="font-size:48px; font-weight:900; color:#E64381;">NUEVA PÁGINA (ESTILO NETFLIX)</h2>
-            <p style="color:#aaa; margin-top:20px; font-size: 18px;">Has salido del menú 3D y ahora estás en una vista plana y enfocada.</p>
-            <button id="btn-close-full" style="padding:15px 30px; background:#fff; color:#000; border:none; border-radius:30px; font-weight:bold; margin-top:30px; cursor:pointer;">Volver al Inicio 3D</button>
-        </div>
-    </div>
+  <div class="shell">
+
+    
+    <!-- Floating Logo -->
+    <a class="brand floating-brand" href="#inicio" aria-label="STARMAKER inicio">
+      <span class="brand-mark" aria-hidden="true"></span>
+      STARMAKER
+    </a>
+    
+    <!-- Floating Admin Button -->
+    <button type="button" class="nav-admin-btn floating-admin-btn" id="btn-open-admin">Consola Admin</button>
 
 
-    <div id="loader-overlay">
-        <div class="loader-ring"></div>
-        <div class="loader-label">INICIALIZANDO EXPERIENCIA...</div>
-    </div>
-
-    <div id="ring-cursor"></div>
-
-    <div class="compat-badge">
-        <span class="ui-dot" style="background: #4ade80; box-shadow: 0 0 10px #4ade80; animation: none;"></span>
-        <span id="compatText">StarMaker Engine</span>
-    </div>
-
-    <main id="scene-root">
-        <!-- Fondos y Ambiente -->
-        <div id="layer-bg" class="depth-layer"><canvas id="ctx-background"></canvas></div>
-        <div id="layer-atmos" class="depth-layer"><div style="width:100%; height:100%; background: radial-gradient(circle at center, transparent 35%, rgba(6,5,11,0.95) 100%);"></div></div>
-        
-        <!-- Plataforma Base Unificada -->
-        <div id="layer-stage" class="depth-layer">
-            <div class="stage-container">
-                <div class="stage-surface"></div>
-                <div class="stage-orbit"></div>
-                <div class="stage-orbit outer"></div>
+    <main>
+      <section class="hero" id="inicio">
+        <div class="hero-inner">
+          <div>
+            <div class="eyebrow"><span class="pulse"></span> Plataforma digital · Live experience</div>
+            <h1>Explora un<br><span class="gradient-text">nuevo universo.</span></h1>
+            <p class="hero-copy">
+              STARMAKER conecta entretenimiento, aprendizaje y creatividad dentro de una experiencia digital inmersiva, sincronizada en tiempo real mediante Firestore.
+            </p>
+            <div class="actions">
+              <a class="btn btn-primary" href="#registro">Completar Registro →</a>
+              <button type="button" class="btn btn-secondary" id="btn-hero-admin">Panel de Control</button>
             </div>
-        </div>
-        
-        <!-- El Menú: Personaje Único -->
-        <div id="layer-actor" class="depth-layer">
-            <div class="portals-group" id="portals-container">
+          </div>
 
-                <!-- León Star (Video MP4 adaptado) -->
-                <div class="portal-item pos-center" tabindex="0" data-id="streamers" aria-label="Registro y Convocatoria" style="--portal-color: #7C3AED; --portal-rgb: 124, 58, 237;">
-                    <div class="portal-aura"></div>
-                    
-                    <!-- Video Original (Oculto) -->
-                    <video id="vid-source-streamers" class="media-video-source" muted loop playsinline autoplay crossorigin="anonymous">
-                        <!-- Reemplaza con la ruta a tu video MP4 -->
-                        <source src="leon_video.mp4" type="video/mp4">
-                    </video>
-                    
-                    <!-- Canvas (Visible, donde se renderiza el video sin fondo) -->
-                    <canvas id="vid-canvas-streamers" class="media-canvas" width="512" height="1024"></canvas>
-                    
-                    <div class="portal-ui">
-                        <div class="ui-line"></div>
-                        <div class="ui-content"><span class="ui-dot"></span><span class="ui-text">LEÓN STAR</span></div>
-                    </div>
+          <div class="hero-stage" aria-hidden="true">
+            <div class="slideshow-container">
+              <div class="slide slide-1"></div>
+              <div class="slide slide-2"></div>
+              <div class="particles"></div>
+            </div>
+            <div class="float-card small">
+              <div class="fc-label">Estado del sistema</div>
+              <div class="fc-value">● Experiencia activa</div>
+            </div>
+            <div class="float-card tiny">
+              <div class="fc-label">Conexión</div>
+              <div class="fc-value" id="status-live-text">Realtime · Online</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      
+    
+      <!-- SECCIÓN FORMULARIO CONECTADO A GOOGLE SHEETS -->
+      
+      <section class="section" id="formulario-registro">
+        <div class="container" style="max-width: 800px; margin: 0 auto;">
+          
+          <style>
+
+    /* MODO EDITOR VISUAL */
+    .editor-active [contenteditable="true"] {
+      outline: 2px dashed var(--cyan) !important;
+      outline-offset: 4px;
+      cursor: text;
+      transition: outline 0.2s;
+    }
+    .editor-active [contenteditable="true"]:hover {
+      outline: 2px solid var(--coral) !important;
+      background: rgba(230, 67, 129, 0.1);
+    }
+    #visual-editor-toolbar {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.9);
+      border: 2px solid var(--cyan);
+      padding: 10px 20px;
+      border-radius: 30px;
+      z-index: 999999;
+      gap: 10px;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+            .premium-accordion-header {
+              text-align: center; margin-bottom: 20px; cursor: pointer; padding: 30px 20px; 
+              background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%); 
+              border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; 
+              transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+              position: relative;
+              overflow: hidden;
+            }
+            .premium-accordion-header:hover {
+              border-color: rgba(255, 100, 100, 0.5);
+              box-shadow: 0 10px 30px -10px rgba(255, 77, 77, 0.2);
+              transform: translateY(-2px);
+            }
+            .premium-accordion-header.is-active {
+              border-color: rgba(255, 77, 77, 0.8);
+              background: linear-gradient(180deg, rgba(255,77,77,0.1) 0%, rgba(0,0,0,0.8) 100%);
+              box-shadow: 0 0 40px rgba(255, 77, 77, 0.15) inset;
+            }
+            .premium-accordion-icon {
+              display: inline-block; transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+              font-size: 1.2rem; opacity: 0.7; color: var(--coral); margin-left: 8px;
+            }
+            .premium-accordion-header.is-active .premium-accordion-icon {
+              transform: rotate(180deg);
+            }
+            .premium-accordion-grid {
+              display: grid;
+              grid-template-rows: 0fr;
+              transition: grid-template-rows 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+            .premium-accordion-grid.is-open {
+              grid-template-rows: 1fr;
+            }
+            .premium-accordion-inner {
+              overflow: hidden;
+              opacity: 0;
+              transform: translateY(-20px) scale(0.98);
+              transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+            .premium-accordion-grid.is-open .premium-accordion-inner {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+              padding-top: 10px; /* spacing */
+            }
+          
+    .nav-links { display: none !important; }
+    .nav-cta { display: none !important; }
+
+    </style>
+
+          <div class="premium-accordion-header" id="toggle-registro" style="position: relative; overflow: visible; display: flex; align-items: center; justify-content: space-between;">
+            
+            <!-- Personaje con fondo transparente o negro (usando mix-blend-mode screen para quitar fondo negro si lo tiene) -->
+            <video id="registro-personaje-video" autoplay loop muted playsinline disablepictureinpicture style="position: absolute; right: -20px; bottom: -10px; height: 160%; z-index: 0; pointer-events: none; mix-blend-mode: screen; -webkit-mix-blend-mode: screen; object-fit: contain; opacity: 0.9;"></video>
+            
+            <div style="position: relative; z-index: 1; pointer-events: none;">
+              <div class="kicker">04 · REGISTRO Y CONVOCATORIA</div>
+              <h2 style="margin-bottom: 5px;">Postula a<br><span class="gradient-text">STARMAKER.</span> <span class="premium-accordion-icon" id="toggle-icon-registro">▼</span></h2>
+            </div>
+            <p class="section-desc" style="pointer-events: none; margin-bottom: 0;">
+              [ PROTOCOLO DE ACCESO RESTRINGIDO — PULSA PARA DESBLOQUEAR ]
+            </p>
+          </div>
+
+          <div id="panel-registro-grid" class="premium-accordion-grid">
+            <div class="premium-accordion-inner">
+              <div class="panel" style="padding: 30px; border-radius: 16px; background: rgba(12, 10, 18, 0.85); border: 1px solid var(--line-bright); box-shadow: 0 20px 50px rgba(0,0,0,0.5); backdrop-filter: blur(20px);">
+                <form id="native-registration-form" style="display: flex; flex-direction: column; gap: 16px;">
+                  <script>
+                    document.getElementById('toggle-registro').addEventListener('click', function() {
+                      const grid = document.getElementById('panel-registro-grid');
+                      this.classList.toggle('is-active');
+                      grid.classList.toggle('is-open');
+                    });
+                  </script>
+              <input type="email" class="admin-input" id="reg-email" placeholder="Correo electrónico *" required />
+              <input type="text" class="admin-input" id="reg-agency" placeholder="Nombre de tu agencia *" required />
+              <input type="text" class="admin-input" id="reg-id" placeholder="Tú ID *" required />
+              <input type="text" class="admin-input" id="reg-agent-id" placeholder="ID de Tú Agente *" required />
+              <input type="text" class="admin-input" id="reg-name" placeholder="Nombre y apellido completo *" required />
+              <input type="tel" class="admin-input" id="reg-phone" placeholder="Número de teléfono (con prefijo) *" required />
+              <input type="text" class="admin-input" id="reg-nationality" placeholder="Nacionalidad *" required />
+              <input type="text" class="admin-input" id="reg-city" placeholder="¿Dónde vive? (Ciudad) *" required />
+              
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 14px; color: var(--coral);">Foto de identificación (lado de frente y atrás) * (Sube hasta 5 archivos de imagen)</label>
+                <input type="file" id="reg-id-photos" class="admin-input" accept="image/*" multiple required />
+                <div id="reg-upload-status" style="font-size: 12px; color: var(--muted);"></div>
+              </div>
+
+              <input type="text" class="admin-input" id="reg-talent" placeholder="¿Cuál es tu talento? *" required />
+              
+              <select class="admin-input" id="reg-gender" required>
+                <option value="" disabled selected>¿Tu género? *</option>
+                <option value="femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+                <option value="otro">Otro</option>
+              </select>
+
+              <input type="text" class="admin-input" id="reg-platform" placeholder="¿Con qué plataforma has colaborado? *" required />
+
+              <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); padding: 16px; border-radius: 8px; background: rgba(0,0,0,0.3); margin-top: 8px;">
+                <label style="font-size: 14px; color: var(--coral); font-weight: bold;">Verificación de Identidad (Video de 10s) *</label>
+                <p style="font-size: 12px; color: var(--muted); margin: 0;">Presiona el botón, permite el acceso a tu cámara y graba un video corto presentándote.</p>
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 8px;">
+                  <button type="button" id="btn-record-video" style="background: #E64381; color: white; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%;">📹 Grabar Video (10s)</button>
                 </div>
+                <div id="record-status" style="font-size: 12px; font-weight: bold; color: #4CAF50; text-align: center; margin-top: 4px;"></div>
+                <video id="record-preview" style="display: none; width: 100%; border-radius: 8px; margin-top: 10px; border: 1px solid var(--line-bright);" autoplay muted playsinline></video>
+                <input type="hidden" id="reg-video-url" required />
+              </div>
 
+              <button type="submit" id="btn-submit-reg" style="background: var(--coral); color: #fff; padding: 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 16px;">Enviar Postulación</button>
+              <div id="reg-feedback" style="display: none; text-align: center; color: #4CAF50; font-weight: bold; padding: 10px;"></div>
+            </form>
+              </div>
             </div>
+          </div>
         </div>
+      </section>
 
-        <!-- Partículas Frontales e Iluminación -->
-        <div id="layer-fg" class="depth-layer"><canvas id="ctx-foreground"></canvas><div class="interactive-light"></div></div>
+      <section class="section" id="tutoriales">
+        <div class="container" style="max-width: 800px; margin: 60px auto;">
+          <div class="premium-accordion-header" id="toggle-tutoriales">
+            <div style="pointer-events: none;">
+              <div class="kicker">05 · VIDEOTUTORIALES</div>
+              <h2 style="margin-bottom: 5px;">Aprende con<br><span class="gradient-text">Nosotros.</span> <span class="premium-accordion-icon" id="toggle-icon-tutoriales">▼</span></h2>
+            </div>
+            <p class="section-desc" style="pointer-events: none; margin-bottom: 0;">
+              [ RECURSOS OFICIALES — PULSA PARA DESBLOQUEAR ]
+            </p>
+          </div>
+          
+          <div id="panel-tutoriales-grid" class="premium-accordion-grid">
+            <div class="premium-accordion-inner">
+              <div class="panel" style="padding: 30px; border-radius: 16px; background: rgba(12, 10, 18, 0.85); border: 1px solid var(--line-bright); box-shadow: 0 20px 50px rgba(0,0,0,0.5); backdrop-filter: blur(20px);">
+                <div id="tutoriales-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+                  <!-- Renderizado dinámico -->
+                </div>
+                <script>
+                  document.getElementById('toggle-tutoriales').addEventListener('click', function() {
+                    const grid = document.getElementById('panel-tutoriales-grid');
+                    this.classList.toggle('is-active');
+                    grid.classList.toggle('is-open');
+                  });
+                </script>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="dudas">
+        <div class="container" style="max-width: 800px; margin: 60px auto;">
+          <div class="premium-accordion-header" id="toggle-dudas">
+            <div style="pointer-events: none;">
+              <div class="kicker">06 · SOPORTE Y DUDAS</div>
+              <h2 style="margin-bottom: 5px;">Centro de<br><span class="gradient-text">Ayuda.</span> <span class="premium-accordion-icon" id="toggle-icon-dudas">▼</span></h2>
+            </div>
+            <p class="section-desc" style="pointer-events: none; margin-bottom: 0;">
+              [ COMUNICACIÓN DIRECTA — PULSA PARA DESBLOQUEAR ]
+            </p>
+          </div>
+
+          <div id="panel-dudas-grid" class="premium-accordion-grid">
+            <div class="premium-accordion-inner">
+              <div class="panel" style="padding: 30px; border-radius: 16px; background: rgba(12, 10, 18, 0.85); border: 1px solid var(--line-bright); box-shadow: 0 20px 50px rgba(0,0,0,0.5); backdrop-filter: blur(20px);">
+                <div id="soporte-list" style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;">
+                  <!-- Renderizado dinámico -->
+                </div>
+                <script>
+                  document.getElementById('toggle-dudas').addEventListener('click', function() {
+                    const grid = document.getElementById('panel-dudas-grid');
+                    this.classList.toggle('is-active');
+                    grid.classList.toggle('is-open');
+                  });
+                </script>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
     </main>
 
-    <script>
-        'use strict';
-        (function() {
-            // =========================================================
-            // RUTAS DE DESTINO (RELLENAR CON URLS REALES)
-            // =========================================================
-            const PORTAL_DESTINATIONS = {
-                streamers: null  // Ejemplo: '/registro'
-            };
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">STARMAKER</div>
+        <div>Premium digital experience · Production build</div>
+        <div>© 2026 STARMAKER</div>
+      </div>
+    </footer>
+  </div>
 
-            const AppConfig = {
-                portals: {
-                    streamers: { colorRGB: '124, 58, 237' }
-                },
-                parallax: { bg: 15, stage: 8, actor: -15, fg: 35 }
-            };
+  <!-- MODAL ADMIN CON LOGIN & EDICIÓN FIRESTORE -->
+  <div class="admin-modal" id="admin-modal">
+    <div class="admin-box">
+      <!-- VISTA 1: LOGIN -->
+      <div id="admin-login-view">
+        <div class="admin-header">
+          <h2 style="font-size:1.15rem;font-weight:800;letter-spacing:.08em;">ACCESO ADMINISTRATIVO</h2>
+          <button class="admin-close" id="btn-close-login">✕</button>
+        </div>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:16px;">Ingresa tus credenciales de administrador:</p>
+        
+        <form id="form-auth-login">
+          <div class="admin-field">
+            <label>Usuario:</label>
+            <input type="text" class="admin-input" id="auth-email" value="" placeholder="Usuario" required autocomplete="username" />
+          </div>
+          <div class="admin-field">
+            <label>Contraseña:</label>
+            <input type="password" class="admin-input" id="auth-password" value="" placeholder="Contraseña" required autocomplete="current-password" />
+          </div>
+          <p id="auth-error-msg" style="color:var(--pink);font-size:12px;margin-bottom:12px;display:none;"></p>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+            INICIAR SESIÓN →
+          </button>
+        </form>
+      </div>
 
-            const State = {
-                mouse: { targetX: 0.5, targetY: 0.5, currentX: 0.5, currentY: 0.5 },
-                viewport: { w: window.innerWidth, h: window.innerHeight },
-                audioEnabled: false,
-                isTransitioning: false,
-                targetPortalCenter: null, // Para atraer partículas
-                prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-            };
+      <!-- VISTA 2: PANEL DE CONTROL CUANDO YA ESTÁ AUTENTICADO -->
+      <div id="admin-panel-view" style="display:none;">
+        <div class="admin-header">
+          <div>
+            <h2 style="font-size:1.15rem;font-weight:800;letter-spacing:.08em;">CONSOLA ADMINISTRATIVA</h2>
+            <span style="font-size:11px;color:var(--coral);">● Conectado a Firestore</span>
+          </div>
+          <button class="admin-close" id="btn-close-panel">✕</button>
+        </div>
 
-            class AudioEngine {
-                constructor() {
-                    this.ctx = null;
-                    ['pointerdown', 'keydown'].forEach(e => window.addEventListener(e, () => {
-                        if (!this.ctx) {
-                            const AC = window.AudioContext || window.webkitAudioContext;
-                            if (AC) { this.ctx = new AC(); State.audioEnabled = true; }
-                        }
-                    }, { once: true, passive: true }));
-                }
-                playTone(t, s, e, d, v) {
-                    if (!State.audioEnabled || !this.ctx) return;
-                    try {
-                        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-                        o.type = t; o.frequency.setValueAtTime(s, this.ctx.currentTime);
-                        o.frequency.exponentialRampToValueAtTime(e, this.ctx.currentTime + d);
-                        g.gain.setValueAtTime(0, this.ctx.currentTime);
-                        g.gain.linearRampToValueAtTime(v, this.ctx.currentTime + (d * 0.2));
-                        g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + d);
-                        o.connect(g); g.connect(this.ctx.destination);
-                        o.start(); o.stop(this.ctx.currentTime + d);
-                    } catch(_) {}
-                }
-                sfxHover() { this.playTone('sine', 650, 1100, 0.1, 0.03); }
-                sfxSelect() { this.playTone('triangle', 320, 60, 0.2, 0.08); }
-                sfxEnter() { this.playTone('sine', 150, 450, 1.2, 0.1); } // Sonido profundo de portal
+        
+        
+        
+        
+
+        <div class="admin-field">
+          <label>Escala del Video (1x):</label>
+          <input type="range" id="admin-video-scale" min="0.5" max="2.5" step="0.05" value="1" style="width:100%;">
+          <span id="val-video-scale" style="font-size: 11px; color: var(--muted);">1</span>
+        </div>
+        <div class="admin-field">
+          <label>Posición X del Video (Horizontal px):</label>
+          <input type="range" id="admin-video-x" min="-200" max="200" step="1" value="0" style="width:100%;">
+          <span id="val-video-x" style="font-size: 11px; color: var(--muted);">0px</span>
+        </div>
+        <div class="admin-field">
+          <label>Posición Y del Video (Vertical px):</label>
+          <input type="range" id="admin-video-y" min="-200" max="200" step="1" value="0" style="width:100%;">
+          <span id="val-video-y" style="font-size: 11px; color: var(--muted);">0px</span>
+        </div>
+
+
+
+
+
+        
+        <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
+          <label class="admin-label">BASE DE DATOS (EXCEL)</label>
+          <button type="button" id="btn-download-db" class="admin-input" style="background: #4CAF50; color: white; border:none; cursor: pointer; text-transform: uppercase; font-weight: bold; width: 100%; margin-bottom: 12px;">Descargar DATABASE (.CSV / Excel)</button>
+        </div>
+
+        <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
+          <label class="admin-label">ENLACES DE SOPORTE (WHATSAPP)</label>
+          <input type="text" class="admin-input" id="admin-wa-1" placeholder="Opción 1: https://wa.me/..." style="margin-bottom: 6px;" />
+          <input type="text" class="admin-input" id="admin-wa-2" placeholder="Opción 2: https://wa.me/..." style="margin-bottom: 6px;" />
+          <input type="text" class="admin-input" id="admin-wa-3" placeholder="Opción 3: https://wa.me/..." style="margin-bottom: 6px;" />
+        </div>
+
+        
+        <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
+          <label class="admin-label">VIDEO PERSONAJE - REGISTRO (.webm transparente o MP4 fondo negro)</label>
+          <label style="background:var(--pink);color:#fff;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">
+            SUBIR VIDEO DE REGISTRO
+            <input type="file" id="admin-registro-video-file" accept="video/webm,video/mp4" style="display:none;" />
+          </label>
+        </div>
+
+        <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
+          <label class="admin-label">VIDEOTUTORIALES (ENLACES DE VIDEO O YOUTUBE)</label>
+          <label style="background:var(--cyan);color:#000;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">SUBIR TUTORIAL 1<input type="file" id="admin-tut-1-file" accept="video/*" style="display:none;" /></label>
+          <label style="background:var(--cyan);color:#000;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">SUBIR TUTORIAL 2<input type="file" id="admin-tut-2-file" accept="video/*" style="display:none;" /></label>
+          <label style="background:var(--cyan);color:#000;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">SUBIR TUTORIAL 3<input type="file" id="admin-tut-3-file" accept="video/*" style="display:none;" /></label>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="btn-save-firestore" style="width:100%;justify-content:center;margin-top:14px;background:#4CAF50;border:none;">
+          GUARDAR EN FIRESTORE EN TIEMPO REAL
+        </button>
+        <button type="button" class="btn btn-primary" id="btn-modo-editor" style="background:var(--cyan); margin-top:14px; width:100%; justify-content:center;">
+          ACTIVAR MODO EDITOR VISUAL (TEXTOS, PNG Y VIDEO)
+        </button>
+
+        <p id="save-msg-feedback" style="text-align:center;font-size:12px;margin-top:10px;color:var(--coral);display:none;"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT DE CONEXIÓN CON FIREBASE V10 -->
+  <script type="module">
+    import { initializeApp } from "firebase/app";
+    import { getFirestore, doc, onSnapshot, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC3iwfeStY1ANVcGIsH8rJD-8rJ5n_p_fE",
+      authDomain: "starmaker-505b7.firebaseapp.com",
+      projectId: "starmaker-505b7",
+      storageBucket: "starmaker-505b7.firebasestorage.app",
+      messagingSenderId: "52809712878",
+      appId: "1:52809712878:web:49c92142f243a951a5dfff",
+      measurementId: "G-MYD1M5XRTY"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const stateDocRef = doc(db, "systemSettings", "globalStateDev4");
+
+    const defaultCards = [
+      {
+        id: "card-streamer",
+        title: "León",
+        subtitle: "Mascota Holográfica",
+        badge: "LIVE HUB",
+        link: "#formulario-registro",
+        videoUrl: "/leonsito.webm"
+      }
+    ];
+
+    function renderCards(cards) {
+      const container = document.getElementById("cards-grid-box");
+      if (!container) return;
+      container.innerHTML = "";
+
+      cards.forEach((card, idx) => {
+        const padIndex = String(idx + 1).padStart(2, "0");
+        const article = document.createElement("article");
+        article.className = "card";
+        article.innerHTML = `
+          <div class="card-art" style="height: 100%;">
+            <div class="meteor-glow"></div>
+            <video class="hero-mascot-video" src="${card.videoUrl || ''}" autoplay loop muted playsinline disablepictureinpicture style="position: absolute; width: 100%; height: 100%; z-index: 2; object-fit: contain; pointer-events: none; mix-blend-mode: screen; -webkit-mix-blend-mode: screen; transform: translate(var(--video-x, 0px), var(--video-y, 0px)) scale(var(--video-scale, 1));"></video>
+            
+            <div class="card-content" style="position: absolute; bottom: 20px; left: 0; width: 100%; z-index: 3; display: flex; justify-content: center; padding: 0;">
+              <button class="interactive-btn" onclick="window.location.href='${card.link || '#formulario-registro'}'">EXPLORAR →</button>
+            </div>
+          </div>
+        `;
+
+        // Sync Logic
+        const videoEl = article.querySelector('.hero-mascot-video');
+        const glowEl = article.querySelector('.meteor-glow');
+        const btnEl = article.querySelector('.interactive-btn');
+
+        if (videoEl) {
+          videoEl.addEventListener('timeupdate', () => {
+            const time = videoEl.currentTime;
+            const duration = videoEl.duration || 10;
+            
+            // Si el video dura menos de 6 segundos, calculamos en base a porcentajes (del 60% al 85% del video)
+            let isTriggered = false;
+            let progress = 0;
+
+            if (duration < 6) {
+              const startPct = 0.6;
+              const endPct = 0.85;
+              const currentPct = time / duration;
+              if (currentPct >= startPct && currentPct <= endPct) {
+                isTriggered = true;
+                progress = (currentPct - startPct) / (endPct - startPct);
+              }
+            } else {
+              if (time >= 6 && time <= 8.5) {
+                isTriggered = true;
+                progress = (time - 6) / 2.5;
+              }
             }
-
-            class ParticleEngine {
-                constructor() {
-                    this.cBg = document.getElementById('ctx-background');
-                    this.cFg = document.getElementById('ctx-foreground');
-                    if(!this.cBg || !this.cFg) return;
-                    this.ctxBg = this.cBg.getContext('2d', { alpha: true });
-                    this.ctxFg = this.cFg.getContext('2d', { alpha: true });
-                    this.particles = [];
-                    this.currentColor = '255, 255, 255'; // Color neutro base
-                    this.resize();
-                    this.spawnParticles();
-                }
-                resize() {
-                    const d = window.devicePixelRatio || 1, w = State.viewport.w, h = State.viewport.h;
-                    this.cBg.width = w * d; this.cBg.height = h * d;
-                    this.cFg.width = w * d; this.cFg.height = h * d;
-                    this.cBg.style.width = `${w}px`; this.cBg.style.height = `${h}px`;
-                    this.cFg.style.width = `${w}px`; this.cFg.style.height = `${h}px`;
-                    this.ctxBg.scale(d, d); this.ctxFg.scale(d, d);
-                }
-                setColor(rgbString) { this.currentColor = rgbString; }
-                spawnParticles() {
-                    this.particles = [];
-                    const c = window.innerWidth < 768 ? 60 : 120;
-                    for(let i=0; i<c; i++) {
-                        this.particles.push({
-                            x: Math.random() * State.viewport.w, y: Math.random() * State.viewport.h,
-                            size: Math.random() * 2 + 0.5, speed: Math.random() * 0.8 + 0.2,
-                            isFg: Math.random() > 0.65, opacity: Math.random() * 0.6 + 0.2,
-                            angle: Math.random() * Math.PI * 2, wobbleSpd: Math.random() * 0.02 + 0.01, wobbleDist: Math.random() * 1.5 + 0.5
-                        });
-                    }
-                }
-                render() {
-                    this.ctxBg.clearRect(0, 0, State.viewport.w, State.viewport.h);
-                    this.ctxFg.clearRect(0, 0, State.viewport.w, State.viewport.h);
-                    
-                    const wind = (State.mouse.currentX - 0.5) * 6;
-                    
-                    this.particles.forEach(p => {
-                        // Lógica de atracción durante transición
-                        if (State.isTransitioning && State.targetPortalCenter) {
-                            const dx = State.targetPortalCenter.x - p.x;
-                            const dy = State.targetPortalCenter.y - p.y;
-                            p.x += dx * 0.03 * (p.isFg ? 1.5 : 0.8);
-                            p.y += dy * 0.03 * (p.isFg ? 1.5 : 0.8);
-                            p.speed *= 1.05; // Aceleran hacia el centro
-                        } else {
-                            p.y -= p.speed * 0.4;
-                            p.x += Math.sin(p.angle) * p.wobbleDist + wind * (p.isFg ? 1 : 0.3);
-                        }
-                        
-                        p.angle += p.wobbleSpd;
-                        if (p.y < -20) p.y = State.viewport.h + 20;
-                        if (p.x < -20) p.x = State.viewport.w + 20;
-                        if (p.x > State.viewport.w + 20) p.x = -20;
-                        
-                        const ctx = p.isFg ? this.ctxFg : this.ctxBg;
-                        ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                        ctx.shadowBlur = p.isFg ? 14 : 6;
-                        ctx.shadowColor = `rgba(${this.currentColor}, 0.9)`;
-                        ctx.fillStyle = p.isFg ? `rgba(255, 255, 255, ${p.opacity})` : `rgba(${this.currentColor}, ${p.opacity * 0.7})`;
-                        ctx.fill();
-                    });
-                }
+            
+            if (isTriggered) {
+              btnEl.classList.add('pulse-active');
+              glowEl.style.setProperty('--meteor-x', `${progress * 150 - 25}%`);
+              glowEl.style.setProperty('--meteor-y', `${20 + Math.sin(progress * Math.PI) * 15}%`);
+              glowEl.style.setProperty('--meteor-opacity', '0.8');
+            } else {
+              btnEl.classList.remove('pulse-active');
+              glowEl.style.setProperty('--meteor-opacity', '0');
             }
+          });
+        }
 
-            class VideoProcessor {
-                constructor(videoId, canvasId) {
-                    this.video = document.getElementById(videoId);
-                    this.canvas = document.getElementById(canvasId);
-                    
-                    if (!this.video || !this.canvas) {
-                        console.error(`VideoProcessor: Elementos no encontrados para ${videoId} o ${canvasId}`);
-                        return;
-                    }
-                    
-                    this.ctx = this.canvas.getContext('2d', { willReadFrequently: true }); // Optimizado para leer pixeles
-                    this.isPlaying = false;
+        article.addEventListener("pointermove", (e) => {
+          const rect = article.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width;
+          const y = (e.clientY - rect.top) / rect.height;
+          article.style.setProperty("--rx", `${(0.5 - y) * 8}deg`);
+          article.style.setProperty("--ry", `${(x - 0.5) * 8}deg`);
+        });
 
-                    // Ajustar tamaño del canvas cuando el video cargue metadatos
-                    this.video.addEventListener('loadedmetadata', () => {
-                        // Limitamos la resolución para rendimiento. Si el video es muy grande, pesará mucho procesarlo.
-                        const maxW = 512;
-                        const ratio = this.video.videoWidth / this.video.videoHeight;
-                        this.canvas.width = Math.min(this.video.videoWidth, maxW);
-                        this.canvas.height = this.canvas.width / ratio;
-                    });
+        article.addEventListener("pointerleave", () => {
+          article.style.setProperty("--rx", "0deg");
+          article.style.setProperty("--ry", "0deg");
+        });
 
-                    this.video.addEventListener('play', () => {
-                        this.isPlaying = true;
-                        this.processFrame();
-                    });
+        container.appendChild(article);
+      });
+    }
 
-                    this.video.addEventListener('pause', () => this.isPlaying = false);
-                    this.video.addEventListener('ended', () => this.isPlaying = false);
-                }
+    renderCards(defaultCards);
 
-                processFrame() {
-                    if (!this.isPlaying || this.video.paused || this.video.ended) {
-                        return;
-                    }
+    // ESCUCHAR EN TIEMPO REAL CON FIRESTORE ONSNAPSHOT
+    onSnapshot(stateDocRef, (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data.theme?.primary) {
+          document.documentElement.style.setProperty("--fuchsia", data.theme.primary);
+          document.documentElement.style.setProperty("--coral", data.theme.primary);
+          const colEl = document.getElementById("editor-theme-color");
+          if (colEl) colEl.value = data.theme.primary;
+        }
+        
+          // Apply dynamic backgrounds
+          if (data.bg1) {
+            document.body.style.backgroundImage = `url(${data.bg1})`;
+          }
+          if (data.videoUrl) {
+             
+             document.querySelectorAll(".hero-mascot-video").forEach(vidEl => {
+                vidEl.src = data.videoUrl;
+                vidEl.load();
+             });
+          }
+          if (data.textos) {
+            const editableElements = document.querySelectorAll('.hero h1, .hero p, .accordion-header h3, .platform-item span, .footer-content p, .highlight');
+            editableElements.forEach((el, index) => {
+              if (data.textos['texto_' + index]) {
+                el.innerHTML = data.textos['texto_' + index];
+              }
+            });
+          }
 
-                    // 1. Dibujar el frame actual del video en el canvas
-                    this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+        if (Array.isArray(data.cards) && data.cards.length > 0) {
+          renderCards(data.cards);
+          if (data.cards[0]) {
+            document.getElementById("editor-c1-title").value = data.cards[0].title || "";
+            document.getElementById("editor-c1-desc").value = data.cards[0].subtitle || "";
+          }
 
-                    // 2. Extraer los píxeles (pesado para la CPU)
-                    const frameData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-                    const l = frameData.data.length / 4;
+          
+          if (data.layout) {
 
-                    // 3. Evaluar cada píxel (Chroma Key Básico)
-                    // NOTA: Esta es una configuración DEMO para intentar quitar colores muy claros (grises/blancos)
-                    // Si usas un video con fondo negro puro (rgb 0,0,0): if (r < 20 && g < 20 && b < 20)
-                    // Si usas fondo verde puro (rgb 0,255,0): if (g > 150 && r < 100 && b < 100)
-                    
-                    for (let i = 0; i < l; i++) {
-                        let r = frameData.data[i * 4 + 0];
-                        let g = frameData.data[i * 4 + 1];
-                        let b = frameData.data[i * 4 + 2];
-                        
-                        // --- CONFIGURACIÓN PARA FONDO CLARO / CUADRICULADO (Aproximación) ---
-                        // Intenta borrar píxeles que son predominantemente grises claros o blancos.
-                        // Esto NO será perfecto en los bordes. Recomiendo fuertemente renderizar 
-                        // tus MP4 con fondo negro (#000000) o verde sólido (#00FF00).
-                        if (r > 190 && g > 190 && b > 190) {
-                             // Si es muy claro/gris, hacerlo transparente
-                            frameData.data[i * 4 + 3] = 0; 
-                        } else if (r > 150 && g > 150 && b > 150) {
-                             // Si es medio claro, hacerlo semi-transparente para suavizar bordes
-                            frameData.data[i * 4 + 3] = 100;
-                        }
-                    }
+            
+            document.documentElement.style.setProperty("--video-scale", data.layout.videoScale || 1);
+            document.documentElement.style.setProperty("--video-x", (data.layout.videoX || 0) + "px");
+            document.documentElement.style.setProperty("--video-y", (data.layout.videoY || 0) + "px");
 
-                    // 4. Volver a pintar los píxeles modificados en el canvas
-                    this.ctx.putImageData(frameData, 0, 0);
-
-                    // 5. Solicitar el siguiente frame
-                    requestAnimationFrame(() => this.processFrame());
-                }
-                
-                play() {
-                    this.video.play().catch(e => console.warn("Autoplay prevenido", e));
-                }
+            if(true) {
+              
+              document.getElementById("admin-video-scale").value = data.layout.videoScale || 1;
+              document.getElementById("admin-video-x").value = data.layout.videoX || 0;
+              document.getElementById("admin-video-y").value = data.layout.videoY || 0;
+              
+              
+              document.getElementById("val-video-scale").textContent = data.layout.videoScale || 1;
+              document.getElementById("val-video-x").textContent = (data.layout.videoX || 0) + "px";
+              document.getElementById("val-video-y").textContent = (data.layout.videoY || 0) + "px";
             }
-
-            class ApplicationCore {
-                constructor() {
-                    this.audio = new AudioEngine();
-                    this.particles = new ParticleEngine();
-                    this.videoProcessors = [];
-                    this.cacheDOM();
-                    this.checkBrowser();
-                    this.initVideoProcessing();
-                    this.bindEvents();
-                    this.initLoader();
-                    this.lastTime = performance.now();
-                    this.lastTappedId = null; // Touch control
-                    requestAnimationFrame((t) => this.loop(t));
-                }
-                cacheDOM() {
-                    this.root = document.documentElement;
-                    this.body = document.body;
-                    this.sceneRoot = document.getElementById('scene-root');
-                    this.portalsGroup = document.getElementById('portals-container');
-                    this.portals = document.querySelectorAll('.portal-item');
-                    // Ya no usamos .media-video directamente para animaciones, ahora usamos .media-canvas o .portal-item en CSS
-                    this.sourceVideos = document.querySelectorAll('.media-video-source');
-                    this.cursor = document.getElementById('ring-cursor');
-                    this.layers = {
-                        bg: document.getElementById('layer-bg'), stage: document.getElementById('layer-stage'),
-                        actor: document.getElementById('layer-actor'), fg: document.getElementById('layer-fg')
-                    };
-                }
-                checkBrowser() {
-                    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                    document.getElementById('compatText').innerText = "Motor ChromaKey Activo (Canvas)";
-                }
-                
-                initVideoProcessing() {
-                     // Inicializar el procesador de video para el león
-                     this.videoProcessors.push(new VideoProcessor('vid-source-streamers', 'vid-canvas-streamers'));
-                }
-
-                bindEvents() {
-                    // Mouse Parallax & Cursor
-                    window.addEventListener('pointermove', (e) => {
-                        State.mouse.targetX = e.clientX / State.viewport.w;
-                        State.mouse.targetY = e.clientY / State.viewport.h;
-                        this.root.style.setProperty('--pointer-x', `${e.clientX}px`);
-                        this.root.style.setProperty('--pointer-y', `${e.clientY}px`);
-                        if (this.cursor) { this.cursor.style.left = `${e.clientX}px`; this.cursor.style.top = `${e.clientY}px`; }
-                    }, { passive: true });
-
-                    // Portals Interaction
-                    this.portals.forEach(portal => {
-                        const id = portal.getAttribute('data-id');
-                        const rgb = AppConfig.portals[id].colorRGB;
-
-                        const handleFocus = () => {
-                            if(State.isTransitioning) return;
-                            this.audio.sfxHover();
-                            this.cursor.classList.add('is-hovering');
-                            this.root.style.setProperty('--ambient-color', rgb);
-                            this.particles.setColor(rgb);
-                            portal.classList.add('is-hovered');
-                        };
-
-                        const handleBlur = () => {
-                            this.cursor.classList.remove('is-hovering');
-                            portal.classList.remove('is-hovered');
-                            // Retornar al color neutro/púrpura por defecto
-                            this.root.style.setProperty('--ambient-color', '124, 58, 237');
-                            this.particles.setColor('255, 255, 255');
-                        };
-
-                        portal.addEventListener('mouseenter', handleFocus);
-                        portal.addEventListener('mouseleave', handleBlur);
-                        portal.addEventListener('focus', handleFocus);
-                        portal.addEventListener('blur', handleBlur);
-
-                        portal.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            if (State.isTransitioning) return;
-
-                            // Lógica para dispositivos táctiles (1 tap ver info, 2 tap entrar)
-                            if (window.matchMedia('(hover: none)').matches) {
-                                if (this.lastTappedId !== id) {
-                                    this.portals.forEach(p => p.classList.remove('is-hovered'));
-                                    this.lastTappedId = id;
-                                    handleFocus(); // Simula hover
-                                    this.audio.sfxSelect();
-                                    return; // Cancela el click para requerir segundo tap
-                                }
-                            }
-                            
-                            this.executeTransition(portal, id);
-                        });
-                    });
-                }
-                
-                executeTransition(selectedPortal, id) {
-                    State.isTransitioning = true;
-                    this.audio.sfxEnter();
-                    this.cursor.classList.replace('is-hovering', 'is-selecting');
-                    
-                    // Bloquear contenedor
-                    this.portalsGroup.classList.add('is-transitioning');
-                    
-                    // Obtener centro del portal para atraer partículas
-                    const rect = selectedPortal.getBoundingClientRect();
-                    State.targetPortalCenter = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
-
-                    // Aplicar estados
-                    this.portals.forEach(p => {
-                        if (p === selectedPortal) p.classList.add('is-selected');
-                    });
-
-                    // Zoom Parallax global
-                    if(!State.prefersReducedMotion) {
-                        this.root.style.setProperty('--scene-scale', '1.15');
-                        this.root.style.setProperty('--scene-z', '100px');
-                    }
-
-                    // Navegación post-transición (1200ms = 1.2s Cinematic)
-                    setTimeout(() => {
-                        if (currentMode === 'B') {
-                           // MODO PANEL FLOTANTE
-                           document.getElementById('demo-panel').style.right = '0';
-                        } else {
-                           // MODO FULLSCREEN
-                           document.getElementById('demo-full').style.opacity = '1';
-                           document.getElementById('demo-full').style.pointerEvents = 'all';
-                        }
-                    }, 600);
-                }
-
-                resetTransition() {
-                    State.isTransitioning = false;
-                    State.targetPortalCenter = null;
-                    this.lastTappedId = null;
-                    this.portalsGroup.classList.remove('is-transitioning');
-                    this.portals.forEach(p => { p.classList.remove('is-selected', 'is-hovered'); });
-                    this.cursor.classList.remove('is-selecting');
-                    this.root.style.setProperty('--scene-scale', '1');
-                    this.root.style.setProperty('--scene-z', '0px');
-                }
-
-                initLoader() {
-                    setTimeout(() => {
-                        document.getElementById('loader-overlay').classList.add('is-hidden');
-                        this.body.classList.add('app-ready');
-                        
-                        
-            // DEMO LOGIC
-            let currentMode = 'B'; // Default to floating
-            document.getElementById('btn-mode-b').onclick = () => {
-                currentMode = 'B';
-                alert("Modo cambiado a Opción B. ¡Haz clic en el portal León Star para verlo!");
-            };
-            document.getElementById('btn-mode-a').onclick = () => {
-                currentMode = 'A';
-                alert("Modo cambiado a Opción A. ¡Haz clic en el portal León Star para verlo!");
-            };
-            document.getElementById('btn-close-demo').onclick = () => {
-                document.getElementById('demo-panel').style.right = '-100%';
-                window.AppCore.resetTransition();
-            };
-            document.getElementById('btn-close-full').onclick = () => {
-                document.getElementById('demo-full').style.opacity = '0';
-                document.getElementById('demo-full').style.pointerEvents = 'none';
-                window.AppCore.resetTransition();
-            };
-
-                        // Iniciar reproducción a través del procesador
-                        this.videoProcessors.forEach(vp => vp.play());
-                        // Fallback por si los procesadores fallan, intentar forzar los videos fuente
-                        this.sourceVideos.forEach(vid => { vid.play().catch(() => {}); });
-                        
-                    }, 1200); // Un poco más de tiempo para asegurar que el canvas procese el primer frame
-                }
-
-                loop(time) {
-                    this.lastTime = time;
-                    if(!State.isTransitioning && !State.prefersReducedMotion) {
-                        State.mouse.currentX += (State.mouse.targetX - State.mouse.currentX) * 0.05;
-                        State.mouse.currentY += (State.mouse.targetY - State.mouse.currentY) * 0.05;
-                        const dx = (State.mouse.currentX - 0.5) * 2, dy = (State.mouse.currentY - 0.5) * 2;
-                        
-                        this.root.style.setProperty('--shadow-offset-x', `${-dx * 60}px`);
-                        this.root.style.setProperty('--shadow-offset-y', `${30 - (dy * 40)}px`);
-                        
-                        const p = AppConfig.parallax;
-                        this.layers.bg.style.transform = `translate(calc(-50% + ${dx * p.bg}px), calc(-50% + ${dy * p.bg}px))`;
-                        this.layers.stage.style.transform = `translate(calc(-50% + ${dx * p.stage}px), calc(-50% + ${dy * p.stage}px))`;
-                        this.layers.actor.style.transform = `translate(calc(-50% + ${dx * p.actor}px), calc(-50% + ${dy * p.actor}px))`;
-                        this.layers.fg.style.transform = `translate(calc(-50% + ${dx * p.fg}px), calc(-50% + ${dy * p.fg}px))`;
-                    }
-                    this.particles.render();
-                    requestAnimationFrame((t) => this.loop(t));
-                }
+          }
+          // Load settings for tutorials and WA
+          if (data.whatsapp) {
+            if (document.getElementById("admin-wa-1")) document.getElementById("admin-wa-1").value = data.whatsapp[0] || "";
+            if (document.getElementById("admin-wa-2")) document.getElementById("admin-wa-2").value = data.whatsapp[1] || "";
+            if (document.getElementById("admin-wa-3")) document.getElementById("admin-wa-3").value = data.whatsapp[2] || "";
+            
+            const waList = document.getElementById("soporte-list");
+            if (waList) {
+              waList.innerHTML = data.whatsapp.map((link, i) => {
+                if(!link) return '';
+                return `<a href="${link}" target="_blank" style="padding: 16px 24px; background: #25D366; color: white; text-decoration: none; border-radius: 20px; font-weight: bold;">Soporte Opción ${i+1}</a>`;
+              }).join("");
             }
+          }
+                    if (data.registroVideo !== undefined) {
+            if (document.getElementById("admin-registro-video")) document.getElementById("admin-registro-video").value = data.registroVideo || "";
+            if (document.getElementById("registro-personaje-video")) document.getElementById("registro-personaje-video").src = data.registroVideo || "";
+          }
 
-            window.addEventListener('DOMContentLoaded', () => { window.AppCore = new ApplicationCore(); });
-        })();
-    </script>
+          if (data.tutorials) {
+            if (document.getElementById("admin-tut-1")) document.getElementById("admin-tut-1").value = data.tutorials[0] || "";
+            if (document.getElementById("admin-tut-2")) document.getElementById("admin-tut-2").value = data.tutorials[1] || "";
+            if (document.getElementById("admin-tut-3")) document.getElementById("admin-tut-3").value = data.tutorials[2] || "";
+            
+            const tutList = document.getElementById("tutoriales-list");
+            if (tutList) {
+              tutList.innerHTML = data.tutorials.map(url => {
+                if(!url) return '';
+                return `<div style="background: rgba(0,0,0,0.5); padding: 12px; border-radius: 12px;"><a href="${url}" target="_blank" style="color: var(--coral);">Ver Tutorial ↗</a></div>`;
+              }).join("");
+            }
+          }
+
+        }
+      }
+    });
+
+    // CONTROL DEL MODAL ADMIN Y AUTH
+    const modal = document.getElementById("admin-modal");
+    const openBtn = document.getElementById("btn-open-admin");
+    const openHeroBtn = document.getElementById("btn-hero-admin");
+    const closeLogin = document.getElementById("btn-close-login");
+    const closePanel = document.getElementById("btn-close-panel");
+    const loginView = document.getElementById("admin-login-view");
+    const panelView = document.getElementById("admin-panel-view");
+
+    let isHardcodedAuthenticated = false;
+    function openAdmin() {
+      modal.classList.add("is-open");
+      if (!isHardcodedAuthenticated) {
+        if(loginView) loginView.style.display = "block";
+        panelView.style.display = "none";
+      } else {
+        if(loginView) loginView.style.display = "none";
+        panelView.style.display = "block";
+      }
+    }
+
+    openBtn.onclick = openAdmin;
+    if (openHeroBtn) openHeroBtn.onclick = openAdmin;
+    closeLogin.onclick = () => modal.classList.remove("is-open");
+    closePanel.onclick = () => modal.classList.remove("is-open");
+
+    // FORMULARIO DE LOGIN
+    const formLogin = document.getElementById("form-auth-login");
+    const authError = document.getElementById("auth-error-msg");
+
+    formLogin.onsubmit = async (e) => {
+      e.preventDefault();
+      authError.style.display = "none";
+      const em = document.getElementById("auth-email").value.trim();
+      const pw = document.getElementById("auth-password").value;
+
+      if (em === "SANTIstp" && pw === "Namekusein123") {
+        isHardcodedAuthenticated = true;
+        loginView.style.display = "none";
+        panelView.style.display = "block";
+        document.getElementById("auth-email").value = "";
+        document.getElementById("auth-password").value = "";
+      } else {
+        authError.textContent = "Usuario o contraseña incorrectos.";
+        authError.style.display = "block";
+      }
+    };
+
+    // GUARDAR EN FIRESTORE
+    const saveBtn = document.getElementById("btn-save-firestore");
+    const saveMsg = document.getElementById("save-msg-feedback");
+
+    saveBtn.onclick = async () => {
+      saveBtn.disabled = true;
+      saveBtn.textContent = "GUARDANDO EN FIRESTORE...";
+
+      
+      const layout = {
+        
+
+        
+        videoScale: parseFloat(document.getElementById("admin-video-scale")?.value || 1),
+        videoX: parseInt(document.getElementById("admin-video-x")?.value || 0),
+        videoY: parseInt(document.getElementById("admin-video-y")?.value || 0)
+      };
+
+
+      const whatsapp = [
+        document.getElementById("admin-wa-1")?.value || "",
+        document.getElementById("admin-wa-2")?.value || "",
+        document.getElementById("admin-wa-3")?.value || ""
+      ];
+
+      const cleanState = JSON.parse(JSON.stringify({ theme: newTheme, cards: newCards, whatsapp, tutorials, layout, registroVideo }));
+
+      try {
+        await setDoc(stateDocRef, cleanState, { merge: true });
+        saveMsg.textContent = "✓ Sincronizado exitosamente con Firestore";
+        saveMsg.style.display = "block";
+        setTimeout(() => { saveMsg.style.display = "none"; modal.classList.remove("is-open"); }, 1400);
+      } catch (err) {
+        saveMsg.textContent = "⚠ Error: " + err.message;
+        saveMsg.style.display = "block";
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "GUARDAR EN FIRESTORE EN TIEMPO REAL";
+      }
+    };
+
+    // UPLOADER A VERCEL SERVERLESS
+    const fileInput = document.getElementById("media-file-input");
+    const statusLabel = document.getElementById("upload-status-label");
+
+    if (fileInput) {
+      fileInput.onchange = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        statusLabel.textContent = "Transmitiendo por Serverless Proxy...";
+        try {
+          const reader = new FileReader();
+          const b64 = await new Promise((res, rej) => {
+            reader.onload = () => res(reader.result.split(',')[1]);
+            reader.onerror = () => rej(new Error("Error leyendo archivo"));
+            reader.readAsDataURL(file);
+          });
+
+          const cleanName = String(file.name || "media").replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120);
+          const response = await fetch("/api/upload-image", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ fileBase64: b64, mimeType: file.type, fileName: cleanName })
+          });
+
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || "Fallo en la subida");
+          statusLabel.textContent = "✓ Subido: " + data.url;
+        } catch (err) {
+          statusLabel.textContent = "⚠ Error: " + err.message;
+        }
+      };
+    }
+  
+    
+    const inputs = ["video-scale", "video-x", "video-y"];
+    inputs.forEach(id => {
+      const el = document.getElementById("admin-" + id);
+      const valEl = document.getElementById("val-" + id);
+      if (el) {
+        el.addEventListener("input", (e) => {
+          const val = e.target.value;
+          const unit = id.includes("x") || id.includes("y") ? "px" : "";
+          document.documentElement.style.setProperty("--" + id, val + unit);
+          if (valEl) valEl.textContent = val + unit;
+        });
+      }
+    });
+    // === VIDEO RECORDER HANDLER ===
+    const btnRecord = document.getElementById("btn-record-video");
+    const recordPreview = document.getElementById("record-preview");
+    const recordStatus = document.getElementById("record-status");
+    const regVideoUrl = document.getElementById("reg-video-url");
+
+    if (btnRecord) {
+      btnRecord.onclick = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { width: { ideal: 480 }, height: { ideal: 640 }, frameRate: { ideal: 15 } }, 
+            audio: true 
+          });
+          recordPreview.srcObject = stream;
+          recordPreview.style.display = "block";
+          recordPreview.muted = true;
+          recordPreview.play();
+
+          let options = { videoBitsPerSecond: 250000 };
+          if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
+            options.mimeType = 'video/webm;codecs=vp9';
+          } else if (MediaRecorder.isTypeSupported('video/webm')) {
+            options.mimeType = 'video/webm';
+          } else if (MediaRecorder.isTypeSupported('video/mp4')) {
+            options.mimeType = 'video/mp4';
+          }
+
+          const recorder = new MediaRecorder(stream, options);
+          const chunks = [];
+          
+          recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+          
+          recorder.onstop = async () => {
+            stream.getTracks().forEach(t => t.stop());
+            recordPreview.style.display = "none";
+            recordStatus.textContent = "Comprimiendo y subiendo video...";
+            recordStatus.style.color = "#E64381";
+            btnRecord.disabled = true;
+
+            const blob = new Blob(chunks, { type: recorder.mimeType || 'video/webm' });
+            const fileName = 'verif_' + Date.now() + '.webm';
+            
+            try {
+              // 1. Obtener el mejor servidor de GoFile disponible
+              const serverRes = await fetch("https://api.gofile.io/servers");
+              const serverData = await serverRes.json();
+              if(serverData.status !== "ok") throw new Error("No se pudo contactar al servidor de videos.");
+              const bestServer = serverData.data.servers[0].name;
+
+              // 2. Subir el video a GoFile
+              const formData = new FormData();
+              formData.append("file", blob, fileName);
+              
+              formData.append("token", "LBRXKRTeYjMsKssLNP2ndcCb6SUi3rBP");
+              const uploadRes = await fetch(`https://${bestServer}.gofile.io/contents/uploadfile`, {
+                method: "POST",
+                body: formData
+              });
+              const uploadData = await uploadRes.json();
+              
+              if(uploadData.status !== "ok") throw new Error("Error al procesar el video.");
+              
+              // 3. Obtener el link público
+              const url = uploadData.data.downloadPage;
+              
+              regVideoUrl.value = url;
+              recordStatus.textContent = "✓ Video grabado y subido exitosamente";
+              recordStatus.style.color = "#4CAF50";
+            } catch(e) {
+              recordStatus.textContent = "⚠ Error al subir: " + e.message;
+              recordStatus.style.color = "red";
+              btnRecord.disabled = false;
+              btnRecord.textContent = "Reintentar Grabación";
+              btnRecord.style.background = "#E64381";
+            }
+          };
+
+          recorder.start();
+          btnRecord.textContent = "🔴 Grabando (10s)...";
+          btnRecord.style.background = "red";
+          btnRecord.disabled = true;
+
+          let timeLeft = 10;
+          const interval = setInterval(() => {
+            timeLeft--;
+            if(timeLeft > 0) {
+              btnRecord.textContent = `🔴 Grabando (${timeLeft}s)...`;
+            } else {
+              clearInterval(interval);
+              recorder.stop();
+              btnRecord.textContent = "Procesando...";
+              btnRecord.style.background = "#77707d";
+            }
+          }, 1000);
+
+        } catch (err) {
+          alert("Error accediendo a la cámara. Asegúrate de dar permisos: " + err.message);
+        }
+      };
+    }
+
+    // === FORM SUBMIT HANDLER ===
+    const regForm = document.getElementById("native-registration-form");
+    if (regForm) {
+      regForm.onsubmit = async (e) => {
+        e.preventDefault();
+        if (!document.getElementById("reg-video-url").value) {
+          alert("Por favor, completa la verificación de video de 10 segundos antes de enviar el formulario.");
+          return;
+        }
+        const btn = document.getElementById("btn-submit-reg");
+        const feedback = document.getElementById("reg-feedback");
+        const status = document.getElementById("reg-upload-status");
+        
+        btn.disabled = true;
+        btn.textContent = "Subiendo archivos y enviando...";
+        feedback.style.display = "none";
+        status.textContent = "";
+
+        try {
+          const fileInput = document.getElementById("reg-id-photos");
+          const files = fileInput.files;
+          const photoUrls = [];
+
+          // Upload files to GoFile with user's token
+          for(let i=0; i < Math.min(files.length, 5); i++) {
+            const file = files[i];
+            if (file.size > 50 * 1024 * 1024) throw new Error("Un archivo excede los 50MB"); 
+            status.textContent = `Subiendo foto ${i+1} de ${Math.min(files.length, 5)} a tu cuenta segura...`;
+            
+            const srvRes = await fetch("https://api.gofile.io/servers");
+            const srvData = await srvRes.json();
+            const server = srvData.data.servers[0].name;
+
+            const fd = new FormData();
+            fd.append("file", file);
+            fd.append("token", "LBRXKRTeYjMsKssLNP2ndcCb6SUi3rBP");
+
+            const response = await fetch(`https://${server}.gofile.io/contents/uploadfile`, {
+              method: "POST",
+              body: fd
+            });
+
+            const data = await response.json();
+            if (data.status !== "ok") throw new Error("Error al subir imagen a GoFile");
+            photoUrls.push(data.data.downloadPage);
+          }
+
+          // === ENVÍO DIRECTO A EXCEL ONLINE (VÍA NUESTRO BACKEND) ===
+          status.textContent = "Guardando registro de forma segura...";
+          
+          // Construimos el objeto JSON estructurado con todos los campos
+          const registroPayload = {
+            nombre: document.getElementById("reg-name").value,
+            email: document.getElementById("reg-email").value,
+            telefono: document.getElementById("reg-phone").value,
+            agencia: document.getElementById("reg-agency").value,
+            tuId: document.getElementById("reg-id").value,
+            agentId: document.getElementById("reg-agent-id").value,
+            nacionalidad: document.getElementById("reg-nationality").value,
+            ciudad: document.getElementById("reg-city").value,
+            talento: document.getElementById("reg-talent").value,
+            genero: document.getElementById("reg-gender").value,
+            plataforma: document.getElementById("reg-platform").value,
+            videoUrl: document.getElementById("reg-video-url").value,
+            fotosUrl: photoUrls.join(" | ") // Separamos los links por un |
+          };
+
+          // Llamamos a nuestro propio backend en Vercel (totalmente invisible y sin CORS)
+          const dbResponse = await fetch('/api/submit-excel', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(registroPayload)
+          });
+
+          const dbResult = await dbResponse.json();
+
+          if (!dbResponse.ok) {
+            throw new Error(dbResult.error || "Fallo de conexión con la base de datos.");
+          }
+          
+          // Imprimimos confirmación en consola para debug
+          console.log("¡Éxito! Registro guardado en la nube:", registroPayload);
+          
+          feedback.textContent = "¡Registro completado y guardado con éxito!";
+          feedback.style.display = "block";
+          regForm.reset();
+          document.getElementById("record-preview").style.display = "none";
+          document.getElementById("record-status").textContent = "";
+          status.textContent = "";
+        } catch(err) {
+          alert("Error al enviar el registro: " + err.message);
+          feedback.textContent = "Ocurrió un error. Inténtalo nuevamente.";
+          feedback.style.color = "red";
+          feedback.style.display = "block";
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Enviar Postulación";
+        }
+      };
+    }
+
+
+    // ==========================================
+    // LÓGICA DEL MODO EDITOR VISUAL (FLOTANTE)
+    // ==========================================
+    
+    const regVideoInput = document.getElementById("admin-registro-video-file");
+    if (regVideoInput) {
+      regVideoInput.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        regVideoInput.parentElement.innerHTML = "⏳ SUBIENDO...";
+        try {
+          const url = await uploadToGoFile(file);
+          await setDoc(stateDocRef, { registroVideo: url }, { merge: true });
+          alert("¡Video de Registro actualizado con éxito!");
+        } catch(err) {
+          alert("Error al subir Video: " + err.message);
+        } finally {
+          location.reload();
+        }
+      });
+    }
+
+    const btnModoEditor = document.getElementById("btn-modo-editor");
+    const editorToolbar = document.getElementById("visual-editor-toolbar");
+    const editorExitBtn = document.getElementById("editor-exit-btn");
+    const editorSaveBtn = document.getElementById("editor-save-btn");
+    const uploadPngInput = document.getElementById("editor-upload-png");
+    const uploadVideoInput = document.getElementById("editor-upload-video");
+    
+    
+    ['admin-tut-1-file', 'admin-tut-2-file', 'admin-tut-3-file'].forEach((id, index) => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if(!file) return;
+          const oldLabel = input.parentElement.innerHTML;
+          input.parentElement.innerHTML = "⏳ SUBIENDO...";
+          try {
+            const url = await uploadToGoFile(file);
+            const key = 'tut' + (index + 1); // e.g. tut1, tut2, tut3
+            await setDoc(stateDocRef, { [key]: url }, { merge: true });
+            alert("Tutorial " + (index+1) + " subido con éxito!");
+          } catch(err) {
+            alert("Error: " + err.message);
+          } finally {
+            location.reload();
+          }
+        });
+      }
+    });
+
+    // Todos los elementos de texto que queremos que sean editables
+    const editableElements = document.querySelectorAll('.hero h1, .hero p, .accordion-header h3, .platform-item span, .footer-content p, .highlight');
+    
+    if (btnModoEditor) {
+      btnModoEditor.addEventListener("click", () => {
+        // Cerrar panel admin y abrir modo editor
+        document.getElementById("admin-modal").classList.remove("is-open");
+        editorToolbar.style.display = "flex";
+        document.body.classList.add("editor-active");
+        
+        // Hacer textos editables
+        editableElements.forEach(el => {
+          el.contentEditable = "true";
+          // Guardar su valor original por si queremos deshacer
+          if(!el.hasAttribute("data-original")) {
+            el.setAttribute("data-original", el.innerHTML);
+          }
+        });
+      });
+    }
+
+    if (editorExitBtn) {
+      editorExitBtn.addEventListener("click", () => {
+        editorToolbar.style.display = "none";
+        document.body.classList.remove("editor-active");
+        editableElements.forEach(el => el.contentEditable = "false");
+      });
+    }
+    
+    // Función genérica para subir a GoFile (Directo desde el navegador, sin problemas de CORS)
+    async function uploadToGoFile(file) {
+      const srvRes = await fetch("https://api.gofile.io/servers");
+      const srvData = await srvRes.json();
+      const server = srvData.data.servers[0].name;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("token", "LBRXKRTeYjMsKssLNP2ndcCb6SUi3rBP");
+
+      const res = await fetch(`https://${server}.gofile.io/contents/uploadfile`, {
+        method: "POST",
+        body: formData
+      });
+      
+      const uploadData = await res.json();
+      if (uploadData.status !== "ok") throw new Error("Error al subir a GoFile");
+      
+      // GoFile devuelve un downloadPage. Intentamos extraer el link directo si la API lo provee, 
+      // de lo contrario usamos la página de descarga.
+      return uploadData.data.downloadPage;
+    }
+
+    if (uploadPngInput) {
+      uploadPngInput.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        
+        const oldLabel = uploadPngInput.parentElement.innerHTML;
+        uploadPngInput.parentElement.innerHTML = "⏳ SUBIENDO...";
+        
+        try {
+          const url = await uploadToGoFile(file);
+          await setDoc(stateDocRef, { bg1: url, bg2: url }, { merge: true });
+          alert("¡Fondo PNG actualizado con éxito!");
+        } catch(err) {
+          alert("Error al subir PNG: " + err.message);
+        } finally {
+          location.reload(); 
+        }
+      });
+    }
+
+    if (uploadVideoInput) {
+      uploadVideoInput.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        
+        const oldLabel = uploadVideoInput.parentElement.innerHTML;
+        uploadVideoInput.parentElement.innerHTML = "⏳ SUBIENDO...";
+        
+        try {
+          const url = await uploadToGoFile(file);
+          await setDoc(stateDocRef, { videoUrl: url }, { merge: true });
+          alert("¡Video Holográfico actualizado con éxito!");
+        } catch(err) {
+          alert("Error al subir Video: " + err.message);
+        } finally {
+          location.reload();
+        }
+      });
+    }
+
+    if (editorSaveBtn) {
+      editorSaveBtn.addEventListener("click", async () => {
+        editorSaveBtn.textContent = "⏳ GUARDANDO...";
+        const textosGuardados = {};
+        editableElements.forEach((el, index) => {
+          textosGuardados['texto_' + index] = el.innerHTML;
+        });
+
+        try {
+          await setDoc(stateDocRef, { textos: textosGuardados }, { merge: true });
+          editorSaveBtn.textContent = "✓ GUARDADO";
+          setTimeout(() => editorSaveBtn.textContent = "💾 GUARDAR TEXTOS", 2000);
+        } catch(e) {
+          alert("Error al guardar: " + e.message);
+          editorSaveBtn.textContent = "💾 GUARDAR TEXTOS";
+        }
+      });
+    }
+
+
+    // === DATABASE DOWNLOAD HANDLER ===
+    const btnDownload = document.getElementById("btn-download-db");
+    if (btnDownload) {
+      btnDownload.onclick = async () => {
+        btnDownload.disabled = true;
+        btnDownload.textContent = "Generando CSV...";
+        try {
+          const snapshot = await getDocs(collection(db, "registros_form"));
+          if (snapshot.empty) {
+            alert("No hay registros en la base de datos.");
+            return;
+          }
+
+          let csv = "Fecha,Correo,Agencia,Tu ID,ID Agente,Nombre Completo,Teléfono,Nacionalidad,Ciudad,Fotos(URLs),Talento,Género,Plataforma,Video Verificación\n";
+          snapshot.forEach(docSnap => {
+            const d = docSnap.data();
+            const fotosStr = (d.photos || []).join(" ; ");
+            const row = [
+              d.timestamp || "", d.email || "", d.agency || "", d.tuId || "", d.agentId || "", 
+              d.fullName || "", d.phone || "", d.nationality || "", d.city || "", 
+              fotosStr, d.talent || "", d.gender || "", d.platform || "", d.verificationVideo || ""
+            ].map(val => `"${String(val).replace(/"/g, '""')}"`);
+            csv += row.join(",") + "\n";
+          });
+
+          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.setAttribute("download", "Starmaker_Registros.csv");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch(err) {
+          alert("Error descargando BD: " + err.message);
+        } finally {
+          btnDownload.disabled = false;
+          btnDownload.textContent = "Descargar DATABASE (.CSV)";
+        }
+      };
+    }
+</script>
+
+  
+  <!-- SVG Icons Template -->
+  <svg style="display:none;">
+    <defs>
+      <g id="icon-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></g>
+      <g id="icon-form"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></g>
+      <g id="icon-video"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></g>
+      <g id="icon-support"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></g>
+    </defs>
+  </svg>
+
+  
+
+
+  
+
+
+  <script>
+    
+  </script>
+
 </body>
 </html>
