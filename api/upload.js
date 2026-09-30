@@ -1,16 +1,15 @@
 import { handleUpload } from '@vercel/blob/client';
 
 export default async function uploadHandler(request, response) {
-  const body = await request.json();
-
   try {
+    const body = (typeof request.body === 'string') ? JSON.parse(request.body) : request.body;
+
     const jsonResponse = await handleUpload({
       body,
       request,
       onBeforeGenerateToken: async (pathname) => {
-        // Here we could authenticate the user, but since the panel has hardcoded auth, we just allow it.
         return {
-          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm'],
+          allowedContentTypes: ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/webm', 'video/quicktime'],
           tokenPayload: JSON.stringify({}),
         };
       },
@@ -21,6 +20,7 @@ export default async function uploadHandler(request, response) {
 
     return response.status(200).json(jsonResponse);
   } catch (error) {
+    console.error("Upload error:", error);
     return response.status(400).json({ error: error.message });
   }
 }
