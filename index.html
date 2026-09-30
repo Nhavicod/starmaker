@@ -715,67 +715,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
         </div>
       </section>
 
-      <section class="section" id="tutoriales">
-        <div class="container" style="max-width: 800px; margin: 60px auto;">
-          <div class="premium-accordion-header" id="toggle-tutoriales">
-            <div style="pointer-events: none;">
-              <div class="kicker">05 · VIDEOTUTORIALES</div>
-              <h2 style="margin-bottom: 5px;">Aprende con<br><span class="gradient-text">Nosotros.</span> <span class="premium-accordion-icon" id="toggle-icon-tutoriales">▼</span></h2>
-            </div>
-            <p class="section-desc" style="pointer-events: none; margin-bottom: 0;">
-              [ RECURSOS OFICIALES — PULSA PARA DESBLOQUEAR ]
-            </p>
-          </div>
-          
-          <div id="panel-tutoriales-grid" class="premium-accordion-grid">
-            <div class="premium-accordion-inner">
-              <div class="panel" style="padding: 30px; border-radius: 16px; background: rgba(12, 10, 18, 0.85); border: 1px solid var(--line-bright); box-shadow: 0 20px 50px rgba(0,0,0,0.5); backdrop-filter: blur(20px);">
-                <div id="tutoriales-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
-                  <!-- Renderizado dinámico -->
-                </div>
-                <script>
-                  document.getElementById('toggle-tutoriales').addEventListener('click', function() {
-                    const grid = document.getElementById('panel-tutoriales-grid');
-                    this.classList.toggle('is-active');
-                    grid.classList.toggle('is-open');
-                  });
-                </script>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="dudas">
-        <div class="container" style="max-width: 800px; margin: 60px auto;">
-          <div class="premium-accordion-header" id="toggle-dudas">
-            <div style="pointer-events: none;">
-              <div class="kicker">06 · SOPORTE Y DUDAS</div>
-              <h2 style="margin-bottom: 5px;">Centro de<br><span class="gradient-text">Ayuda.</span> <span class="premium-accordion-icon" id="toggle-icon-dudas">▼</span></h2>
-            </div>
-            <p class="section-desc" style="pointer-events: none; margin-bottom: 0;">
-              [ COMUNICACIÓN DIRECTA — PULSA PARA DESBLOQUEAR ]
-            </p>
-          </div>
-
-          <div id="panel-dudas-grid" class="premium-accordion-grid">
-            <div class="premium-accordion-inner">
-              <div class="panel" style="padding: 30px; border-radius: 16px; background: rgba(12, 10, 18, 0.85); border: 1px solid var(--line-bright); box-shadow: 0 20px 50px rgba(0,0,0,0.5); backdrop-filter: blur(20px);">
-                <div id="soporte-list" style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;">
-                  <!-- Renderizado dinámico -->
-                </div>
-                <script>
-                  document.getElementById('toggle-dudas').addEventListener('click', function() {
-                    const grid = document.getElementById('panel-dudas-grid');
-                    this.classList.toggle('is-active');
-                    grid.classList.toggle('is-open');
-                  });
-                </script>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
 
     </main>
@@ -817,7 +757,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
       </div>
 
       <!-- VISTA 2: PANEL DE CONTROL CUANDO YA ESTÁ AUTENTICADO -->
-      <div id="admin-panel-view" style="display:none;">
+            <div id="admin-panel-view" style="display:none;">
         <div class="admin-header">
           <div>
             <h2 style="font-size:1.15rem;font-weight:800;letter-spacing:.08em;">CONSOLA ADMINISTRATIVA</h2>
@@ -826,68 +766,10 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
           <button class="admin-close" id="btn-close-panel">✕</button>
         </div>
 
-        
-        
-        
-        
-
-        <div class="admin-field">
-          <label>Escala del Video (1x):</label>
-          <input type="range" id="admin-video-scale" min="0.5" max="2.5" step="0.05" value="1" style="width:100%;">
-          <span id="val-video-scale" style="font-size: 11px; color: var(--muted);">1</span>
+        <div style="margin-top:24px; padding-top: 16px;">
+          <label class="admin-label">BASE DE DATOS (USUARIOS REGISTRADOS)</label>
+          <button type="button" id="btn-download-db" class="admin-input" style="background: #4CAF50; color: white; border:none; cursor: pointer; text-transform: uppercase; font-weight: bold; width: 100%; margin-bottom: 12px; padding: 16px; border-radius: 8px;">Descargar DATABASE (.CSV / Excel)</button>
         </div>
-        <div class="admin-field">
-          <label>Posición X del Video (Horizontal px):</label>
-          <input type="range" id="admin-video-x" min="-200" max="200" step="1" value="0" style="width:100%;">
-          <span id="val-video-x" style="font-size: 11px; color: var(--muted);">0px</span>
-        </div>
-        <div class="admin-field">
-          <label>Posición Y del Video (Vertical px):</label>
-          <input type="range" id="admin-video-y" min="-200" max="200" step="1" value="0" style="width:100%;">
-          <span id="val-video-y" style="font-size: 11px; color: var(--muted);">0px</span>
-        </div>
-
-
-
-
-
-        
-        <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
-          <label class="admin-label">BASE DE DATOS (EXCEL)</label>
-          <button type="button" id="btn-download-db" class="admin-input" style="background: #4CAF50; color: white; border:none; cursor: pointer; text-transform: uppercase; font-weight: bold; width: 100%; margin-bottom: 12px;">Descargar DATABASE (.CSV / Excel)</button>
-        </div>
-
-        <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
-          <label class="admin-label">ENLACES DE SOPORTE (WHATSAPP)</label>
-          <input type="text" class="admin-input" id="admin-wa-1" placeholder="Opción 1: https://wa.me/..." style="margin-bottom: 6px;" />
-          <input type="text" class="admin-input" id="admin-wa-2" placeholder="Opción 2: https://wa.me/..." style="margin-bottom: 6px;" />
-          <input type="text" class="admin-input" id="admin-wa-3" placeholder="Opción 3: https://wa.me/..." style="margin-bottom: 6px;" />
-        </div>
-
-        
-        <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
-          <label class="admin-label">VIDEO PERSONAJE - REGISTRO (.webm transparente o MP4 fondo negro)</label>
-          <label style="background:var(--pink);color:#fff;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">
-            SUBIR VIDEO DE REGISTRO
-            <input type="file" id="admin-registro-video-file" accept="video/webm,video/mp4" style="display:none;" />
-          </label>
-        </div>
-
-        <div style="margin-top:24px; padding-top: 16px; border-top: 1px solid var(--line);">
-          <label class="admin-label">VIDEOTUTORIALES (ENLACES DE VIDEO O YOUTUBE)</label>
-          <label style="background:var(--cyan);color:#000;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">SUBIR TUTORIAL 1<input type="file" id="admin-tut-1-file" accept="video/*" style="display:none;" /></label>
-          <label style="background:var(--cyan);color:#000;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">SUBIR TUTORIAL 2<input type="file" id="admin-tut-2-file" accept="video/*" style="display:none;" /></label>
-          <label style="background:var(--cyan);color:#000;padding:8px;border-radius:4px;display:block;margin-bottom:6px;cursor:pointer;font-weight:bold;text-align:center;">SUBIR TUTORIAL 3<input type="file" id="admin-tut-3-file" accept="video/*" style="display:none;" /></label>
-        </div>
-
-        <button type="button" class="btn btn-primary" id="btn-save-firestore" style="width:100%;justify-content:center;margin-top:14px;background:#4CAF50;border:none;">
-          GUARDAR EN FIRESTORE EN TIEMPO REAL
-        </button>
-        <button type="button" class="btn btn-primary" id="btn-modo-editor" style="background:var(--cyan); margin-top:14px; width:100%; justify-content:center;">
-          ACTIVAR MODO EDITOR VISUAL (TEXTOS, PNG Y VIDEO)
-        </button>
-
-        <p id="save-msg-feedback" style="text-align:center;font-size:12px;margin-top:10px;color:var(--coral);display:none;"></p>
       </div>
     </div>
   </div>
@@ -1372,22 +1254,19 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
             if (file.size > 50 * 1024 * 1024) throw new Error("Un archivo excede los 50MB"); 
             status.textContent = `Subiendo foto ${i+1} de ${Math.min(files.length, 5)} a tu cuenta segura...`;
             
-            const srvRes = await fetch("https://api.gofile.io/servers");
-            const srvData = await srvRes.json();
-            const server = srvData.data.servers[0].name;
-
-            const fd = new FormData();
-            fd.append("file", file);
-            fd.append("token", "LBRXKRTeYjMsKssLNP2ndcCb6SUi3rBP");
-
-            const response = await fetch(`https://${server}.gofile.io/contents/uploadfile`, {
-              method: "POST",
-              body: fd
+            
+            const buffer = await file.arrayBuffer();
+            const base64 = btoa(new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+            const ext = file.name.split('.').pop() || 'jpg';
+            const uploadRes = await fetch('/api/upload-file', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fileBase64: base64, ext })
             });
+            const data = await uploadRes.json();
+            if (!data.url) throw new Error("Error subiendo foto");
+            photoUrls.push(data.url);
 
-            const data = await response.json();
-            if (data.status !== "ok") throw new Error("Error al subir imagen a GoFile");
-            photoUrls.push(data.data.downloadPage);
           }
 
           // === ENVÍO DIRECTO A EXCEL ONLINE (VÍA NUESTRO BACKEND) ===
@@ -1445,19 +1324,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     }
 
 
-    // ==========================================
-    // LÓGICA DEL MODO EDITOR VISUAL (FLOTANTE)
-    // ==========================================
     
-    const regVideoInput = document.getElementById("admin-registro-video-file");
-    if (regVideoInput) {
-      regVideoInput.addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
-        regVideoInput.parentElement.innerHTML = "⏳ SUBIENDO...";
-        try {
-          const url = await uploadToBlob(file);
-          await setDoc(stateDocRef, { registroVideo: url }, { merge: true });
           alert("¡Video de Registro actualizado con éxito!");
         } catch(err) {
           alert("Error al subir Video: " + err.message);
@@ -1467,26 +1334,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
       });
     }
 
-    const btnModoEditor = document.getElementById("btn-modo-editor");
-    const editorToolbar = document.getElementById("visual-editor-toolbar");
-    const editorExitBtn = document.getElementById("editor-exit-btn");
-    const editorSaveBtn = document.getElementById("editor-save-btn");
-    const uploadPngInput = document.getElementById("editor-upload-png");
-    const uploadVideoInput = document.getElementById("editor-upload-video");
     
-    
-    ['admin-tut-1-file', 'admin-tut-2-file', 'admin-tut-3-file'].forEach((id, index) => {
-      const input = document.getElementById(id);
-      if (input) {
-        input.addEventListener('change', async (e) => {
-          const file = e.target.files[0];
-          if(!file) return;
-          const oldLabel = input.parentElement.innerHTML;
-          input.parentElement.innerHTML = "⏳ SUBIENDO...";
-          try {
-            const url = await uploadToGoFile(file);
-            const key = 'tut' + (index + 1); // e.g. tut1, tut2, tut3
-            await setDoc(stateDocRef, { [key]: url }, { merge: true });
             alert("Tutorial " + (index+1) + " subido con éxito!");
           } catch(err) {
             alert("Error: " + err.message);
