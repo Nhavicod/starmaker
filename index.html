@@ -1039,7 +1039,7 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
     const saveBtn = document.getElementById("btn-save-firestore");
     const saveMsg = document.getElementById("save-msg-feedback");
 
-    saveBtn.onclick = async () => {
+    if (saveBtn) saveBtn.onclick = async () => {
       saveBtn.disabled = true;
       saveBtn.textContent = "GUARDANDO EN FIRESTORE...";
 
@@ -1323,27 +1323,12 @@ window.onerror = function(msg, url, lineNo, columnNo, error) {
       };
     }
 
-
-    
-          alert("¡Video de Registro actualizado con éxito!");
-        } catch(err) {
-          alert("Error al subir Video: " + err.message);
-        } finally {
-          location.reload();
-        }
-      });
-    }
-
-    
-            alert("Tutorial " + (index+1) + " subido con éxito!");
-          } catch(err) {
-            alert("Error: " + err.message);
-          } finally {
-            location.reload();
-          }
-        });
-      }
-    });
+    const btnModoEditor = document.getElementById("btn-modo-editor");
+    const editorToolbar = document.getElementById("visual-editor-toolbar");
+    const editorExitBtn = document.getElementById("editor-exit-btn");
+    const editorSaveBtn = document.getElementById("editor-save-btn");
+    const uploadPngInput = document.getElementById("editor-upload-png");
+    const uploadVideoInput = document.getElementById("editor-upload-video");
 
     // Todos los elementos de texto que queremos que sean editables
     const editableElements = document.querySelectorAll('.hero h1, .hero p, .accordion-header h3, .platform-item span, .footer-content p, .highlight');
