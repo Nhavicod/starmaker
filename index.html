@@ -82,7 +82,7 @@
     
     header {
       position: fixed; top: 0; left: 0; width: 100%;
-      padding: 24px 30px; display: flex; justify-content: flex-start; align-items: center;
+      padding: 24px 30px; display: flex; justify-content: space-between; align-items: center;
       z-index: 1000; pointer-events: none;
     }
     .brand-container {
@@ -175,15 +175,19 @@
       100% { background-position: 100% 0; }
     }
 
-    /* ── ADMIN BUTTON ── */
-    .admin-btn-top {
+    /* ── HEADER ACTIONS & ADMIN BUTTONS ── */
+    .header-actions {
       position: fixed; top: 14px; right: 16px; z-index: 9999;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .admin-btn-top {
       background: rgba(0,0,0,.5); backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.6);
+      border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.7);
       padding: 7px 16px; border-radius: 20px; font-size: 11px; font-weight: 700;
       cursor: pointer; transition: all .3s; pointer-events: auto;
+      display: inline-flex; align-items: center; gap: 6px;
     }
-    .admin-btn-top:hover { color: white; background: rgba(255,255,255,.12); }
+    .admin-btn-top:hover { color: white; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.25); }
 
     /* ── SHOWROOM ── */
     .hero-showroom {
@@ -1760,7 +1764,14 @@
       <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--coral)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       <span class="brand">STARMAKER</span>
     </div>
-    <button class="admin-btn-top" id="btn-open-admin" onclick="openExecutiveAdmin()"><i data-lucide="crown" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;color:#D4AF7A"></i> Executive Console</button>
+    <div class="header-actions">
+      <button class="admin-btn-top" id="btn-open-mascot" onclick="toggleMascotWidget()" style="background:rgba(241,141,121,0.14);border-color:rgba(241,141,121,0.35);color:#F18D79;">
+        <span>🦁</span> Calibrar Mascota
+      </button>
+      <button class="admin-btn-top" id="btn-open-admin" onclick="openExecutiveAdmin()">
+        <i data-lucide="crown" style="width:13px;height:13px;color:#D4AF7A"></i> Panel Admin
+      </button>
+    </div>
   </header>
 
 
@@ -2264,6 +2275,25 @@
   <!-- ================================================================ -->
   <!-- EXECUTIVE COMMAND SUITE (ADMIN STARLEO)                           -->
   <!-- ================================================================ -->
+  
+  <!-- ================================================================ -->
+  <!-- WIDGET FLOTANTE: EDICIÓN Y SUBIDA DE MASCOTA 3D                   -->
+  <!-- ================================================================ -->
+  <div class="admin-widget" id="mascot-widget" style="display:none;">
+    <div class="admin-widget-header" id="mascot-widget-header">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:16px;">🦁</span>
+        <h3 style="font-size:13px;font-weight:800;letter-spacing:0.8px;margin:0;color:#fff;">CALIBRADOR DE MASCOTA</h3>
+      </div>
+      <button id="btn-close-mascot" onclick="closeMascotWidget()" style="background:transparent;border:none;color:#b9b0ba;font-size:18px;cursor:pointer;padding:2px 8px;border-radius:6px;transition:0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#b9b0ba'">✕</button>
+    </div>
+    <div class="admin-widget-content" style="padding:16px;max-height:calc(85vh - 55px);overflow-y:auto;">
+      <div id="admin-error-msg" style="display:none;background:rgba(235,82,121,0.2);border:1px solid #EB5279;padding:10px;border-radius:8px;color:#EB5279;font-size:11px;margin-bottom:12px;font-weight:bold;"></div>
+      <p style="font-size:11px;color:#b9b0ba;margin-bottom:14px;line-height:1.4;">Sube los videos de StarLeo (alfa transparente) y calibra tamaño y posición en tiempo real sobre el escenario 3D.</p>
+      <div id="admin-portals-config"></div>
+    </div>
+  </div>
+
   <div id="adminExecutiveOverlay" class="admin-executive-overlay" style="display:none;">
 
 
@@ -2278,7 +2308,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       <span class="live" id="syncBadge"><span class="status-dot green"></span>SYNC ACTIVE</span>
-      <button class="btn btn-secondary mini" onclick="openPublicPreview()" title="Ver cómo lucen las tarjetas públicas"><i data-lucide="eye" width="14"></i> Vista Previa</button>
+      <button class="btn btn-secondary mini" onclick="closeExecutiveAdmin();toggleMascotWidget()" style="background:rgba(241,141,121,0.12);border-color:rgba(241,141,121,0.3);color:#F18D79;" title="Abrir Calibrador Flotante de Mascota">🦁 Calibrar Mascota</button>
       <button class="btn btn-secondary mini" onclick="openNewRequestModal()" title="Registrar solicitud">+ Solicitud</button>
       <button class="btn btn-secondary mini" onclick="exportCandidatesCsv()" title="Exportar CSV de postulantes"><i data-lucide="download" width="14"></i> CSV</button>
       <button class="btn btn-secondary btn-icon" id="adminExit" onclick="openModal('lockModal')" title="Bloquear Consola"><i data-lucide="lock" width="15"></i></button>
@@ -2288,12 +2318,11 @@
 
   <div class="admin-content">
     <nav class="admin-tabs" id="adminTabs">
-      <button class="admin-tab active" data-tab="overview">Overview Ejecutivo</button>
-      <button class="admin-tab" data-tab="requests">Solicitudes</button>
-      <button class="admin-tab" data-tab="verification">Verificación</button>
-      <button class="admin-tab" data-tab="support">Concierge & Soporte</button>
-      <button class="admin-tab" data-tab="activity">Auditoría</button>
-      <button class="admin-tab" data-tab="settings">Configuración Master</button>
+      <button class="admin-tab active" data-tab="overview"><i data-lucide="layout-dashboard" width="14" style="margin-right:6px"></i> Overview</button>
+      <button class="admin-tab" data-tab="requests"><i data-lucide="inbox" width="14" style="margin-right:6px"></i> Solicitudes de Streamers</button>
+      <button class="admin-tab" data-tab="tutorials"><i data-lucide="graduation-cap" width="14" style="margin-right:6px"></i> Academia & Tutoriales</button>
+      <button class="admin-tab" data-tab="support"><i data-lucide="headphones" width="14" style="margin-right:6px"></i> Soporte & WhatsApp</button>
+      <button class="admin-tab" data-tab="settings"><i data-lucide="settings" width="14" style="margin-right:6px"></i> Configuración</button>
     </nav>
     <div id="adminView"></div>
   </div>
@@ -2301,8 +2330,9 @@
   <nav class="bottom-nav" id="adminBottom">
     <button data-tab="overview" class="active"><i data-lucide="layout-dashboard" width="18"></i>Overview</button>
     <button data-tab="requests"><i data-lucide="inbox" width="18"></i>Solicitudes</button>
-    <button data-tab="verification"><i data-lucide="video" width="18"></i>Videos</button>
-    <button data-tab="settings"><i data-lucide="sliders" width="18"></i>Master</button>
+    <button data-tab="tutorials"><i data-lucide="graduation-cap" width="18"></i>Academia</button>
+    <button data-tab="support"><i data-lucide="headphones" width="18"></i>Soporte</button>
+    <button data-tab="settings"><i data-lucide="settings" width="18"></i>Ajustes</button>
   </nav>
 </section>
 
@@ -2390,28 +2420,7 @@
   </div>
 </div>
 
-<!-- Modal Calibrador de Mascota Adicional -->
-<div class="modal" id="extraMascotModal" onclick="if(event.target===this)closeModal('extraMascotModal')">
-  <div class="modal-box" style="max-width:560px">
-    <button class="close" onclick="closeModal('extraMascotModal')">×</button>
-    <div class="modal-head">
-      <span class="kicker">3D Spatial Calibrator</span>
-      <h3 id="extraMascotModalTitle">Calibrar Mascota</h3>
-    </div>
-    <div id="extraMascotModalBody"></div>
-  </div>
-</div>
 
-<!-- Modal Vista Previa Pública -->
-<div class="modal" id="publicPreviewModal" onclick="if(event.target===this)closeModal('publicPreviewModal')">
-  <div class="modal-box" style="width:min(1100px,100%)">
-    <button class="close" onclick="closeModal('publicPreviewModal')">×</button>
-    <div class="modal-head">
-      <span class="kicker">Live Public Simulation</span>
-      <h3>Vista Previa de Tarjetas Holográficas</h3>
-    </div>
-    <div id="publicPreviewArea" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:14px"></div>
-  </div>
 </div>
 
 <!-- Modal de Bloqueo Ejecutivo -->
@@ -3451,45 +3460,58 @@ function createNewRequest() {
 }
 
 function renderOverview() {
+  const total = state.requests.length;
   const pending = state.requests.filter(r => !["APROBADA", "RECHAZADA"].includes(r.status)).length;
   const approved = state.requests.filter(r => r.status === "APROBADA").length;
-  const videoCount = state.requests.filter(r => r.video).length;
+  const withVideo = state.requests.filter(r => r.video).length;
   const tutCount = state.tutorials?.length || 0;
+  const openTickets = (state.tickets || []).filter(t => t.status !== "RESUELTO").length;
+
   return `<div class="admin-grid">
-    <div class="widget span-4" style="min-height:auto">
-      <div class="widget-pad" style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:16px">
-          <div class="avatar" style="width:50px;height:50px;border-radius:16px">${icon("hard-drive", 22)}</div>
-          <div>
-            <span class="kicker">Cloud Infrastructure</span>
-            <h4 style="color:var(--text);margin:3px 0 2px;font-size:16px">Almacenamiento de Activos Multimedia</h4>
-            <p style="color:var(--muted);font-size:12px;margin:0">Capacidad dedicada para videos WebM transparentes y recursos de alta definición</p>
-          </div>
+    ${widget("w-kpi", "EXPEDIENTES TOTALES", "Postulaciones recibidas", `<div class="kpi">${total}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">${withVideo} videos de verificación · ${tutCount} guías</div>`, 'data-kpi="' + total + '"')}
+    ${widget("w-pending", "POR DICTAMINAR", "En espera de revisión", `<div class="kpi">${pending}</div><div class="progress-bar" style="margin-top:16px"><span style="width:${Math.min(100, pending * 25)}%"></span></div>`, 'data-kpi="' + pending + '"')}
+    ${widget("w-approved", "TALENTOS APROBADOS", "Streamers oficiales", `<div class="kpi">${approved}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">Creadores certificados</div>`, 'data-kpi="' + approved + '"')}
+    ${widget("w-tickets", "CONCIERGE DESK", "Tickets de creadores", `<div class="kpi">${openTickets}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">${state.tickets?.length || 0} consultas en total</div>`, 'data-kpi="' + openTickets + '"')}
+
+    <article class="widget span-2" id="w-notes">
+      <div class="glow"></div>
+      <div class="full-view widget-pad">
+        <div class="widget-head">
+          <div><span class="kicker">Directrices y Turnos</span><h3>Bitácora Estratégica</h3></div>
         </div>
-        <div style="display:flex;align-items:center;gap:18px">
-          <div style="text-align:right">
-            <div style="font-size:11px;color:var(--muted)">Estado del Nodo</div>
-            <strong style="font-size:13px;color:var(--green)">Óptimo · CDN Activo</strong>
-          </div>
-          <div style="position:relative;width:62px;height:62px">
-            <svg viewBox="0 0 36 36" style="width:100%;height:100%;transform:rotate(-90deg)">
-              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3"></path>
-              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--primary)" stroke-width="3" stroke-dasharray="18, 100" id="memChartPath"></path>
-            </svg>
-            <div id="memChartVal" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--primary)">18%</div>
-          </div>
+        <div class="field" style="margin:6px 0;height:calc(100% - 20px)">
+          <textarea class="control" style="height:140px;resize:none;line-height:1.6" placeholder="Escribe aquí las directrices y notas del equipo..." oninput="updateNotes(this.value)">${esc(state.notes || "")}</textarea>
         </div>
       </div>
-    </div>
+    </article>
 
-    ${widget("w-kpi", "EXPEDIENTES TOTALES", "Volumen acumulado", `<div class="kpi">${state.requests.length}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">${videoCount} videos verificados · ${tutCount} guías activas</div>`, 'data-kpi="' + state.requests.length + '"')}
-    ${widget("w-pending", "POR DICTAMINAR", "Pendientes de revisión", `<div class="kpi">${pending}</div><div class="progress-bar" style="margin-top:16px"><span style="width:${Math.min(100, pending * 25)}%"></span></div>`, 'data-kpi="' + pending + '"')}
-    ${widget("w-approved", "TALENTOS APROBADOS", "Streamers certificados", `<div class="kpi">${approved}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">Tasa de conversión activa</div>`, 'data-kpi="' + approved + '"')}
-    ${widget("w-tickets", "CONCIERGE DESK", "Tickets abiertos", `<div class="kpi">${state.tickets.filter(t => t.status !== "RESUELTO").length}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">${state.tickets.length} consultas registradas</div>`, 'data-kpi="' + state.tickets.length + '"')}
-    ${widget("w-notes", "BITÁCORA EJECUTIVA", "Notas y directrices del turno", `<div class="field" style="margin:6px 0;height:calc(100% - 20px)"><textarea class="control" style="height:175px;resize:none;line-height:1.6" placeholder="Escribe aquí tus notas estratégicas..." oninput="updateNotes(this.value)">${esc(state.notes || "")}</textarea></div>`, 'span-2 data-icon="book"')}
-    ${widget("w-chart", "FLUJO DE CAPTACIÓN", "Curva de registros", `<div class="chart-range"><button class="range active" onclick="changeChart('day',this)">24 Horas</button><button class="range" onclick="changeChart('week',this)">7 Días</button><button class="range" onclick="changeChart('month',this)">Anual</button></div><div class="chart-box"><canvas id="mainChart"></canvas></div>`, "span-2")}
-    ${widget("w-activity", "AUDITORÍA EN TIEMPO REAL", "Eventos recientes del sistema", `<div class="activity">${state.events.slice(0, 6).map(e => `<div class="event">${icon("sparkles", 14)}<div><p>${esc(e[0])}</p><small>${esc(e[1])}</small></div><time>${esc(e[2])}</time></div>`).join("")}</div>`, "span-2")}
-    ${widget("w-inbox", "BANDEJA PRIORITARIA", "Últimos perfiles recibidos", `<div class="request-list">${state.requests.slice(0, 4).map(requestRow).join("")}</div><button class="btn btn-secondary" style="width:100%;margin-top:12px" onclick="setAdminTab('requests')">Abrir bandeja completa →</button>`, "span-2")}
+    <article class="widget span-2" id="w-inbox-preview">
+      <div class="glow"></div>
+      <div class="full-view widget-pad">
+        <div class="widget-head">
+          <div><span class="kicker">Talent Acquisition</span><h3>Bandeja Prioritaria</h3></div>
+          <button class="btn btn-secondary mini" onclick="setAdminTab('requests')">Ver Todas →</button>
+        </div>
+        <div class="request-list">
+          ${state.requests.slice(0, 3).map(requestRow).join("") || '<div class="empty">No hay solicitudes pendientes.</div>'}
+        </div>
+      </div>
+    </article>
+
+    <article class="widget span-4" id="w-quick-actions">
+      <div class="glow"></div>
+      <div class="full-view widget-pad" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div>
+          <span class="kicker">Acciones Operativas</span>
+          <h4 style="color:#fff;margin:2px 0 0;font-size:15px">Herramientas Rápidas</h4>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="exportCandidatesCsv()"><i data-lucide="download" width="14"></i> Descargar Base CSV</button>
+          <button class="btn btn-secondary" onclick="closeExecutiveAdmin();toggleMascotWidget()" style="color:#F18D79;border-color:rgba(241,141,121,0.35);background:rgba(241,141,121,0.12)">🦁 Abrir Calibrador Flotante</button>
+          <button class="btn btn-primary" onclick="openNewRequestModal()">+ Nueva Solicitud</button>
+        </div>
+      </div>
+    </article>
   </div>`;
 }
 
@@ -3533,15 +3555,16 @@ function renderRequests() {
     <article class="widget span-4" id="req-main">
       <div class="glow"></div>
       <div class="full-view widget-pad">
-        <div class="widget-head" style="flex-wrap:wrap">
-          <div><span class="kicker">Talent Acquisition Inbox</span><h3>Gestión de Solicitudes</h3></div>
-          <div style="display:flex;gap:8px;align-items:center">
+        <div class="widget-head" style="flex-wrap:wrap;gap:12px">
+          <div><span class="kicker">Talent Acquisition Inbox</span><h3>Gestión de Solicitudes de Streamers</h3></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
             <input class="control" style="width:220px;padding:8px 12px;font-size:12px" placeholder="Buscar nombre, @usuario, ID..." value="${esc(requestSearch)}" oninput="setReqSearch(this.value)">
+            <button class="btn btn-secondary mini" onclick="exportCandidatesCsv()" title="Exportar CSV">${icon("download", 13)} CSV</button>
             <button class="btn btn-primary mini" onclick="openNewRequestModal()">+ Nueva Solicitud</button>
           </div>
         </div>
         <div style="display:flex;gap:8px;margin-bottom:16px;overflow:auto;padding-bottom:4px">
-          <button type="button" class="chip green ${requestFilter === 'ALL' ? 'active-filter' : ''}" onclick="setReqFilter('ALL')">Todas (${total})</button>
+          <button type="button" class="chip ${requestFilter === 'ALL' ? 'active-filter' : ''}" onclick="setReqFilter('ALL')">Todas (${total})</button>
           <button type="button" class="chip yellow ${requestFilter === 'PENDING' ? 'active-filter' : ''}" onclick="setReqFilter('PENDING')">En Revisión (${pending})</button>
           <button type="button" class="chip green ${requestFilter === 'APPROVED' ? 'active-filter' : ''}" onclick="setReqFilter('APPROVED')">Aprobadas (${approved})</button>
           <button type="button" class="chip ${requestFilter === 'VIDEO' ? 'active-filter' : ''}" onclick="setReqFilter('VIDEO')">Con Video (${withVideo})</button>
@@ -3552,327 +3575,74 @@ function renderRequests() {
   </div>`;
 }
 
-function renderVerification() {
-  const withVideos = state.requests.filter(r => r.video);
-  const withoutVideos = state.requests.filter(r => !r.video);
-  const qc = state.qualityCriteria || defaultState.qualityCriteria;
-
-  return `<div class="admin-grid">
-    ${widget("verify-queue", "COLA DE AUDITORÍA", "Solicitudes sin video vs con video", `
-      <div style="display:flex;gap:24px;align-items:baseline">
-        <div><div class="kpi">${withVideos.length}</div><small style="color:var(--green);font-size:11px">Con video listo</small></div>
-        <div><div class="kpi" style="opacity:0.6">${withoutVideos.length}</div><small style="color:var(--muted);font-size:11px">Sin video aún</small></div>
-      </div>
-      <p style="color:var(--muted);font-size:12px;margin-top:12px">Inspecciona los videos de casting directamente en la consola.</p>
-    `, "span-2")}
-    ${widget("verify-info", "PROTOCOLO QUALITY CHECK", "Estándares de aprobación STARLEO (Editables)", `
-      <div class="metric-row" style="padding:10px 14px"><span>Duración requerida</span><input class="control" style="width:130px;padding:6px 10px;text-align:right;font-weight:700" value="${esc(qc.minDuration)}" onchange="updateQC('minDuration',this.value)"></div>
-      <div class="metric-row" style="padding:10px 14px"><span>Encuadre e iluminación</span><input class="control" style="width:150px;padding:6px 10px;text-align:right;color:var(--primary);font-weight:700" value="${esc(qc.framing)}" onchange="updateQC('framing',this.value)"></div>
-      <div class="metric-row" style="padding:10px 14px"><span>Claridad vocal</span><input class="control" style="width:150px;padding:6px 10px;text-align:right;color:var(--primary);font-weight:700" value="${esc(qc.audio)}" onchange="updateQC('audio',this.value)"></div>
-      <div class="metric-row" style="padding:10px 14px"><span>Filtros faciales</span><input class="control" style="width:150px;padding:6px 10px;text-align:right;font-weight:700" value="${esc(qc.filters)}" onchange="updateQC('filters',this.value)"></div>
-    `, "span-2")}
-    ${widget("verify-list", "CASTINGS RECIBIDOS", "Revisión directa de videos de verificación", `
-      <div class="request-list">
-        ${withVideos.length ? withVideos.map(requestRow).join("") : '<div class="empty">No hay solicitudes con video en este momento.</div>'}
-      </div>
-    `, "span-4")}
-  </div>`;
-}
-
-window.updateQC = (key, val) => {
-  if (!state.qualityCriteria) state.qualityCriteria = clone(defaultState.qualityCriteria);
-  state.qualityCriteria[key] = val;
-  addActivity("Criterio Quality Check actualizado", `${key}: ${val}`);
-  toast("Quality Check", "Estándar actualizado.");
-};
-
-function renderSettings() {
-  const palette = [
-    { name: "Champagne Gold", hex: "#D4AF7A" },
-    { name: "Rose Gold", hex: "#E2A3A3" },
-    { name: "Royal Amethyst", hex: "#A594F9" },
-    { name: "Jade Emerald", hex: "#45D09E" },
-    { name: "Platinum Ice", hex: "#B8C4D9" },
-    { name: "Crimson Velvet", hex: "#E06C75" }
-  ];
-
-  let themeHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
-    <span class="kicker">Estética & Identidad</span>
-    <h4 style="color:#fff;margin:4px 0 16px;font-size:16px">1. Atmósfera de Lujo y Redes Oficiales</h4>
-    <div class="form-grid" style="margin-bottom:16px">
-      <div class="field">
-        <label>Acabado Metálico (Acento Principal)</label>
-        <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;align-items:center">
-          ${palette.map(c => `<button type="button" style="background:${c.hex};width:36px;height:36px;border-radius:10px;border:2px solid ${state.themeColor === c.hex ? '#fff' : 'rgba(255,255,255,0.15)'};cursor:pointer;box-shadow:0 4px 14px ${c.hex}33;transition:0.2s" title="${c.name}" onclick="updateTheme('${c.hex}')"></button>`).join('')}
-          <input type="color" value="${state.themeColor || '#D4AF7A'}" style="width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:transparent;cursor:pointer" title="Color personalizado" onchange="updateTheme(this.value)">
-        </div>
-      </div>
-      <div class="field">
-        <label>Tono de Superficie (Tarjetas)</label>
-        <input class="control" type="color" value="${state.cardColor || '#10131c'}" style="height:42px;padding:4px" onchange="updateCard(this.value)">
-      </div>
-      <div class="field">
-        <label>Instagram Oficial (URL)</label>
-        <input class="control" type="url" placeholder="https://instagram.com/..." value="${esc(state.socials?.instagram || '')}" onchange="updateSocial('instagram',this.value)">
-      </div>
-      <div class="field">
-        <label>TikTok Oficial (URL)</label>
-        <input class="control" type="url" placeholder="https://tiktok.com/..." value="${esc(state.socials?.tiktok || '')}" onchange="updateSocial('tiktok',this.value)">
-      </div>
-      <div class="field full">
-        <label>Facebook Oficial (URL)</label>
-        <input class="control" type="url" placeholder="https://facebook.com/..." value="${esc(state.socials?.facebook || '')}" onchange="updateSocial('facebook',this.value)">
-      </div>
-    </div>
-  </div>`;
-
-  const bubbles = state.character?.bubbles || [];
-  let bubblesHtml = bubbles.map((b, idx) => `
-    <div style="display:grid;grid-template-columns:1fr 80px 80px auto;gap:8px;align-items:center;margin-bottom:8px">
-      <input class="control" value="${esc(b.text)}" placeholder="Mensaje de burbuja" onchange="editCharacterBubble(${idx},'text',this.value)">
-      <input class="control" type="number" value="${b.start}" title="Segundo inicial" onchange="editCharacterBubble(${idx},'start',this.value)">
-      <input class="control" type="number" value="${b.end}" title="Segundo final" onchange="editCharacterBubble(${idx},'end',this.value)">
-      <button class="btn btn-danger mini" onclick="removeCharacterBubble(${idx})">×</button>
-    </div>
-  `).join("");
-
-  let charHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
-    <span class="kicker">Hero Hologram</span>
-    <h4 style="color:#fff;margin:4px 0 16px;font-size:16px">2. Gestor de Personaje Principal</h4>
-    <div class="carousel-preview" style="background:#06070b;display:grid;place-items:center;height:200px;border-radius:14px;margin-bottom:16px">
-      ${state.character?.videoUrl ? `<video id="heroCharPreviewVideo" src="${esc(state.character.videoUrl)}" autoplay loop muted playsinline style="max-height:100%;max-width:100%;transform:scale(${(state.character.scale || 100) / 100})"></video>` : `<div class="empty">Sin video de personaje asignado</div>`}
-    </div>
-    <div class="form-grid" style="margin-bottom:16px">
-      <div class="field">
-        <label>Escala de Proyección: <b id="charScaleLabel" style="color:var(--primary)">${state.character.scale || 100}%</b></label>
-        <input class="range-input" type="range" min="50" max="200" value="${state.character.scale || 100}" oninput="updateCharacterScale(this.value)">
-      </div>
-      <div style="display:flex;gap:8px;align-items:end">
-        <label class="btn btn-primary" style="flex:1;text-align:center;cursor:pointer">
-          ${icon("upload", 14)} Subir Video (MP4 / WEBM)
-          <input type="file" accept="video/webm,video/mp4,image/gif" style="display:none" onchange="uploadCharacterVideo(this.files[0])">
-        </label>
-        ${state.character?.videoUrl ? `<button class="btn btn-danger" onclick="removeCharacterVideo()">Quitar</button>` : ""}
-      </div>
-    </div>
-    <div style="border-top:1px solid var(--line);padding-top:14px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <label style="font-size:11px;font-weight:700;color:var(--primary)">BURBUJAS DE DIÁLOGO SINCRONIZADAS (Texto / Seg Inicio / Seg Fin)</label>
-        <button class="btn btn-secondary mini" onclick="addCharacterBubble()">+ Añadir Burbuja</button>
-      </div>
-      ${bubblesHtml || '<div class="empty" style="padding:12px">Sin burbujas configuradas.</div>'}
-    </div>
-  </div>`;
-
-  const mascotKeys = ["streamer", "aprender", "soporte"];
-  const pm = state.panelMascots || defaultState.panelMascots;
-
-  let cards = (state.cards || []).map((c, i) => {
-    const mkey = mascotKeys[i] || "streamer";
-    const m = pm[mkey] || defaultMascotConfig("");
-
-    return `<div class="card-editor" style="display:grid;gap:12px;background:rgba(255,255,255,0.02);padding:18px;border-radius:16px;border:1px solid var(--line)">
-      <div class="form-grid" style="grid-template-columns:1fr auto auto">
-        <div class="field"><label>Título de Tarjeta</label><input class="control" type="text" value="${esc(c.title)}" onchange="editCard(${i},'title',this.value)"></div>
-        <div class="field"><label>Color Acento</label><input class="control" type="color" value="${esc(c.color || '#D4AF7A')}" style="width:52px;height:42px;padding:3px" onchange="editCard(${i},'color',this.value)"></div>
-        <div style="display:grid;place-items:center;background:var(--surface2);border:1px solid var(--line);border-radius:12px;width:44px;height:42px;align-self:end;color:var(--primary)">
-          ${(c.icon || "").includes('http') || (c.icon || "").startsWith('data:') ? '<img src="' + esc(c.icon) + '" style="width:24px;height:24px;object-fit:contain">' : icon(c.icon || "circle", 20)}
-        </div>
-      </div>
-      <div class="form-grid">
-        <div class="field"><label>Descripción Ejecutiva</label><input class="control" type="text" value="${esc(c.desc)}" onchange="editCard(${i},'desc',this.value)"></div>
-        <div class="field"><label>Texto del Botón</label><input class="control" type="text" value="${esc(c.btn)}" onchange="editCard(${i},'btn',this.value)"></div>
-      </div>
-      <label class="btn btn-secondary mini" style="text-align:center;cursor:pointer;justify-self:start">
-        ${icon("image", 13)} Subir Icono PNG Personalizado
-        <input type="file" accept="image/*" style="display:none" onchange="uploadCardImage(${i},this.files[0])">
-      </label>
-
-      <div class="card-video-controls" style="margin-top:8px;border-top:1px solid var(--line);padding-top:16px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <strong style="font-size:11px;letter-spacing:0.08em;color:var(--primary)">MASCOTA HOLOGRÁFICA (.WEBM / .GIF)</strong>
-          <label style="font-size:11px;display:flex;align-items:center;gap:6px;cursor:pointer">
-            <input type="checkbox" ${m.active !== false ? 'checked' : ''} onchange="updateMascot('${mkey}','active',this.checked)"> Activar Proyección
-          </label>
-        </div>
-        
-        <div class="card-video-editor-stage" id="mascotStage-${mkey}" data-card-key="${mkey}" onpointerdown="startMascotDrag(event,'${mkey}')" onwheel="scaleMascotByWheel(event,'${mkey}')" style="background:#07080d;border:1px solid ${esc(c.color)}66;width:300px;height:380px;margin:10px auto;border-radius:22px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:38px 28px;box-shadow:0 20px 50px rgba(0,0,0,0.6)">
-          <div style="width:58px;height:58px;border-radius:16px;background:${esc(c.color)}18;border:1px solid ${esc(c.color)}44;display:flex;align-items:center;justify-content:center;margin-bottom:16px;z-index:4;pointer-events:none;color:${esc(c.color)}">
-             ${(c.icon || "").includes('http') || (c.icon || "").startsWith('data:') ? `<img src="${esc(c.icon)}" style="width:28px;height:28px;object-fit:contain">` : icon(c.icon || 'star', 24)}
-          </div>
-          <h3 style="font-family:'Clash Display',sans-serif;font-size:21px;font-weight:600;line-height:1.15;margin:0 0 12px;color:#fff;text-transform:uppercase;z-index:4;pointer-events:none;text-align:center">${esc(c.title).replace(" ", "<br>")}</h3>
-          <div style="margin-top:auto;padding:10px 20px;background:rgba(255,255,255,0.06);border:1px solid ${esc(c.color)}66;border-radius:10px;color:#fff;font-weight:600;font-size:12px;z-index:4;pointer-events:none">${esc(c.btn)} →</div>
-
-          ${m.gif ? ((m.gif.toLowerCase().endsWith(".webm") || m.gif.toLowerCase().endsWith(".mp4") || m.gif.startsWith("data:video") || m.gif.startsWith("blob:")) ? `<video id="mascotPreview-${mkey}" src="${esc(m.gif)}" autoplay loop muted playsinline disablePictureInPicture style="position:absolute;bottom:0;left:50%;transform:translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg);width:${m.size || 180}px;height:auto;object-fit:contain;opacity:${Number.isFinite(Number(m.opacity)) ? m.opacity : 1};z-index:${m.layer === 1 ? 1 : (m.layer === 3 ? 5 : 3)};pointer-events:none"></video>` : `<img id="mascotPreview-${mkey}" src="${esc(m.gif)}" draggable="false" style="position:absolute;bottom:0;left:50%;transform:translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg);width:${m.size || 180}px;height:auto;object-fit:contain;opacity:${Number.isFinite(Number(m.opacity)) ? m.opacity : 1};z-index:${m.layer === 1 ? 1 : (m.layer === 3 ? 5 : 3)};pointer-events:none">`) : ``}
-          
-          <div class="card-video-drag-hint">${icon("move", 12)} ARRASTRAR / RUEDA = ZOOM</div>
-        </div>
-        
-        <div class="video-transform-grid" style="margin-top:14px">
-          <label>Eje X <output id="mascotX-${mkey}">${Math.round(m.x || 0)}px</output><input type="range" id="sliderX-${mkey}" min="-250" max="250" step="1" value="${m.x || 0}" oninput="previewMascot('${mkey}','x',this.value)"></label>
-          <label>Eje Y <output id="mascotY-${mkey}">${Math.round(m.y || 0)}px</output><input type="range" id="sliderY-${mkey}" min="-250" max="250" step="1" value="${m.y || 0}" oninput="previewMascot('${mkey}','y',this.value)"></label>
-          <label>Escala <output id="mascotScale-${mkey}">${Math.round(m.scale || 100)}%</output><input type="range" id="sliderScale-${mkey}" min="30" max="250" step="1" value="${m.scale || 100}" oninput="previewMascot('${mkey}','scale',this.value)"></label>
-          <label>Rotación <output id="mascotRot-${mkey}">${Math.round(m.rotation || 0)}°</output><input type="range" min="-180" max="180" step="1" value="${m.rotation || 0}" oninput="previewMascot('${mkey}','rotation',this.value)"></label>
-          <label>Opacidad <output id="mascotOp-${mkey}">${Math.round((Number.isFinite(Number(m.opacity)) ? m.opacity : 1) * 100)}%</output><input type="range" min="0" max="1" step="0.05" value="${Number.isFinite(Number(m.opacity)) ? m.opacity : 1}" oninput="previewMascot('${mkey}','opacity',this.value)"></label>
-          <label>Plano Z <output id="mascotLayer-${mkey}">${m.layer === 1 ? 'Fondo' : m.layer === 3 ? 'Frente' : 'Medio'}</output><input type="range" min="1" max="3" step="1" value="${m.layer || 2}" oninput="previewMascot('${mkey}','layer',this.value)" onchange="updateMascot('${mkey}','layer',this.value)"></label>
-          <label style="grid-column:1/-1">Tamaño Base <output id="mascotSize-${mkey}">${Math.round(m.size || 180)}px</output><input type="range" min="80" max="400" step="10" value="${m.size || 180}" oninput="previewMascot('${mkey}','size',this.value)"></label>
-        </div>
-        
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
-          <button type="button" class="btn btn-secondary mini" onclick="resetMascot('${mkey}')">${icon("rotate-ccw", 12)} Restablecer</button>
-          <label class="btn btn-primary mini" style="text-align:center;cursor:pointer">
-            ${icon("upload", 12)} ${m.gif ? 'Reemplazar Activo (.WebM / .GIF)' : 'Subir Activo (.WebM / .GIF)'}
-            <input type="file" accept="image/gif,image/png,image/webp,video/webm,video/mp4" style="display:none" onchange="uploadMascotGif('${mkey}',this.files[0])">
-          </label>
-          ${m.gif ? `<button type="button" class="btn btn-danger mini" onclick="removeMascotGif('${mkey}')">Eliminar Activo</button>` : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join("");
-
-  const extraKeys = [
-    { key: "registro", label: "Registro (Tarjeta Video Intro)" },
-    { key: "guias", label: "Guías (Tarjetas de Tutoriales)" },
-    { key: "support1", label: "Soporte (Oficial 1)" },
-    { key: "support2", label: "Soporte (Oficial 2)" },
-    { key: "support3", label: "Soporte (Oficial 3)" }
-  ];
-  let extraMascotsHtml = extraKeys.map(ek => {
-    const m = pm[ek.key] || defaultMascotConfig("");
-    return `<div class="request" style="grid-template-columns:1fr auto">
-      <div>
-        <strong style="color:var(--primary)">${ek.label}</strong>
-        <div class="meta">${m.gif ? "Activo asignado · Escala " + (m.scale || 100) + "%" : "Sin activo asignado"}</div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer">
-          <input type="checkbox" ${m.active !== false ? 'checked' : ''} onchange="updateMascot('${ek.key}','active',this.checked)"> Activo
-        </label>
-        <label class="btn btn-secondary mini" style="cursor:pointer">
-          ${icon("upload", 12)} Subir WebM/GIF
-          <input type="file" accept="image/gif,image/png,video/webm,video/mp4" style="display:none" onchange="uploadMascotGif('${ek.key}',this.files[0])">
-        </label>
-        <button type="button" class="btn btn-primary mini" onclick="openExtraMascotCalibrator('${ek.key}','${ek.label}')">${icon("sliders", 12)} Calibrar</button>
-        ${m.gif ? `<button type="button" class="btn btn-danger mini" onclick="removeMascotGif('${ek.key}')">×</button>` : ''}
-      </div>
-    </div>`;
-  }).join("");
-
-  let cardHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
-    <span class="kicker">Interactive Cards</span>
-    <h4 style="color:#fff;margin:4px 0 16px;font-size:16px">3. Calibración de Tarjetas y Mascotas 3D</h4>
-    <div style="display:grid;gap:16px">${cards}</div>
-    <div style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px">
-      <span class="kicker">Extended Holograms</span>
-      <h4 style="color:#fff;margin:4px 0 12px;font-size:15px">Mascotas de Módulos Secundarios</h4>
-      <div style="display:grid;gap:10px">${extraMascotsHtml}</div>
-    </div>
-  </div>`;
-
-  let tuts = state.tutorials.length ? state.tutorials.map((t, i) => `
+// ── TAB: ACADEMIA & TUTORIALES (PORTAL 2) ────────────────────────────────────
+function renderTutorialsAdmin() {
+  const tuts = (state.tutorials && state.tutorials.length) ? state.tutorials.map((t, i) => `
     <div class="request" style="grid-template-columns:auto 1fr auto">
       <div class="avatar">${icon(t.type === 'pdf' ? 'file-text' : 'play', 15)}</div>
       <div>
         <strong>${esc(t.title)}</strong>
-        <div class="meta">${esc(t.desc)} · <span class="badge">${t.type.toUpperCase()}</span></div>
+        <div class="meta">${esc(t.desc)} · <span class="badge">${(t.type || 'VIDEO').toUpperCase()}</span></div>
+        <div style="font-size:11px;color:var(--primary);margin-top:2px;overflow:hidden;text-overflow:ellipsis;max-width:400px;white-space:nowrap">${esc(t.url)}</div>
       </div>
       <div style="display:flex;gap:6px">
-        <button class="btn btn-secondary mini" onclick="previewTutorial(${i})" title="Reproducir / Abrir">${icon("eye", 13)} Ver</button>
-        <button class="btn btn-danger mini" onclick="removeTutorial(${i})" title="Eliminar">×</button>
+        <button class="btn btn-secondary mini" onclick="previewTutorial(${i})" title="Previsualizar">${icon("eye", 13)} Ver</button>
+        <button class="btn btn-danger mini" onclick="removeTutorial(${i})" title="Eliminar">${icon("trash-2", 13)}</button>
       </div>
-    </div>`).join("") : '<div class="empty">Sin tutoriales publicados.</div>';
+    </div>`).join("") : '<div class="empty">No hay tutoriales publicados. Agrega uno a continuación.</div>';
 
-  let tutHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
-    <span class="kicker">Academy Library</span>
-    <h4 style="color:#fff;margin:4px 0 16px;font-size:16px">4. Gestor de Tutoriales y Manuales</h4>
-    <div style="display:grid;gap:10px;margin-bottom:16px">${tuts}</div>
-    <div class="form-grid" style="background:rgba(0,0,0,0.25);padding:16px;border-radius:14px;border:1px solid var(--line)">
-      <div class="field"><label>Título del Recurso *</label><input class="control" id="tutTitle" placeholder="Ej. Masterclass de Iluminación"></div>
-      <div class="field"><label>Descripción *</label><input class="control" id="tutDesc" placeholder="Resumen ejecutivo del contenido"></div>
-      <div class="field full">
-        <label>Subir Archivo (Video MP4/WebM o PDF) o pegar URL directa</label>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input class="control" id="tutUrlInput" style="flex:1" placeholder="https://... (opcional si subes archivo)">
-          <label class="btn btn-secondary" style="cursor:pointer">
-            ${icon("upload", 14)} Subir Video / PDF
-            <input type="file" accept="video/*,application/pdf" style="display:none" onchange="uploadTutorialFile(this.files[0])">
-          </label>
-          <button class="btn btn-primary" onclick="addTutorialByUrl()">Publicar Recurso</button>
+  return `<div class="admin-grid">
+    <article class="widget span-4">
+      <div class="glow"></div>
+      <div class="full-view widget-pad">
+        <div class="widget-head">
+          <div><span class="kicker">Academia StarMaker (Portal 2)</span><h3>Biblioteca de Tutoriales y Guías Oficiales</h3></div>
         </div>
-      </div>
-    </div>
-  </div>`;
-
-  let supps = (state.supportContacts || []).map((c, i) => `<div style="display:grid;gap:12px;background:rgba(255,255,255,0.02);padding:16px;border-radius:14px;border:1px solid var(--line)">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="display:flex;gap:12px;align-items:center">
-        <div class="avatar" style="width:44px;height:44px">
-          ${(c.avatar || "").includes('http') || (c.avatar || "").startsWith('data:') ? `<img src="${esc(c.avatar)}" style="width:28px;height:28px;object-fit:contain">` : `<span style="font-size:20px">${esc(c.avatar || '💎')}</span>`}
+        
+        <div style="background:rgba(255,255,255,0.02);padding:18px;border-radius:16px;border:1px solid var(--line);margin-bottom:20px;">
+          <h4 style="color:#fff;margin:0 0 12px;font-size:14px;">+ Publicar Nuevo Recurso en Academia</h4>
+          <div class="form-grid" style="margin-bottom:12px">
+            <div class="field"><label>Título del Tutorial / Guía *</label><input class="control" id="tutTitle" placeholder="Ej. Guía Oficial de Emisión y Batallas PK"></div>
+            <div class="field"><label>Descripción Breve</label><input class="control" id="tutDesc" placeholder="Ej. Requisitos técnicos para streamers"></div>
+            <div class="field full"><label>URL del Video (YouTube / MP4 / WebM) o Enlace PDF</label>
+              <div style="display:flex;gap:8px">
+                <input class="control" id="tutUrlInput" placeholder="https://...">
+                <label class="btn btn-secondary" style="white-space:nowrap;cursor:pointer">
+                  ${icon("upload", 13)} Subir Archivo
+                  <input type="file" accept="video/webm,video/mp4,application/pdf" style="display:none" onchange="uploadTutorialFile(this.files[0])">
+                </label>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addTutorialByUrl()">${icon("plus", 14)} Añadir Recurso a Portal 2</button>
         </div>
-        <label class="btn btn-secondary mini" style="cursor:pointer">
-          ${icon("image", 12)} Subir Icono PNG
-          <input type="file" accept="image/*" style="display:none" onchange="uploadSupportAvatar(${i},this.files[0])">
-        </label>
+
+        <h4 style="color:#fff;margin:0 0 14px;font-size:14px;">Recursos Actualmente Publicados (${state.tutorials?.length || 0})</h4>
+        <div class="request-list">${tuts}</div>
       </div>
-      <button class="btn btn-danger mini" onclick="removeSupportContact(${i})">Eliminar Oficial</button>
-    </div>
-    <div class="form-grid">
-      <div class="field"><label>ID Departamento</label><input class="control" type="text" value="${esc(c.id)}" onchange="editSupport(${i},'id',this.value)"></div>
-      <div class="field"><label>Título Oficial</label><input class="control" type="text" value="${esc(c.name)}" onchange="editSupport(${i},'name',this.value)"></div>
-      <div class="field"><label>Especialidad / Rol</label><input class="control" type="text" value="${esc(c.role)}" onchange="editSupport(${i},'role',this.value)"></div>
-      <div class="field"><label>Categorías (Separadas por coma)</label><input class="control" type="text" value="${esc(c.issues)}" onchange="editSupport(${i},'issues',this.value)"></div>
-      <div class="field"><label>Línea WhatsApp (con código de país)</label><input class="control" type="text" value="${esc(c.whatsapp)}" onchange="editSupport(${i},'whatsapp',this.value)"></div>
-      <div class="field"><label>Correo Ejecutivo</label><input class="control" type="email" value="${esc(c.email)}" onchange="editSupport(${i},'email',this.value)"></div>
-    </div>
-  </div>`).join("");
-
-  let suppHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-      <div>
-        <span class="kicker">Executive Concierge</span>
-        <h4 style="color:#fff;margin:4px 0 0;font-size:16px">5. Directorio de Oficiales de Soporte</h4>
-      </div>
-      <button class="btn btn-primary mini" onclick="addSupportContact()">+ Añadir Oficial</button>
-    </div>
-    <div style="display:grid;gap:14px">${supps}</div>
+    </article>
   </div>`;
-
-  let backupHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
-    <span class="kicker">Data & Security</span>
-    <h4 style="color:#fff;margin:4px 0 14px;font-size:16px">6. Respaldo Maestro y Mantenimiento</h4>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn btn-secondary" onclick="exportBackupJson()">${icon("download", 14)} Exportar Respaldo (.JSON)</button>
-      <label class="btn btn-secondary" style="cursor:pointer">
-        ${icon("upload", 14)} Importar Respaldo (.JSON)
-        <input type="file" accept="application/json" style="display:none" onchange="importBackupJson(this.files[0])">
-      </label>
-      <button class="btn btn-danger" style="margin-left:auto" onclick="resetDemo()">${icon("alert-triangle", 14)} Vaciar / Restaurar de Fábrica</button>
-    </div>
-  </div>`;
-
-  let body = `<div style="display:grid;gap:22px">${themeHtml}${charHtml}${cardHtml}${tutHtml}${suppHtml}${backupHtml}</div>`;
-  return '<div class="admin-grid">' + widget("global-settings", "MASTER CONFIGURATION", "Arquitectura Visual y Parámetros del Sistema", body, "span-4") + '</div>';
 }
 
-function setTicketFilter(f) {
-  ticketFilter = f;
-  renderAdmin();
-}
-
+// ── TAB: SOPORTE & ASESORES WHATSAPP (PORTAL 3) ──────────────────────────────
 function openNewTicketModal() {
-  document.getElementById("ntName").value = "";
-  document.getElementById("ntMsg").value = "";
+  const nameEl = document.getElementById("ntName");
+  const msgEl = document.getElementById("ntMsg");
+  if (nameEl) nameEl.value = "";
+  if (msgEl) msgEl.value = "";
   const sel = document.getElementById("ntCat");
-  sel.innerHTML = (state.supportContacts || []).map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("");
+  if (sel) sel.innerHTML = (state.supportContacts || []).map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("");
   openModal("newTicketModal");
 }
 
 function createNewTicket() {
-  const name = document.getElementById("ntName").value.trim();
-  const cat = document.getElementById("ntCat").value;
-  const msg = document.getElementById("ntMsg").value.trim();
-  if (!name || !msg) return toast("Datos incompletos", "Ingresa el nombre y el mensaje.");
-  const id = "TICK-" + Math.floor(1000 + Math.random() * 9000);
+  const name = (document.getElementById("ntName")?.value || "").trim();
+  const cat = document.getElementById("ntCat")?.value || "Soporte General";
+  const msg = (document.getElementById("ntMsg")?.value || "").trim();
+  if (!name || !msg) return toast("Campos requeridos", "Ingresa nombre y mensaje del ticket.");
+
+  const id = "TICK-" + Math.floor(1000 + Math.random() * 8999);
+  if (!Array.isArray(state.tickets)) state.tickets = [];
   state.tickets.unshift({
     id,
     name,
@@ -3881,14 +3651,14 @@ function createNewTicket() {
     status: "ABIERTO",
     date: new Date().toLocaleDateString("es-MX")
   });
-  addActivity("Ticket de soporte creado", `${name} · ${id}`);
+  addActivity("Nuevo ticket de soporte registrado", `${name} · ${id}`);
   closeModal("newTicketModal");
   renderAdmin();
-  toast("Ticket registrado", id);
+  toast("Ticket registrado", `${name} (${id})`);
 }
 
 function toggleTicketStatus(id) {
-  const t = state.tickets.find(x => x.id === id);
+  const t = (state.tickets || []).find(x => x.id === id);
   if (!t) return;
   t.status = t.status === "RESUELTO" ? "ABIERTO" : "RESUELTO";
   addActivity(`Ticket ${t.status.toLowerCase()}`, `${t.name} · ${t.id}`);
@@ -3897,7 +3667,7 @@ function toggleTicketStatus(id) {
 }
 
 function deleteTicket(id) {
-  const idx = state.tickets.findIndex(x => x.id === id);
+  const idx = (state.tickets || []).findIndex(x => x.id === id);
   if (idx === -1) return;
   state.tickets.splice(idx, 1);
   addActivity("Ticket eliminado", id);
@@ -3905,75 +3675,155 @@ function deleteTicket(id) {
   toast("Ticket eliminado", id);
 }
 
+function addSupportContact() {
+  if (!Array.isArray(state.supportContacts)) state.supportContacts = [];
+  state.supportContacts.push({
+    id: "oficial_" + (state.supportContacts.length + 1),
+    name: "Nuevo Oficial Ejecutivo",
+    role: "Atención Especializada",
+    avatar: "💎",
+    whatsapp: "",
+    email: "",
+    issues: "Consultas, Soporte"
+  });
+  addActivity("Oficial de soporte añadido");
+  renderAdmin();
+  toast("Oficial añadido");
+}
+
+function editSupport(i, key, val) {
+  if (!state.supportContacts || !state.supportContacts[i]) return;
+  state.supportContacts[i][key] = val;
+  save();
+  syncSupportToPortal();
+}
+
+function removeSupportContact(i) {
+  if (!state.supportContacts || !state.supportContacts[i]) return;
+  const name = state.supportContacts[i].name || "";
+  state.supportContacts.splice(i, 1);
+  addActivity("Oficial de soporte eliminado", name);
+  renderAdmin();
+  toast("Departamento eliminado", name);
+}
+
 function renderSupportAdmin() {
-  const filtered = state.tickets.filter(t => {
+  const filtered = (state.tickets || []).filter(t => {
     if (ticketFilter === "OPEN") return t.status !== "RESUELTO";
     if (ticketFilter === "RESOLVED") return t.status === "RESUELTO";
     return true;
   });
 
-  let tks = filtered.length ? filtered.map(t => `<div class="request">
-    <div class="avatar">${icon("message-square", 16)}</div>
-    <div>
-      <strong>${esc(t.name)}</strong>
-      <div class="meta">${esc(t.cat)} · <span style="color:var(--primary)">${esc(t.id)}</span> · ${esc(t.date || "")}</div>
-      <p style="font-size:12.5px;color:var(--text);margin:6px 0 0">${esc(t.msg)}</p>
-    </div>
-    <div class="request-actions">
-      <button class="chip ${t.status === "RESUELTO" ? "green" : "yellow"}" onclick="toggleTicketStatus('${t.id}')" title="Cambiar estado">${esc(t.status)}</button>
-      <button class="btn btn-danger mini" onclick="deleteTicket('${t.id}')" title="Eliminar">${icon("trash-2", 13)}</button>
-    </div>
-  </div>`).join("") : '<div class="empty">No hay tickets en esta categoría.</div>';
-
-  return `<div class="admin-grid">
-    <article class="widget span-4" id="support-admin">
-      <div class="glow"></div>
-      <div class="full-view widget-pad">
-        <div class="widget-head" style="flex-wrap:wrap">
-          <div><span class="kicker">Concierge Desk</span><h3>Tickets de Asistencia en Vivo</h3></div>
-          <button class="btn btn-primary mini" onclick="openNewTicketModal()">+ Crear Ticket</button>
+  const contactsHtml = (state.supportContacts || []).map((c, i) => `
+    <div class="request" style="grid-template-columns:auto 1fr auto">
+      <div class="avatar">${c.avatar && c.avatar.length <= 4 ? c.avatar : icon("user-check", 16)}</div>
+      <div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+          <input class="control" style="padding:6px 10px;font-size:12px" value="${esc(c.name)}" placeholder="Nombre oficial" onchange="editSupport(${i},'name',this.value)">
+          <input class="control" style="padding:6px 10px;font-size:12px" value="${esc(c.role)}" placeholder="Departamento / Rol" onchange="editSupport(${i},'role',this.value)">
         </div>
-        <div style="display:flex;gap:8px;margin-bottom:16px">
-          <button class="chip ${ticketFilter === 'ALL' ? 'active-filter' : ''}" onclick="setTicketFilter('ALL')">Todos (${state.tickets.length})</button>
-          <button class="chip yellow ${ticketFilter === 'OPEN' ? 'active-filter' : ''}" onclick="setTicketFilter('OPEN')">Abiertos (${state.tickets.filter(t => t.status !== 'RESUELTO').length})</button>
-          <button class="chip green ${ticketFilter === 'RESOLVED' ? 'active-filter' : ''}" onclick="setTicketFilter('RESOLVED')">Resueltos (${state.tickets.filter(t => t.status === 'RESUELTO').length})</button>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <input class="control" style="padding:6px 10px;font-size:12px" value="${esc(c.whatsapp)}" placeholder="WhatsApp (Ej. 5215500000000)" onchange="editSupport(${i},'whatsapp',this.value)">
+          <input class="control" style="padding:6px 10px;font-size:12px" value="${esc(c.email || '')}" placeholder="Email" onchange="editSupport(${i},'email',this.value)">
         </div>
-        <div class="request-list">${tks}</div>
       </div>
-    </article>
-  </div>`;
-}
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-danger mini" onclick="removeSupportContact(${i})" title="Eliminar">${icon("trash-2", 13)}</button>
+      </div>
+    </div>
+  `).join("");
 
-function clearActivityLog() {
-  state.activity = [];
-  state.events = [];
-  save();
-  renderAdmin();
-  toast("Historial limpio", "Se vació el registro de auditoría.");
-}
-
-function renderActivity() {
-  const merged = [...(Array.isArray(state.events) ? state.events : [])].slice(0, 50);
-  let evts = merged.length ? merged.map(e => {
-    const a = Array.isArray(e) ? e : ["Actividad", "", ""];
-    return `<div class="event">${icon("shield-check", 15)}<div><p>${esc(a[0])}</p><small>${esc(a[1])}</small></div><time>${esc(a[2])}</time></div>`;
-  }).join("") : '<div class="empty">Sin registros de auditoría.</div>';
+  const ticketsHtml = filtered.length ? filtered.map(t => `
+    <div class="request">
+      <div class="avatar">${icon("message-square", 16)}</div>
+      <div>
+        <strong>${esc(t.name)}</strong>
+        <div class="meta">${esc(t.cat)} · <span style="color:var(--primary)">${esc(t.id)}</span> · ${esc(t.date || "")}</div>
+        <p style="font-size:12px;color:var(--text);margin:6px 0 0">${esc(t.msg)}</p>
+      </div>
+      <div class="request-actions">
+        <button class="chip ${t.status === "RESUELTO" ? "green" : "yellow"}" onclick="toggleTicketStatus('${t.id}')">${esc(t.status)}</button>
+        <button class="btn btn-danger mini" onclick="deleteTicket('${t.id}')">${icon("trash-2", 13)}</button>
+      </div>
+    </div>
+  `).join("") : '<div class="empty">No hay tickets en este estado.</div>';
 
   return `<div class="admin-grid">
-    <article class="widget span-4" id="audit">
+    <article class="widget span-4">
       <div class="glow"></div>
       <div class="full-view widget-pad">
         <div class="widget-head">
-          <div><span class="kicker">Security & Audit Log</span><h3>Trazabilidad de Operaciones Administrativas</h3></div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-secondary mini" onclick="exportBackupJson()">${icon("download", 13)} Exportar</button>
-            <button class="btn btn-danger mini" onclick="clearActivityLog()">${icon("trash-2", 13)} Limpiar</button>
+          <div><span class="kicker">Atención al Creador (Portal 3)</span><h3>Directorio de Asesores WhatsApp</h3></div>
+          <button class="btn btn-primary mini" onclick="addSupportContact()">+ Nuevo Asesor</button>
+        </div>
+        <p style="color:var(--muted);font-size:12px;margin:-8px 0 16px;">Estos números conectan directamente con el botón "Hablar con Agente" y los enlaces en Portal 3.</p>
+        <div class="request-list" style="margin-bottom:28px">${contactsHtml}</div>
+
+        <div class="widget-head" style="margin-top:20px;border-top:1px solid var(--line);padding-top:20px;">
+          <div><span class="kicker">Consultas de Streamers</span><h3>Tickets de Soporte Registrados</h3></div>
+          <div style="display:flex;gap:6px">
+            <button class="chip ${ticketFilter === 'ALL' ? 'active-filter' : ''}" onclick="setTicketFilter('ALL')">Todos (${state.tickets?.length || 0})</button>
+            <button class="chip yellow ${ticketFilter === 'OPEN' ? 'active-filter' : ''}" onclick="setTicketFilter('OPEN')">Abiertos</button>
+            <button class="chip green ${ticketFilter === 'RESOLVED' ? 'active-filter' : ''}" onclick="setTicketFilter('RESOLVED')">Resueltos</button>
+            <button class="btn btn-secondary mini" onclick="openNewTicketModal()">+ Ticket</button>
           </div>
         </div>
-        <div class="activity">${evts}</div>
+        <div class="request-list">${ticketsHtml}</div>
       </div>
     </article>
   </div>`;
+}
+
+// ── TAB: CONFIGURACIÓN & REDES ──────────────────────────────────────────────
+function renderSettings() {
+  return `<div class="admin-grid">
+    <article class="widget span-4">
+      <div class="glow"></div>
+      <div class="full-view widget-pad">
+        <div class="widget-head">
+          <div><span class="kicker">Identidad y Operaciones</span><h3>Configuración Master</h3></div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:18px;margin-bottom:20px">
+          <div style="background:rgba(255,255,255,0.02);padding:18px;border-radius:16px;border:1px solid var(--line);">
+            <h4 style="color:#fff;margin:0 0 14px;font-size:14px;">Redes Sociales Oficiales</h4>
+            <div class="field" style="margin-bottom:10px">
+              <label>Instagram Oficial</label>
+              <input class="control" placeholder="https://instagram.com/..." value="${esc(state.socials?.instagram || '')}" onchange="updateSocial('instagram',this.value)">
+            </div>
+            <div class="field" style="margin-bottom:10px">
+              <label>TikTok Oficial</label>
+              <input class="control" placeholder="https://tiktok.com/..." value="${esc(state.socials?.tiktok || '')}" onchange="updateSocial('tiktok',this.value)">
+            </div>
+            <div class="field">
+              <label>Facebook Oficial</label>
+              <input class="control" placeholder="https://facebook.com/..." value="${esc(state.socials?.facebook || '')}" onchange="updateSocial('facebook',this.value)">
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.02);padding:18px;border-radius:16px;border:1px solid var(--line);">
+            <h4 style="color:#fff;margin:0 0 14px;font-size:14px;">Mascota 3D & Respaldo de Datos</h4>
+            <p style="color:var(--muted);font-size:12px;margin-bottom:16px;">Para calibrar y subir los videos de StarLeo en tiempo real sobre el Showroom, utiliza el Calibrador Flotante.</p>
+            <button class="btn btn-secondary" onclick="closeExecutiveAdmin();toggleMascotWidget();" style="width:100%;margin-bottom:14px;background:rgba(241,141,121,0.15);border-color:rgba(241,141,121,0.35);color:#F18D79;">
+              🦁 Abrir Calibrador Flotante de Mascota
+            </button>
+            <div style="display:flex;gap:10px">
+              <button class="btn btn-secondary" style="flex:1" onclick="exportBackupJson()">${icon("download", 13)} Exportar JSON</button>
+              <label class="btn btn-secondary" style="flex:1;cursor:pointer;text-align:center">
+                ${icon("upload", 13)} Restaurar JSON
+                <input type="file" accept=".json" style="display:none" onchange="importBackupJson(this.files[0])">
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>`;
+}
+
+function setTicketFilter(f) {
+  ticketFilter = f;
+  renderAdmin();
 }
 
 function syncTutorialsToPortal() {
@@ -4009,24 +3859,92 @@ function syncSupportToPortal() {
     `</div>`;
 }
 
+// ── MAIN RENDER & TAB CONTROLLER ─────────────────────────────────────────────
 function renderAdmin() {
   applySavedTheme();
   const v = document.getElementById("adminView");
   if (v) {
     if (adminTab === "overview") v.innerHTML = renderOverview();
     if (adminTab === "requests") v.innerHTML = renderRequests();
-    if (adminTab === "verification") v.innerHTML = renderVerification();
-    if (adminTab === "settings") v.innerHTML = renderSettings();
+    if (adminTab === "tutorials") v.innerHTML = renderTutorialsAdmin();
     if (adminTab === "support") v.innerHTML = renderSupportAdmin();
-    if (adminTab === "activity") v.innerHTML = renderActivity();
+    if (adminTab === "settings") v.innerHTML = renderSettings();
   }
   document.querySelectorAll(".admin-tab").forEach(b => b.classList.toggle("active", b.dataset.tab === adminTab));
   document.querySelectorAll("#adminBottom button").forEach(b => b.classList.toggle("active", b.dataset.tab === adminTab));
   icons();
-  updateMemoryChart();
   syncTutorialsToPortal();
   syncSupportToPortal();
-  if (adminTab === "overview") setTimeout(() => drawChart("day"), 20);
+}
+
+// ── FLOATING MASCOT WIDGET TOGGLE & DRAG ──────────────────────────────────────
+window.toggleMascotWidget = function() {
+  const w = document.getElementById('mascot-widget');
+  if (!w) return;
+  if (w.classList.contains('is-open')) {
+    w.classList.remove('is-open');
+    w.style.display = 'none';
+  } else {
+    w.style.display = 'flex';
+    w.classList.add('is-open');
+  }
+};
+
+window.closeMascotWidget = function() {
+  const w = document.getElementById('mascot-widget');
+  if (!w) return;
+  w.classList.remove('is-open');
+  w.style.display = 'none';
+};
+
+const mascotWidget = document.getElementById('mascot-widget');
+const mascotHeader = document.getElementById('mascot-widget-header');
+let isMascotDragging = false, mStartX, mStartY, mStartLeft, mStartTop;
+
+if (mascotHeader && mascotWidget) {
+  mascotHeader.addEventListener('mousedown', (e) => {
+    if (e.target.id === 'btn-close-mascot') return;
+    isMascotDragging = true;
+    mStartX = e.clientX;
+    mStartY = e.clientY;
+    const rect = mascotWidget.getBoundingClientRect();
+    mStartLeft = rect.left;
+    mStartTop = rect.top;
+    document.body.style.userSelect = 'none';
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!isMascotDragging) return;
+    const dx = e.clientX - mStartX;
+    const dy = e.clientY - mStartY;
+    mascotWidget.style.left = (mStartLeft + dx) + 'px';
+    mascotWidget.style.top = (mStartTop + dy) + 'px';
+    mascotWidget.style.right = 'auto';
+  });
+  window.addEventListener('mouseup', () => {
+    isMascotDragging = false;
+    document.body.style.userSelect = '';
+  });
+
+  mascotHeader.addEventListener('touchstart', (e) => {
+    if (e.target.id === 'btn-close-mascot') return;
+    isMascotDragging = true;
+    mStartX = e.touches[0].clientX;
+    mStartY = e.touches[0].clientY;
+    const rect = mascotWidget.getBoundingClientRect();
+    mStartLeft = rect.left;
+    mStartTop = rect.top;
+  }, { passive: true });
+  window.addEventListener('touchmove', (e) => {
+    if (!isMascotDragging) return;
+    const dx = e.touches[0].clientX - mStartX;
+    const dy = e.touches[0].clientY - mStartY;
+    mascotWidget.style.left = (mStartLeft + dx) + 'px';
+    mascotWidget.style.top = (mStartTop + dy) + 'px';
+    mascotWidget.style.right = 'auto';
+  }, { passive: true });
+  window.addEventListener('touchend', () => {
+    isMascotDragging = false;
+  });
 }
 
 function setAdminTab(t) {
@@ -4561,11 +4479,13 @@ window.exportCandidatesCsv = function() {
   toast("Descarga completada", "Base de candidatos exportada a CSV.");
 };
 
-// Bind all necessary functions to window for inline onclick handlers
+// Bind all active executive and mascot functions to window
 Object.assign(window, {
   adminExecutiveState: state,
   openExecutiveAdmin,
   closeExecutiveAdmin,
+  toggleMascotWidget,
+  closeMascotWidget,
   openModal,
   closeModal,
   openDrawer,
@@ -4583,45 +4503,19 @@ Object.assign(window, {
   deleteTicket,
   addSupportContact,
   editSupport,
-  uploadSupportAvatar,
   removeSupportContact,
   addTutorialByUrl,
   uploadTutorialFile,
   previewTutorial,
   removeTutorial,
-  openExtraMascotCalibrator,
-  resetMascot,
-  removeMascotGif,
-  uploadMascotGif,
-  startMascotDrag,
-  scaleMascotByWheel,
-  previewMascot,
-  updateMascot,
-  editCard,
-  uploadCardImage,
-  updateCharacterScale,
-  uploadCharacterVideo,
-  removeCharacterVideo,
-  addCharacterBubble,
-  editCharacterBubble,
-  removeCharacterBubble,
-  updateTheme,
-  updateCard,
   updateSocial,
   updateNotes,
-  updateQC,
   setAdminTab,
   setReqFilter,
   setReqSearch,
   setTicketFilter,
-  togglePin,
-  wakeWidget,
-  changeChart,
-  drawChart,
-  openPublicPreview,
   exportBackupJson,
   importBackupJson,
-  resetDemo,
   unlockConsole,
   exportCandidatesCsv,
   renderAdmin,
