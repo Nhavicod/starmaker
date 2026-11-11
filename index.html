@@ -57,7 +57,7 @@
         radial-gradient(ellipse 45% 50% at 84% 25%, rgba(59,130,246,.10), transparent 70%);
     }
 
-    /* ── STARS ── */
+    /* ── STARS (OPTIMIZADO: GPU COMPOSITING SIN REPINTE CONTINUO) ── */
     .stars {
       position: fixed; inset: 0; pointer-events: none; z-index: 0;
       background-image:
@@ -68,16 +68,10 @@
         radial-gradient(circle at 30% 50%, rgba(255,255,255,.3) 0 1px, transparent 1.5px),
         radial-gradient(circle at 60% 40%, rgba(255,255,255,.25) 0 1px, transparent 1.5px);
       background-size: 280px 260px, 360px 330px, 420px 380px, 540px 480px, 320px 290px, 460px 420px;
-      animation: starDrift 40s linear infinite;
+      transform: translateZ(0);
+      opacity: 0.75;
     }
-    @keyframes starDrift { from { background-position: 0 0; } to { background-position: 200px 100px; } }
-
-    /* ── STARDUST ── */
-    .stardust-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background-image: radial-gradient(circle at center, rgba(255,255,255,.8) 0, rgba(255,255,255,0) 2px); }
-    .stardust-1 { background-size: 120px 120px; animation: floatUp 22s linear infinite; opacity: .12; }
-    .stardust-2 { background-size: 180px 180px; animation: floatUp 16s linear infinite .5s; opacity: .20; }
-    @keyframes floatUp { from { background-position: 0 100vh; } to { background-position: 0 0; } }
+    .stardust-layer { display: none !important; }
 
     /* ── HEADER ── */
     
@@ -227,7 +221,7 @@
       transform: translateZ(-20px);
       transition: border-color .6s ease;
     }
-    .stage-container.portal-prep .stage-surface { opacity: .2; filter: blur(8px); }
+    .stage-container.portal-prep .stage-surface { opacity: .3; transform: scale(1.04); }
 
     /* ── MASCOT WRAPPER ── */
     .mascot-wrapper {
@@ -243,28 +237,26 @@
     @media (max-width: 600px) {
       .mascot-wrapper { width: min(80vw, 340px); height: min(55vh, 420px); bottom: 13vh; }
     }
-    .mascot-wrapper.portal-prep { opacity: .2; filter: blur(8px); }
+    .mascot-wrapper.portal-prep { opacity: .3; }
 
-    /* ── VIDEOS ── */
+    /* ── VIDEOS (OPTIMIZADO GPU TRANSFORM, SIN DROP-SHADOW REPAINTS) ── */
     .media-webm { width: 100%; height: 100%; object-fit: contain;
-      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      position: absolute; bottom: 0; left: 50%;
       pointer-events: none;
-      /* Animación de salida (desaparece y cae hacia atrás) */
       opacity: 0; visibility: hidden;
-      filter: drop-shadow(0 20px 30px rgba(0,0,0,0)) brightness(0.5) blur(10px);
-      translate: 0 50px;
-      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateX(-50%) translateY(30px);
+      filter: drop-shadow(0 25px 35px rgba(0,0,0,.85));
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
     }
     .media-webm.is-active { 
-      /* Animación de entrada (Materialize) */
       opacity: 1; visibility: visible; 
-      filter: drop-shadow(0 30px 40px rgba(0,0,0,.85)) brightness(1) blur(0px);
-      translate: 0 0px;
-      animation: mascotFloat 4s ease-in-out infinite 0.7s; /* Inicia a flotar después de entrar */
+      transform: translateX(-50%) translateY(0);
+      animation: mascotFloat 4s ease-in-out infinite 0.5s;
     }
     @keyframes mascotFloat { 
-      0%,100% { translate: 0 0px; filter: drop-shadow(0 30px 40px rgba(0,0,0,.85)); } 
-      50% { translate: 0 -15px; filter: drop-shadow(0 50px 50px rgba(0,0,0,.5)); } 
+      0%, 100% { transform: translateX(-50%) translateY(0); } 
+      50% { transform: translateX(-50%) translateY(-12px); } 
     }
 
     /* Admin CSS‑var transforms per portal */
@@ -317,13 +309,13 @@
       width: min(92vw, 380px);
       height: 72px;
       border-radius: 9999px;
-      background: rgba(13, 9, 20, 0.85);
-      backdrop-filter: blur(35px);
-      -webkit-backdrop-filter: blur(35px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(13, 9, 20, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       box-shadow: 
-        0 25px 60px rgba(0, 0, 0, 0.85),
-        0 0 40px rgba(var(--theme-rgb), 0.25),
+        0 20px 50px rgba(0, 0, 0, 0.8),
+        0 0 35px rgba(var(--theme-rgb), 0.22),
         inset 0 1px 1px rgba(255, 255, 255, 0.15);
       display: flex;
       align-items: center;
@@ -332,7 +324,26 @@
       user-select: none;
       -webkit-user-select: none;
       touch-action: none;
-      transition: box-shadow 0.4s ease, border-color 0.4s ease;
+      overflow: hidden;
+      transition: box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    
+    /* Automated Idle Progress Bar */
+    .capsule-auto-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, transparent, var(--theme-accent), var(--theme-glow));
+      box-shadow: 0 0 10px var(--theme-glow);
+      pointer-events: none;
+      opacity: 0;
+      transition: width 0.1s linear, opacity 0.3s ease;
+      z-index: 4;
+    }
+    .capsule-trackpad.is-autoplay .capsule-auto-progress {
+      opacity: 0.85;
     }
 
     /* Chevron Lateral Buttons */
@@ -1678,6 +1689,9 @@ window.seleccionarPunto = function(portalId, targetId, ctaText, accent, glow, rg
 };
 
 window.irAlPuntoActual = function() {
+  if (window.particleSys) window.particleSys.stop();
+  if (window.capsuleDock) window.capsuleDock.pauseAutoplay();
+  [1, 2, 3].forEach(id => { const v = document.getElementById('vid-p' + id); if (v) v.pause(); });
   document.body.classList.remove('in-showroom');
   document.body.classList.add('portal-open');       // ← allow scroll
   const main = document.getElementById('main-content');
@@ -1697,6 +1711,8 @@ window.irAlPuntoActual = function() {
 };
 
 window.volverAlShowroom = function() {
+  if (window.particleSys) window.particleSys.start();
+  if (window.capsuleDock) window.capsuleDock.resetAutoplay();
   document.body.classList.remove('portal-open');    // ← block scroll again
   const main = document.getElementById('main-content');
   if (main) main.classList.remove('is-visible');
@@ -1952,93 +1968,114 @@ window.uploadVideo = async (input, fieldName, ext, lblId) => {
 };
 
 
-// ── PARTICLE ENGINE (REDUCIDO 20% Y REACTIVO) ──────────────────────────────
+// ── PARTICLE ENGINE (ALTO RENDIMIENTO: CERO LAG, AUTO-PAUSE, SIN SHADOWBLUR) ──
 window.State = { mouse: { currentX: 0.5, currentY: 0.5 }, viewport: { w: window.innerWidth, h: window.innerHeight }, isTransitioning: false, targetPortalCenter: null };
 
 class ParticleEngine {
     constructor() {
-        this.cBg = document.getElementById('ctx-background');
-        this.cFg = document.getElementById('ctx-foreground');
-        if(!this.cBg || !this.cFg) return;
-        this.ctxBg = this.cBg.getContext('2d', { alpha: true });
-        this.ctxFg = this.cFg.getContext('2d', { alpha: true });
+        this.canvas = document.getElementById('ctx-background');
+        const fg = document.getElementById('ctx-foreground');
+        if (fg) fg.style.display = 'none'; // Un solo canvas para 60-120fps puros sin duplicar dibujado
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d', { alpha: true });
         this.particles = [];
-        this.currentColor = '230, 67, 129'; // Default pink
-        
-        window.addEventListener('resize', () => this.resize());
-        window.addEventListener('pointermove', (e) => {
-            window.State.mouse.currentX = e.clientX / window.State.viewport.w;
+        this.currentColor = '139, 92, 246';
+        this.isRunning = true;
+        this.rafId = null;
+        this.w = window.innerWidth;
+        this.h = window.innerHeight;
+
+        window.addEventListener('resize', () => this.resize(), { passive: true });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) this.stop();
+            else if (!document.body.classList.contains('portal-open')) this.start();
         });
-        
+
         this.resize();
         this.spawnParticles();
-        requestAnimationFrame(() => this.render());
+        this.start();
     }
     resize() {
-        window.State.viewport.w = window.innerWidth;
-        window.State.viewport.h = window.innerHeight;
-        const d = window.devicePixelRatio || 1, w = window.State.viewport.w, h = window.State.viewport.h;
-        this.cBg.width = w * d; this.cBg.height = h * d;
-        this.cFg.width = w * d; this.cFg.height = h * d;
-        this.ctxBg.scale(d, d); this.ctxFg.scale(d, d);
+        this.w = window.innerWidth;
+        this.h = window.innerHeight;
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        this.canvas.width = Math.round(this.w * dpr);
+        this.canvas.height = Math.round(this.h * dpr);
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     setColor(rgbString) { this.currentColor = rgbString; }
     spawnParticles() {
         this.particles = [];
-        const c = window.innerWidth < 768 ? 12 : 24; // Reducido al 20% (Móvil: 12, PC: 24)
-        for(let i=0; i<c; i++) {
+        const count = window.innerWidth < 768 ? 14 : 24;
+        for (let i = 0; i < count; i++) {
             this.particles.push({
-                x: Math.random() * window.State.viewport.w, y: Math.random() * window.State.viewport.h,
-                size: Math.random() * 2 + 0.5, speed: Math.random() * 0.8 + 0.2,
-                isFg: Math.random() > 0.65, opacity: Math.random() * 0.6 + 0.2,
-                angle: Math.random() * Math.PI * 2, wobbleSpd: Math.random() * 0.02 + 0.01, wobbleDist: Math.random() * 1.5 + 0.5
+                x: Math.random() * this.w,
+                y: Math.random() * this.h,
+                size: Math.random() * 2 + 0.8,
+                speed: Math.random() * 0.4 + 0.15,
+                opacity: Math.random() * 0.5 + 0.25,
+                angle: Math.random() * Math.PI * 2,
+                wobble: Math.random() * 0.02 + 0.005
             });
         }
     }
+    start() {
+        if (!this.isRunning) {
+            this.isRunning = true;
+            this.render();
+        }
+    }
+    stop() {
+        this.isRunning = false;
+        if (this.rafId) {
+            cancelAnimationFrame(this.rafId);
+            this.rafId = null;
+        }
+    }
     render() {
-        this.ctxBg.clearRect(0, 0, window.State.viewport.w, window.State.viewport.h);
-        this.ctxFg.clearRect(0, 0, window.State.viewport.w, window.State.viewport.h);
-        
-        const wind = (window.State.mouse.currentX - 0.5) * 6;
-        
-        this.particles.forEach(p => {
-            if (window.State.isTransitioning && window.State.targetPortalCenter) {
-                const dx = window.State.targetPortalCenter.x - p.x;
-                const dy = window.State.targetPortalCenter.y - p.y;
-                p.x += dx * 0.03 * (p.isFg ? 1.5 : 0.8);
-                p.y += dy * 0.03 * (p.isFg ? 1.5 : 0.8);
-                p.speed *= 1.05; 
-            } else {
-                p.y -= p.speed * 0.4;
-                p.x += Math.sin(p.angle) * p.wobbleDist + wind * (p.isFg ? 1 : 0.3);
-            }
-            p.angle += p.wobbleSpd;
-            if (p.y < -20) p.y = window.State.viewport.h + 20;
-            if (p.x < -20) p.x = window.State.viewport.w + 20;
-            if (p.x > window.State.viewport.w + 20) p.x = -20;
-            
-            const ctx = p.isFg ? this.ctxFg : this.ctxBg;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.shadowBlur = p.isFg ? 14 : 6;
-            ctx.shadowColor = `rgba(${this.currentColor}, 0.9)`;
-            ctx.fillStyle = p.isFg ? `rgba(255, 255, 255, ${p.opacity})` : `rgba(${this.currentColor}, ${p.opacity * 0.7})`;
-            ctx.fill();
-        });
-        requestAnimationFrame(() => this.render());
+        if (!this.isRunning) return;
+        this.ctx.clearRect(0, 0, this.w, this.h);
+
+        const rgb = this.currentColor;
+        for (let i = 0; i < this.particles.length; i++) {
+            const p = this.particles[i];
+            p.y -= p.speed;
+            p.x += Math.sin(p.angle) * 0.5;
+            p.angle += p.wobble;
+
+            if (p.y < -10) p.y = this.h + 10;
+            if (p.x < -10) p.x = this.w + 10;
+            if (p.x > this.w + 10) p.x = -10;
+
+            // Halo suave + núcleo sin el costoso Gaussian blur en CPU
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(${rgb}, ${p.opacity * 0.22})`;
+            this.ctx.fill();
+
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity * 0.85})`;
+            this.ctx.fill();
+        }
+        this.rafId = requestAnimationFrame(() => this.render());
     }
 }
 window.particleSys = new ParticleEngine();
 
 
-// ── CHROMA KEY PROCESSOR (CANVAS) ─────────────────────────────────────────────
+// ── CHROMA KEY PROCESSOR (THROTTLED 30FPS, SOLO PORTAL ACTIVO, CERO CPU DESPERDICIADA) ──
 class VideoProcessor {
-    constructor(videoId, canvasId) {
+    constructor(id, videoId, canvasId) {
+        this.id = id;
         this.canvas = document.getElementById(canvasId);
         if (!this.canvas) return;
         this.ctx = this.canvas.getContext('2d', { willReadFrequently: true, alpha: true });
         this.isPlaying = false;
         this.video = document.getElementById(videoId);
-        this.lastTime = -1;
+        this.lastFrameTime = 0;
+        this.lastVideoTime = -1;
+        this.rafId = null;
         if (!this.video) return;
         
         this.bindVideo();
@@ -2046,73 +2083,87 @@ class VideoProcessor {
     
     bindVideo() {
         this.video.addEventListener('loadedmetadata', () => {
-            // REDUCCIÓN DE ESCALA PARA SUPER RENDIMIENTO (maxW 360 en lugar de 512)
-            // Esto reduce la cantidad de píxeles a procesar a la mitad, eliminando el lag.
-            const maxW = 360; 
-            const ratio = this.video.videoWidth / this.video.videoHeight || 1;
-            this.canvas.width = Math.min(this.video.videoWidth, maxW);
-            this.canvas.height = this.canvas.width / ratio;
+            const maxW = 320; 
+            const ratio = (this.video.videoWidth / this.video.videoHeight) || 1;
+            this.canvas.width = Math.min(this.video.videoWidth || maxW, maxW);
+            this.canvas.height = Math.round(this.canvas.width / ratio);
         });
 
         this.video.addEventListener('play', () => { 
-            if(!this.isPlaying) {
-                this.isPlaying = true; 
-                this.processFrame(); 
-            }
+            this.isPlaying = true;
+            this.processFrame(); 
         });
-        this.video.addEventListener('pause', () => this.isPlaying = false);
-        this.video.addEventListener('ended', () => this.isPlaying = false);
+        this.video.addEventListener('pause', () => {
+            this.isPlaying = false;
+            if (this.rafId) cancelAnimationFrame(this.rafId);
+        });
+        this.video.addEventListener('ended', () => {
+            this.isPlaying = false;
+            if (this.rafId) cancelAnimationFrame(this.rafId);
+        });
     }
     
     processFrame() {
         if (!this.isPlaying || this.video.paused || this.video.ended) return;
         
-        // OPTIMIZACIÓN 1: No procesar el mismo frame 2 veces si la pantalla va a 60/120hz
-        if (this.video.currentTime === this.lastTime) {
-            requestAnimationFrame(() => this.processFrame());
+        // Detener si este portal no está activo o si se abrió el portal de lectura
+        if (window.currentPortal !== this.id || document.body.classList.contains('portal-open') || document.hidden) {
+            this.isPlaying = false;
             return;
         }
-        this.lastTime = this.video.currentTime;
 
-        this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
-        
-        try {
-            const frameData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-            const data = frameData.data;
-            const l = data.length;
-            
-            // OPTIMIZACIÓN 2: Loop desenrollado y matemáticas rápidas nativas
-            for (let i = 0; i < l; i += 4) {
-                let r = data[i];
-                let g = data[i + 1];
-                let b = data[i + 2];
+        const now = performance.now();
+        // Límite a 30 FPS para evitar sobrecarga en pantallas 60/120Hz
+        if (now - this.lastFrameTime < 32) {
+            this.rafId = requestAnimationFrame(() => this.processFrame());
+            return;
+        }
+
+        if (this.video.currentTime === this.lastVideoTime) {
+            this.rafId = requestAnimationFrame(() => this.processFrame());
+            return;
+        }
+
+        this.lastFrameTime = now;
+        this.lastVideoTime = this.video.currentTime;
+
+        const w = this.canvas.width;
+        const h = this.canvas.height;
+        if (w > 0 && h > 0) {
+            this.ctx.drawImage(this.video, 0, 0, w, h);
+            try {
+                const frameData = this.ctx.getImageData(0, 0, w, h);
+                const data = frameData.data;
+                const len = data.length;
                 
-                // Filtro estricto para proteger el ojo: solo blancos muy puros (fondo)
-                if (r > 235 && g > 235 && b > 235) {
-                    let max = r > g ? (r > b ? r : b) : (g > b ? g : b);
-                    let min = r < g ? (r < b ? r : b) : (g < b ? g : b);
+                for (let i = 0; i < len; i += 4) {
+                    const r = data[i];
+                    const g = data[i + 1];
+                    const b = data[i + 2];
                     
-                    if ((max - min) < 15) { // Muy Neutral
-                        if (min > 245) {
-                            data[i + 3] = 0; // Transparencia total
-                        } else {
-                            // Feathering de 235 a 245
-                            let p = (min - 235) / 10; 
-                            data[i + 3] = 255 * (1 - p); 
+                    if (r > 235 && g > 235 && b > 235) {
+                        const max = r > g ? (r > b ? r : b) : (g > b ? g : b);
+                        const min = r < g ? (r < b ? r : b) : (g < b ? g : b);
+                        if ((max - min) < 15) {
+                            if (min > 245) {
+                                data[i + 3] = 0;
+                            } else {
+                                data[i + 3] = Math.round(255 * (1 - (min - 235) / 10));
+                            }
                         }
                     }
                 }
-            }
-            this.ctx.putImageData(frameData, 0, 0);
-        } catch(e) { }
+                this.ctx.putImageData(frameData, 0, 0);
+            } catch(e) {}
+        }
         
-        requestAnimationFrame(() => this.processFrame());
+        this.rafId = requestAnimationFrame(() => this.processFrame());
     }
 }
 window.processors = {
-    1: new VideoProcessor('vid-p1', 'canvas-p1'),
-    2: new VideoProcessor('vid-p2', 'canvas-p2'),
-    3: new VideoProcessor('vid-p3', 'canvas-p3')
+    1: new VideoProcessor(1, 'vid-p1', 'canvas-p1'),
+    2: new VideoProcessor(2, 'vid-p2', 'canvas-p2'),
+    3: new VideoProcessor(3, 'vid-p3', 'canvas-p3')
 };
 
 // ── ADMIN: SAVE LINKS ─────────────────────────────────────────────────────────
@@ -2396,6 +2447,7 @@ if (regForm) {
   
 // ── OPTIMIZED 3D TILT PHYSICS (ZERO LAG / 120FPS) ──────────────────────────
 function initTiltPhysics() {
+  if (window.matchMedia && window.matchMedia('(hover: none)').matches) return; // Desactivar en móviles para 0 overhead
   const cards = document.querySelectorAll('.tilt-card');
   cards.forEach(card => {
     let rect = null;
@@ -2578,224 +2630,387 @@ const PORTALES = [
 ];
 
 let currentPortalIndex = 0;
-let isTrackpadDragging = false;
-let trackpadStartX = 0;
-let trackpadCurrentX = 0;
-let trackpadDragStartTime = 0;
-let trackpadHasVibrated = false;
 
-function initCapsuleTrackpad() {
-  const puck = document.getElementById('capsule-puck');
-  const btnPrev = document.getElementById('capsule-btn-prev');
-  const btnNext = document.getElementById('capsule-btn-next');
-  const stageEl = document.getElementById('stage-container');
-  const mascotEl = document.getElementById('mascot-wrapper');
-  if (!puck) return;
+// ── AUTOMATED DYNAMIC CAPSULE TRACKPAD CONTROLLER ──────────────────────────
+class AutomatedCapsuleTrackpad {
+  constructor() {
+    this.puck = document.getElementById('capsule-puck');
+    this.trackpad = document.getElementById('capsule-trackpad');
+    this.btnPrev = document.getElementById('capsule-btn-prev');
+    this.btnNext = document.getElementById('capsule-btn-next');
+    this.dots = document.querySelectorAll('.capsule-dot');
+    this.progressBar = document.getElementById('capsule-auto-progress');
+    this.stageEl = document.getElementById('stage-container');
+    this.mascotEl = document.getElementById('mascot-wrapper');
 
-  const maxTravel = 95;
-  const threshold = 45;
+    this.isDragging = false;
+    this.startX = 0;
+    this.currentX = 0;
+    this.lastX = 0;
+    this.startTime = 0;
+    this.lastTime = 0;
+    this.velocity = 0;
+    this.hasVibrated = false;
 
-  puck.addEventListener('pointerdown', e => {
+    this.maxTravel = 90;
+    this.threshold = 36;
+
+    // Autoplay / Automation Config
+    this.autoplayInterval = 5500; // 5.5s por portal
+    this.idleResumeDelay = 6500;  // reanudar autoplay tras 6.5s inactivo
+    this.autoplayTimer = null;
+    this.idleTimer = null;
+    this.progressRaf = null;
+    this.progressStart = 0;
+    this.isAutoplayActive = true;
+
+    if (!this.puck || !this.trackpad) return;
+
+    this.initEvents();
+    this.startAutoplay();
+  }
+
+  initEvents() {
+    // 1. Pointer Dragging (Touch + Mouse unificado)
+    this.puck.addEventListener('pointerdown', e => this.onPointerDown(e));
+    window.addEventListener('pointermove', e => this.onPointerMove(e), { passive: false });
+    window.addEventListener('pointerup', e => this.onPointerUp(e));
+    window.addEventListener('pointercancel', e => this.onPointerUp(e));
+
+    // 2. Lateral Chevron Buttons
+    this.btnPrev?.addEventListener('click', e => {
+      e.stopPropagation();
+      this.interact();
+      this.pulseButton(this.btnPrev);
+      this.prev();
+    });
+
+    this.btnNext?.addEventListener('click', e => {
+      e.stopPropagation();
+      this.interact();
+      this.pulseButton(this.btnNext);
+      this.next();
+    });
+
+    // 3. Direct Tap on Trackpad Sides (Automated Glide)
+    this.trackpad.addEventListener('click', e => {
+      if (this.isDragging) return;
+      if (e.target.closest('#capsule-puck') || e.target.closest('.capsule-arrow-btn')) return;
+      
+      this.interact();
+      const rect = this.trackpad.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      if (clickX < rect.width / 2) {
+        this.pulseButton(this.btnPrev);
+        this.prev();
+      } else {
+        this.pulseButton(this.btnNext);
+        this.next();
+      }
+    });
+
+    // 4. Dot Click
+    this.dots.forEach((dot, idx) => {
+      dot.addEventListener('click', e => {
+        e.stopPropagation();
+        this.interact();
+        this.goTo(idx);
+      });
+    });
+
+    // 5. User Presence & Pause on Hover
+    this.trackpad.addEventListener('mouseenter', () => this.pauseAutoplay());
+    this.trackpad.addEventListener('mouseleave', () => {
+      if (!document.body.classList.contains('portal-open')) {
+        this.scheduleAutoplayResume();
+      }
+    });
+
+    // 6. Keyboard Navigation
+    window.addEventListener('keydown', e => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
+      if (e.key === 'ArrowLeft') {
+        this.interact();
+        this.pulseButton(this.btnPrev);
+        this.prev();
+      } else if (e.key === 'ArrowRight') {
+        this.interact();
+        this.pulseButton(this.btnNext);
+        this.next();
+      } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+        if (!document.body.classList.contains('portal-open')) {
+          e.preventDefault();
+          this.openPortal();
+        }
+      } else if (e.key === 'Escape') {
+        if (document.body.classList.contains('portal-open')) {
+          window.volverAlShowroom();
+        }
+      }
+    });
+  }
+
+  // ── AUTOPLAY & AUTOMATION ENGINE ──
+  startAutoplay() {
+    if (!this.isAutoplayActive || document.body.classList.contains('portal-open')) return;
+    this.clearAutoplay();
+    this.trackpad.classList.add('is-autoplay');
+
+    this.progressStart = performance.now();
+    const updateProgress = (now) => {
+      const elapsed = now - this.progressStart;
+      const progress = Math.min(100, (elapsed / this.autoplayInterval) * 100);
+      if (this.progressBar) this.progressBar.style.width = progress + '%';
+
+      if (elapsed < this.autoplayInterval) {
+        this.progressRaf = requestAnimationFrame(updateProgress);
+      } else {
+        this.next();
+        this.startAutoplay();
+      }
+    };
+    this.progressRaf = requestAnimationFrame(updateProgress);
+  }
+
+  pauseAutoplay() {
+    this.clearAutoplay();
+    this.trackpad.classList.remove('is-autoplay');
+    if (this.progressBar) this.progressBar.style.width = '0%';
+  }
+
+  scheduleAutoplayResume() {
+    clearTimeout(this.idleTimer);
+    this.idleTimer = setTimeout(() => {
+      if (!document.body.classList.contains('portal-open')) {
+        this.isAutoplayActive = true;
+        this.startAutoplay();
+      }
+    }, this.idleResumeDelay);
+  }
+
+  clearAutoplay() {
+    if (this.progressRaf) {
+      cancelAnimationFrame(this.progressRaf);
+      this.progressRaf = null;
+    }
+    clearTimeout(this.autoplayTimer);
+    clearTimeout(this.idleTimer);
+  }
+
+  interact() {
+    this.pauseAutoplay();
+    this.scheduleAutoplayResume();
+  }
+
+  pulseButton(btn) {
+    if (!btn) return;
+    btn.classList.add('glow-active');
+    setTimeout(() => btn.classList.remove('glow-active'), 280);
+  }
+
+  // ── POINTER DRAG & ELASTIC SPRING ──
+  onPointerDown(e) {
+    if (e.target.closest('.capsule-arrow-btn')) return;
     e.preventDefault();
-    puck.setPointerCapture(e.pointerId);
-    isTrackpadDragging = true;
-    trackpadStartX = e.clientX;
-    trackpadCurrentX = e.clientX;
-    trackpadDragStartTime = performance.now();
-    trackpadHasVibrated = false;
+    this.interact();
 
-    puck.style.cursor = 'grabbing';
-    puck.style.transition = 'none';
-  });
+    try { this.puck.setPointerCapture(e.pointerId); } catch(_) {}
+    this.isDragging = true;
+    this.startX = e.clientX;
+    this.currentX = e.clientX;
+    this.lastX = e.clientX;
+    this.startTime = performance.now();
+    this.lastTime = this.startTime;
+    this.velocity = 0;
+    this.hasVibrated = false;
 
-  puck.addEventListener('pointermove', e => {
-    if (!isTrackpadDragging) return;
-    trackpadCurrentX = e.clientX;
-    const rawDelta = trackpadCurrentX - trackpadStartX;
+    this.puck.style.cursor = 'grabbing';
+    this.puck.style.transition = 'none';
+  }
+
+  onPointerMove(e) {
+    if (!this.isDragging) return;
+    const now = performance.now();
+    this.currentX = e.clientX;
+
+    // Fling velocity calculation
+    const dt = now - this.lastTime;
+    if (dt > 10) {
+      this.velocity = (this.currentX - this.lastX) / dt;
+      this.lastX = this.currentX;
+      this.lastTime = now;
+    }
+
+    const rawDelta = this.currentX - this.startX;
     const sign = Math.sign(rawDelta);
     const absDelta = Math.abs(rawDelta);
 
-    // Non-linear rubber-banding resistance
-    const resistedDelta = sign * Math.min(maxTravel, Math.pow(absDelta, 0.88) * 1.3);
-    const stretch = 1 + (absDelta / 400);
+    // Resistencia física no lineal
+    const resistedDelta = sign * Math.min(this.maxTravel, Math.pow(absDelta, 0.86) * 1.25);
+    const stretch = 1 + (absDelta / 420);
 
-    puck.style.transform = `translate(calc(-50% + ${resistedDelta}px), -50%) scaleX(${stretch})`;
+    this.puck.style.transform = `translate(calc(-50% + ${resistedDelta}px), -50%) scaleX(${stretch})`;
 
-    // Reacción 3D en tiempo real en el Escenario Superior (Stage 3D & Holograma)
-    if (stageEl) {
-      const tiltY = (resistedDelta / maxTravel) * 22;
-      const tiltZ = (resistedDelta / maxTravel) * 8;
-      stageEl.style.transition = 'none';
-      stageEl.style.transform = `translateX(calc(-50% + ${resistedDelta * 0.4}px)) rotateX(72deg) rotateY(${tiltY}deg) rotateZ(${tiltZ}deg)`;
+    // Reacción 3D suave en Escenario y Mascota
+    if (this.stageEl) {
+      const tiltY = (resistedDelta / this.maxTravel) * 20;
+      const tiltZ = (resistedDelta / this.maxTravel) * 6;
+      this.stageEl.style.transition = 'none';
+      this.stageEl.style.transform = `translateX(calc(-50% + ${resistedDelta * 0.35}px)) rotateX(72deg) rotateY(${tiltY}deg) rotateZ(${tiltZ}deg)`;
     }
-    if (mascotEl) {
-      const tiltY = (resistedDelta / maxTravel) * 16;
-      mascotEl.style.transition = 'none';
-      mascotEl.style.transform = `translateX(calc(-50% + ${resistedDelta * 0.5}px)) rotateY(${tiltY}deg)`;
+    if (this.mascotEl) {
+      const tiltY = (resistedDelta / this.maxTravel) * 14;
+      this.mascotEl.style.transition = 'none';
+      this.mascotEl.style.transform = `translateX(calc(-50% + ${resistedDelta * 0.45}px)) rotateY(${tiltY}deg)`;
     }
 
-    // Directional chevron neon glow feedback
-    if (resistedDelta > 15) {
-      btnNext?.classList.add('glow-active');
-      btnPrev?.classList.remove('glow-active');
-    } else if (resistedDelta < -15) {
-      btnPrev?.classList.add('glow-active');
-      btnNext?.classList.remove('glow-active');
+    // Feedback visual en flechas
+    if (resistedDelta > 14) {
+      this.btnNext?.classList.add('glow-active');
+      this.btnPrev?.classList.remove('glow-active');
+    } else if (resistedDelta < -14) {
+      this.btnPrev?.classList.add('glow-active');
+      this.btnNext?.classList.remove('glow-active');
     } else {
-      btnPrev?.classList.remove('glow-active');
-      btnNext?.classList.remove('glow-active');
+      this.btnPrev?.classList.remove('glow-active');
+      this.btnNext?.classList.remove('glow-active');
     }
 
-    // Armed State + Haptic feedback
-    if (Math.abs(resistedDelta) >= threshold) {
-      if (!puck.classList.contains('is-armed')) {
-        puck.classList.add('is-armed');
-        if (!trackpadHasVibrated && navigator.vibrate) {
-          navigator.vibrate(18);
-          trackpadHasVibrated = true;
+    // Estado Armado con vibración háptica
+    if (Math.abs(resistedDelta) >= this.threshold) {
+      if (!this.puck.classList.contains('is-armed')) {
+        this.puck.classList.add('is-armed');
+        if (!this.hasVibrated && navigator.vibrate) {
+          navigator.vibrate(15);
+          this.hasVibrated = true;
         }
       }
     } else {
-      puck.classList.remove('is-armed');
-      trackpadHasVibrated = false;
+      this.puck.classList.remove('is-armed');
+      this.hasVibrated = false;
     }
-  });
+  }
 
-  const onPointerEnd = e => {
-    if (!isTrackpadDragging) return;
-    isTrackpadDragging = false;
-    try { puck.releasePointerCapture(e.pointerId); } catch(_) {}
+  onPointerUp(e) {
+    if (!this.isDragging) return;
+    this.isDragging = false;
+    try { this.puck.releasePointerCapture(e.pointerId); } catch(_) {}
 
-    puck.style.cursor = 'grab';
-    btnPrev?.classList.remove('glow-active');
-    btnNext?.classList.remove('glow-active');
+    this.puck.style.cursor = 'grab';
+    this.btnPrev?.classList.remove('glow-active');
+    this.btnNext?.classList.remove('glow-active');
 
-    const rawDelta = trackpadCurrentX - trackpadStartX;
-    const sign = Math.sign(rawDelta);
+    const rawDelta = this.currentX - this.startX;
     const absDelta = Math.abs(rawDelta);
-    const resistedDelta = sign * Math.min(maxTravel, Math.pow(absDelta, 0.88) * 1.3);
-    const duration = performance.now() - trackpadDragStartTime;
+    const sign = Math.sign(rawDelta);
+    const duration = performance.now() - this.startTime;
 
-    // Direct tap on puck opens portal
-    if (absDelta < 6 && duration < 280) {
-      puck.style.transition = 'transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)';
-      puck.style.transform = 'translate(-50%, -50%) scaleX(1)';
-      if (stageEl) {
-        stageEl.style.transition = 'transform 500ms cubic-bezier(0.25, 1, 0.5, 1)';
-        stageEl.style.transform = 'translateX(-50%) rotateX(72deg)';
-      }
-      if (mascotEl) {
-        mascotEl.style.transition = 'transform 500ms cubic-bezier(0.25, 1, 0.5, 1)';
-        mascotEl.style.transform = 'translateX(-50%)';
-      }
-      window.irAlPuntoActual();
+    // 1. Direct Tap on Puck -> Abrir Portal inmediatamente
+    if (absDelta < 7 && duration < 280) {
+      this.resetPuckSpring();
+      this.openPortal();
       return;
     }
 
-    // Elastic spring-back return
-    puck.style.transition = 'transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 300ms ease, border-color 300ms ease';
-    puck.style.transform = 'translate(-50%, -50%) scaleX(1)';
-    puck.classList.remove('is-armed');
+    // 2. Fling gesture o arrastre superando umbral -> Cambio automatizado
+    const isFling = Math.abs(this.velocity) > 0.32;
+    const isPastThreshold = absDelta >= this.threshold;
 
-    // Reset 3D Stage
-    if (stageEl) {
-      stageEl.style.transition = 'transform 550ms cubic-bezier(0.25, 1, 0.5, 1)';
-      stageEl.style.transform = 'translateX(-50%) rotateX(72deg)';
+    this.resetPuckSpring();
+
+    if (isFling || isPastThreshold) {
+      const direction = isFling ? Math.sign(this.velocity) : sign;
+      if (direction > 0) this.next();
+      else if (direction < 0) this.prev();
     }
-    if (mascotEl) {
-      mascotEl.style.transition = 'transform 550ms cubic-bezier(0.25, 1, 0.5, 1)';
-      mascotEl.style.transform = 'translateX(-50%)';
+  }
+
+  resetPuckSpring() {
+    this.puck.style.transition = 'transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 300ms ease, border-color 300ms ease';
+    this.puck.style.transform = 'translate(-50%, -50%) scaleX(1)';
+    this.puck.classList.remove('is-armed');
+
+    if (this.stageEl) {
+      this.stageEl.style.transition = 'transform 500ms cubic-bezier(0.25, 1, 0.5, 1)';
+      this.stageEl.style.transform = 'translateX(-50%) rotateX(72deg)';
+    }
+    if (this.mascotEl) {
+      this.mascotEl.style.transition = 'transform 500ms cubic-bezier(0.25, 1, 0.5, 1)';
+      this.mascotEl.style.transform = 'translateX(-50%)';
+    }
+  }
+
+  // ── NAVEGACIÓN Y SINCRONIZACIÓN DE PORTALES ──
+  goTo(index) {
+    currentPortalIndex = (index + PORTALES.length) % PORTALES.length;
+    const p = PORTALES[currentPortalIndex];
+
+    // Core selection
+    window.seleccionarPunto(p.id, p.targetId, p.ctaText, p.accent, p.glow, p.rgb);
+
+    // Micro-animación en el Puck
+    const puckContent = document.getElementById('puck-content');
+    const puckIcon = document.getElementById('puck-icon');
+    const puckTitle = document.getElementById('puck-title');
+
+    if (puckContent) {
+      puckContent.classList.add('puck-flip-out');
+      setTimeout(() => {
+        if (puckIcon) puckIcon.className = `fa-solid ${p.icon} puck-icon`;
+        if (puckTitle) puckTitle.innerText = p.name;
+        puckContent.classList.remove('puck-flip-out');
+        puckContent.classList.add('puck-flip-in');
+        setTimeout(() => puckContent.classList.remove('puck-flip-in'), 180);
+      }, 110);
     }
 
-    // Navigation trigger
-    if (Math.abs(resistedDelta) >= threshold) {
-      if (sign > 0) {
-        window.trackpadGoNext();
-      } else {
-        window.trackpadGoPrev();
-      }
+    if (this.puck) {
+      this.puck.style.background = `linear-gradient(135deg, rgba(${p.rgb}, 0.35) 0%, rgba(20, 15, 30, 0.88) 100%)`;
+      this.puck.style.boxShadow = `0 0 25px rgba(${p.rgb}, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.4)`;
     }
-  };
 
-  puck.addEventListener('pointerup', onPointerEnd);
-  puck.addEventListener('pointercancel', onPointerEnd);
+    // Sincronizar Dots
+    this.dots.forEach((dot, idx) => {
+      if (idx === currentPortalIndex) dot.classList.add('active');
+      else dot.classList.remove('active');
+    });
 
-  // Chevron lateral button clicks
-  btnPrev?.addEventListener('click', () => {
-    btnPrev.classList.add('glow-active');
-    setTimeout(() => btnPrev.classList.remove('glow-active'), 250);
-    window.trackpadGoPrev();
-  });
-  btnNext?.addEventListener('click', () => {
-    btnNext.classList.add('glow-active');
-    setTimeout(() => btnNext.classList.remove('glow-active'), 250);
-    window.trackpadGoNext();
-  });
-
-  // Keyboard navigation (ArrowLeft / ArrowRight)
-  window.addEventListener('keydown', e => {
-    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
-    if (e.key === 'ArrowLeft') {
-      btnPrev?.classList.add('glow-active');
-      setTimeout(() => btnPrev?.classList.remove('glow-active'), 250);
-      window.trackpadGoPrev();
-    } else if (e.key === 'ArrowRight') {
-      btnNext?.classList.add('glow-active');
-      setTimeout(() => btnNext?.classList.remove('glow-active'), 250);
-      window.trackpadGoNext();
+    // Reiniciar barra de progreso si autoplay está activo
+    if (this.isAutoplayActive && !document.body.classList.contains('portal-open')) {
+      this.startAutoplay();
     }
-  });
+  }
+
+  next() {
+    this.goTo(currentPortalIndex + 1);
+  }
+
+  prev() {
+    this.goTo(currentPortalIndex - 1);
+  }
+
+  openPortal() {
+    window.irAlPuntoActual();
+  }
+
+  resetAutoplay() {
+    this.isAutoplayActive = true;
+    this.startAutoplay();
+  }
 }
 
+// Global API Bridges
 window.trackpadSwitchPortal = function(index) {
-  currentPortalIndex = (index + PORTALES.length) % PORTALES.length;
-  const p = PORTALES[currentPortalIndex];
-
-  // Core selection
-  window.seleccionarPunto(p.id, p.targetId, p.ctaText, p.accent, p.glow, p.rgb);
-
-  // Puck update with flip animation
-  const puck = document.getElementById('capsule-puck');
-  const puckContent = document.getElementById('puck-content');
-  const puckIcon = document.getElementById('puck-icon');
-  const puckTitle = document.getElementById('puck-title');
-
-  if (puckContent) {
-    puckContent.classList.add('puck-flip-out');
-    setTimeout(() => {
-      if (puckIcon) puckIcon.className = `fa-solid ${p.icon} puck-icon`;
-      if (puckTitle) puckTitle.innerText = p.name;
-      puckContent.classList.remove('puck-flip-out');
-      puckContent.classList.add('puck-flip-in');
-      setTimeout(() => puckContent.classList.remove('puck-flip-in'), 200);
-    }, 120);
-  }
-
-  if (puck) {
-    puck.style.background = `linear-gradient(135deg, rgba(${p.rgb}, 0.35) 0%, rgba(20, 15, 30, 0.88) 100%)`;
-    puck.style.boxShadow = `0 0 25px rgba(${p.rgb}, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.4)`;
-  }
-
-  // Micro-indicators dots update
-  const dots = document.querySelectorAll('.capsule-dot');
-  dots.forEach((dot, idx) => {
-    if (idx === currentPortalIndex) {
-      dot.classList.add('active');
-    } else {
-      dot.classList.remove('active');
-    }
-  });
+  if (window.capsuleDock) window.capsuleDock.goTo(index);
 };
-
 window.trackpadGoNext = function() {
-  window.trackpadSwitchPortal(currentPortalIndex + 1);
+  if (window.capsuleDock) window.capsuleDock.next();
 };
-
 window.trackpadGoPrev = function() {
-  window.trackpadSwitchPortal(currentPortalIndex - 1);
+  if (window.capsuleDock) window.capsuleDock.prev();
 };
 
-  initCapsuleTrackpad();
+window.capsuleDock = new AutomatedCapsuleTrackpad();
 </script>
 </body>
 </html>
