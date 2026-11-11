@@ -2,1532 +2,2800 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="STARMAKER — experiencia digital espacial, holográfica y premium." />
-  <meta name="theme-color" content="#050507" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>STARMAKER — Universo Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    /* ── VARIABLES & THEME FROM INDEX(4).HTML ── */
+    :root {
+      --primary:   #8B5CF6;
+      --secondary: #3B82F6;
+      --accent:    #F43F5E;
+      --pink:      #EC4899;
+      --emerald:   #10B981;
+      --coral:     #F18D79;
+      --ink:       #05040a;
+      --white:     #f8f6fb;
+      --muted:     #9e98aa;
+      --black-1:   #05040a;
+      --black-2:   #08080b;
+      --text:      #f8f6fb;
+      --theme-accent: #8B5CF6;
+      --theme-glow:   #A78BFA;
+      --theme-rgb:    139, 92, 246;
+    }
 
-    /* MODO EDITOR VISUAL */
-    .editor-active [contenteditable="true"] {
-      outline: 2px dashed var(--cyan) !important;
-      outline-offset: 4px;
-      cursor: text;
-      transition: outline 0.2s;
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background: #05040a; }
+    body {
+      min-height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background:
+        radial-gradient(ellipse 160vw 100vh at 90% 5%, rgba(139,92,246,.14), transparent 70%),
+        radial-gradient(ellipse 160vw 100vh at 10% 5%, rgba(59,130,246,.12), transparent 70%),
+        radial-gradient(ellipse 140vw 120vh at 50% 55%, rgba(236,72,153,.10), transparent 70%),
+        radial-gradient(ellipse 180vw 140vh at 50% 100%, rgba(16,185,129,.12), transparent 70%),
+        linear-gradient(180deg, #05040a 0%, #08080b 100%);
     }
-    .editor-active [contenteditable="true"]:hover {
-      outline: 2px solid var(--coral) !important;
-      background: rgba(230, 67, 129, 0.1);
-    }
-    #visual-editor-toolbar {
-      display: none;
+    body:before {
+      content: "";
       position: fixed;
-      top: 20px;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 55% at 50% 36%, rgba(236,72,153,.10), transparent 68%),
+        radial-gradient(ellipse 45% 50% at 16% 30%, rgba(139,92,246,.14), transparent 70%),
+        radial-gradient(ellipse 45% 50% at 84% 25%, rgba(59,130,246,.10), transparent 70%);
+    }
+
+    /* ── STARS ── */
+    .stars {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        radial-gradient(circle at 15% 25%, rgba(255,255,255,.7) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 75% 15%, rgba(255,255,255,.5) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 45% 70%, rgba(255,255,255,.4) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 85% 80%, rgba(255,255,255,.35) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 30% 50%, rgba(255,255,255,.3) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 60% 40%, rgba(255,255,255,.25) 0 1px, transparent 1.5px);
+      background-size: 280px 260px, 360px 330px, 420px 380px, 540px 480px, 320px 290px, 460px 420px;
+      animation: starDrift 40s linear infinite;
+    }
+    @keyframes starDrift { from { background-position: 0 0; } to { background-position: 200px 100px; } }
+
+    /* ── STARDUST ── */
+    .stardust-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: radial-gradient(circle at center, rgba(255,255,255,.8) 0, rgba(255,255,255,0) 2px); }
+    .stardust-1 { background-size: 120px 120px; animation: floatUp 22s linear infinite; opacity: .12; }
+    .stardust-2 { background-size: 180px 180px; animation: floatUp 16s linear infinite .5s; opacity: .20; }
+    @keyframes floatUp { from { background-position: 0 100vh; } to { background-position: 0 0; } }
+
+    /* ── HEADER ── */
+    
+    header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 24px 30px; display: flex; justify-content: flex-start; align-items: center;
+      z-index: 1000; pointer-events: none;
+    }
+    .brand-container {
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1); padding: 12px 24px; border-radius: 100px;
+      pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: all 0.3s;
+    }
+    .brand-container:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); transform: translateY(-2px); }
+    .brand {
+      font-weight: 900; letter-spacing: .2em; font-size: 22px; color: white; text-decoration: none;
+      background: linear-gradient(90deg, #fff 40%, var(--coral) 50%, #fff 60%);
+      background-size: 300% 100%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: sweepLight 6s ease-in-out infinite;
+    }
+    
+    
+    /* --- STARLEO SLIDER CSS --- */
+    .universe-copy { position: absolute; top: 7.5vh; left: 50%; transform: translateX(-50%); text-align: center; width: min(90vw, 840px); pointer-events: none; transition: opacity .4s ease, transform .6s ease; z-index: 60; }
+    body.portal-open .universe-copy { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+    
+    .slider-wrapper { display: grid; align-items: center; justify-items: center; pointer-events: auto; }
+    .hero-slide { grid-area: 1 / 1; opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; width: 100%; display: none; }
+    .hero-slide.active { opacity: 1; transform: translateY(0); pointer-events: auto; z-index: 2; display: block; }
+    
+    .universe-copy h1 { margin: 8px 0; font-size: clamp(26px, 4vw, 48px); line-height: 1.15; letter-spacing: -.03em; font-weight: 300; text-shadow: 0 10px 40px rgba(0,0,0,.8); }
+    
+    /* Showroom gradient */
+    .slide-p0 strong { font-weight: 900; background: linear-gradient(90deg, #F18D79, #EB5279 30%, #E64381 60%, #F18D79); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientText 6s ease infinite; }
+    /* Portal 1 gradient */
+    .slide-p1 strong { font-weight: 900; background: linear-gradient(90deg, #FFB75E, #ED8F03 30%, #F18D79 60%, #FFB75E); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientText 6s ease infinite; }
+    /* Portal 2 gradient */
+    .slide-p2 strong { font-weight: 900; background: linear-gradient(90deg, #8A2387, #E94057 30%, #F27121 60%, #8A2387); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientText 6s ease infinite; }
+    /* Portal 3 gradient */
+    .slide-p3 strong { font-weight: 900; background: linear-gradient(90deg, #00C9FF, #92FE9D 30%, #00C9FF 60%, #00C9FF); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: gradientText 6s ease infinite; }
+
+    @keyframes gradientText { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+    @media (max-width: 768px) {
+      .universe-copy { top: 10vh; }
+      .universe-copy h1 { font-size: 42px; }
+    }
+
+
+
+    /* old header */
+    
+    /* ── ADMIN MODAL & WIDGET ── */
+    .login-modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(10px);
+      z-index: 10000; display: none; justify-content: center; align-items: center;
+    }
+    .login-modal.is-open { display: flex; }
+    .login-box {
+      background: #0f0d14; border: 1px solid #2a2536; border-radius: 20px;
+      padding: 30px; width: 90%; max-width: 320px; color: white;
+      box-shadow: 0 30px 60px rgba(0,0,0,.8); text-align: center;
+    }
+
+    .admin-widget {
+      position: fixed; top: 80px; right: 20px; width: 380px; max-height: 85vh;
+      background: rgba(15, 13, 20, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,.15); border-radius: 16px;
+      z-index: 10000; display: none; flex-direction: column;
+      box-shadow: 0 20px 50px rgba(0,0,0,.8);
+      resize: both; overflow: hidden;
+    }
+    .admin-widget.is-open { display: flex; }
+    .old-header {
+      position: fixed; top: 0; left: 0; width: 100%;
+      padding: 16px 20px; display: flex; justify-content: center; align-items: center;
+      z-index: 1000; pointer-events: none;
+    }
+    header > * { pointer-events: auto; }
+    .brand {
+      font-weight: 900; letter-spacing: .15em; font-size: 20px; color: white; text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+      background: linear-gradient(90deg, #fff 40%, var(--coral) 50%, #fff 60%);
+      background-size: 300% 100%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: sweepLight 10s ease-in-out infinite;
+    }
+    @keyframes sweepLight {
+      0%   { background-position: 100% 0; }
+      15%  { background-position:   0% 0; }
+      65%  { background-position:   0% 0; }
+      80%  { background-position: 100% 0; }
+      100% { background-position: 100% 0; }
+    }
+
+    /* ── ADMIN BUTTON ── */
+    .admin-btn-top {
+      position: fixed; top: 14px; right: 16px; z-index: 9999;
+      background: rgba(0,0,0,.5); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.6);
+      padding: 7px 16px; border-radius: 20px; font-size: 11px; font-weight: 700;
+      cursor: pointer; transition: all .3s; pointer-events: auto;
+    }
+    .admin-btn-top:hover { color: white; background: rgba(255,255,255,.12); }
+
+    /* ── SHOWROOM ── */
+    .hero-showroom {
+      position: fixed; inset: 0; width: 100%; height: 100dvh;
+      display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+      z-index: 10;
+      transition: opacity .7s ease, filter .7s ease, transform .7s ease;
+    }
+    body:not(.in-showroom) .hero-showroom {
+      opacity: 0; transform: scale(1.15); filter: blur(30px) brightness(2); pointer-events: none;
+    }
+
+    /* ── STAGE (3D plataforma circular) ── */
+    .stage-container {
+      position: absolute;
+      /* Centre horizontally, sit at lower 60% of screen */
+      bottom: 13vh; left: 50%;
+      width: min(60vw, 420px); aspect-ratio: 1;
+      transform: translateX(-50%) rotateX(72deg);
+      transform-style: preserve-3d; pointer-events: none; z-index: 5;
+      transition: all .6s cubic-bezier(.25,1,.5,1);
+    }
+    @media (max-width: 600px) {
+      .stage-container { width: min(80vw, 340px); bottom: 14vh; }
+    }
+    .stage-surface {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: radial-gradient(circle at 50% 45%, rgba(var(--theme-rgb), .16), rgba(9, 6, 15, .92) 62%);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1.5px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        inset 0 0 80px rgba(var(--theme-rgb), 0.35),
+        0 30px 90px rgba(0, 0, 0, 0.95),
+        0 0 120px rgba(var(--theme-rgb), 0.22);
+      transition: box-shadow 0.6s ease, background 0.6s ease;
+    }
+    .stage-orbit {
+      position: absolute; inset: -12%; border-radius: 50%;
+      border: 1px solid var(--theme-accent); opacity: .4;
+      transform: translateZ(-20px);
+      transition: border-color .6s ease;
+    }
+    .stage-container.portal-prep .stage-surface { opacity: .2; filter: blur(8px); }
+
+    /* ── MASCOT WRAPPER ── */
+    .mascot-wrapper {
+      position: absolute;
+      /* sits from middle of screen upward */
+      bottom: 12vh; left: 50%;
+      transform: translateX(-50%);
+      width: min(55vw, 380px);
+      height: min(70vh, 600px);
+      display: flex; justify-content: center; align-items: flex-end;
+      pointer-events: none; z-index: 20;
+    }
+    @media (max-width: 600px) {
+      .mascot-wrapper { width: min(80vw, 340px); height: min(55vh, 420px); bottom: 13vh; }
+    }
+    .mascot-wrapper.portal-prep { opacity: .2; filter: blur(8px); }
+
+    /* ── VIDEOS ── */
+    .media-webm { width: 100%; height: 100%; object-fit: contain;
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+      /* Animación de salida (desaparece y cae hacia atrás) */
+      opacity: 0; visibility: hidden;
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,0)) brightness(0.5) blur(10px);
+      translate: 0 50px;
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .media-webm.is-active { 
+      /* Animación de entrada (Materialize) */
+      opacity: 1; visibility: visible; 
+      filter: drop-shadow(0 30px 40px rgba(0,0,0,.85)) brightness(1) blur(0px);
+      translate: 0 0px;
+      animation: mascotFloat 4s ease-in-out infinite 0.7s; /* Inicia a flotar después de entrar */
+    }
+    @keyframes mascotFloat { 
+      0%,100% { translate: 0 0px; filter: drop-shadow(0 30px 40px rgba(0,0,0,.85)); } 
+      50% { translate: 0 -15px; filter: drop-shadow(0 50px 50px rgba(0,0,0,.5)); } 
+    }
+
+    /* Admin CSS‑var transforms per portal */
+    #canvas-p1 { transform: translateX(calc(-50% + var(--vp1-x,0px))) translateY(var(--vp1-y,0px)) scale(var(--vp1-s,1)); }
+    #canvas-p2 { transform: translateX(calc(-50% + var(--vp2-x,0px))) translateY(var(--vp2-y,0px)) scale(var(--vp2-s,1)); }
+    #canvas-p3 { transform: translateX(calc(-50% + var(--vp3-x,0px))) translateY(var(--vp3-y,0px)) scale(var(--vp3-s,1)); }
+
+
+    /* ── CTA BUTTON ── */
+    .btn-magnetic {
+      position: absolute; bottom: calc(9vh + 70px);
+      background: rgba(14,10,22,.75); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,.18);
+      padding: 14px 32px; border-radius: 100px;
+      color: white; font-weight: 800; font-size: .95rem; letter-spacing: 1px;
+      cursor: pointer; display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.5); transition: all .3s; z-index: 50;
+    }
+    .btn-magnetic:hover {
+      border-color: var(--theme-glow); background: rgba(var(--theme-rgb),.25);
+      box-shadow: 0 15px 40px rgba(0,0,0,.7), 0 0 35px rgba(var(--theme-rgb),.5);
+      transform: translateY(-3px);
+    }
+    .dot-glow { width: 8px; height: 8px; border-radius: 50%; background: var(--theme-glow); box-shadow: 0 0 10px var(--theme-glow); }
+    @media (max-width: 600px) { .btn-magnetic { bottom: calc(9vh + 58px); padding: 12px 24px; font-size: .85rem; } }
+
+    /* ── DYNAMIC CAPSULE TRACKPAD (SPRING-BACK CENTER) ── */
+    .capsule-trackpad-wrapper {
+      position: fixed;
+      bottom: max(3.5vh, env(safe-area-inset-bottom, 24px));
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.9);
-      border: 2px solid var(--cyan);
-      padding: 10px 20px;
-      border-radius: 30px;
-      z-index: 999999;
-      gap: 10px;
-      align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    :root{
-      /* Reglas exactas de la paleta espacial STARMAKER */
-      --coral-suave: #F18D79;       /* Superior derecha */
-      --rosa-intenso: #EB5279;      /* Superior izquierda */
-      --rosa-fucsia: #E64381;       /* Centro inferior */
-      --magenta-violeta: #AD3E98;   /* Transición inferior */
-      --violeta: #743F9B;           /* Inferior */
-
-      --coral: var(--coral-suave);
-      --pink: var(--rosa-intenso);
-      --fuchsia: var(--rosa-fucsia);
-      --magenta: var(--magenta-violeta);
-      --violet: var(--violeta);
-
-      --black-1:#050507;
-      --black-2:#08080B;
-      --surface:rgba(16,14,22,.66);
-      --surface-strong:rgba(20,17,28,.88);
-      --line:rgba(255,255,255,.11);
-      --line-bright:rgba(255,255,255,.18);
-      --text:#fff9fb;
-      --muted:#b9b0ba;
-      --dim:#77707d;
-      --shadow:0 28px 80px rgba(0,0,0,.52);
-      --radius:26px;
-      --ease:cubic-bezier(.2,.8,.2,1);
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth;background:var(--black-1)}
-    body{
-      min-height:100vh;
-      overflow-x:hidden;
-      color:var(--text);
-      background:
-        /* Coral suave · Superior derecha */
-        radial-gradient(900px 700px at 85% 10%, rgba(241, 141, 121, .22), transparent 70%),
-        /* Rosa intenso · Superior izquierda */
-        radial-gradient(850px 650px at 15% 15%, rgba(235, 82, 121, .22), transparent 70%),
-        /* Rosa fucsia · Centro inferior */
-        radial-gradient(800px 600px at 50% 65%, rgba(230, 67, 129, .20), transparent 70%),
-        /* Magenta violeta · Transición inferior */
-        radial-gradient(900px 600px at 50% 85%, rgba(173, 62, 152, .22), transparent 70%),
-        /* Violeta · Inferior */
-        radial-gradient(1000px 700px at 50% 100%, rgba(116, 63, 155, .25), transparent 70%),
-        linear-gradient(180deg, var(--black-1), var(--black-2) 60%, #060609);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      -webkit-font-smoothing:antialiased;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:50;
-      opacity:.035;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
-    }
-
-    a{color:inherit;text-decoration:none}
-    button{font:inherit}
-    ::selection{background:rgba(230,67,129,.38);color:#fff}
-    :focus-visible{outline:2px solid var(--coral);outline-offset:4px}
-
-    .stars,.stars::before,.stars::after{
-      position:fixed;inset:0;content:"";pointer-events:none;z-index:0;
-      background-image:
-        radial-gradient(circle at 10% 20%,rgba(255,255,255,.7) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 70% 12%,rgba(255,255,255,.45) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 42% 66%,rgba(255,255,255,.38) 0 1px,transparent 1.5px),
-        radial-gradient(circle at 88% 72%,rgba(255,255,255,.35) 0 1px,transparent 1.5px);
-      background-size:260px 240px,340px 310px,410px 370px,520px 460px;
-    }
-    .stars::before{opacity:.45;transform:scale(1.2)}
-    .stars::after{opacity:.3;filter:blur(1px);transform:scale(.9)}
-
-    .orb{
-      position:fixed;border-radius:50%;pointer-events:none;filter:blur(70px);opacity:.2;z-index:0;
-      animation:float 12s ease-in-out infinite;
-    }
-    .orb.one{width:340px;height:340px;background:var(--fuchsia);top:12%;left:-180px}
-    .orb.two{width:300px;height:300px;background:var(--violet);right:-130px;top:48%;animation-delay:-5s}
-    @keyframes float{50%{transform:translate3d(30px,-25px,0) scale(1.08)}}
-
-    .shell{position:relative;z-index:1}
-        
-
-    .brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.18em}
-    .brand-mark{
-      width:31px;height:31px;border-radius:10px;position:relative;
-      background:linear-gradient(135deg,var(--coral),var(--fuchsia) 50%,var(--violet));
-      box-shadow:0 0 28px rgba(230,67,129,.4);
-    }
-    .brand-mark::after{content:"✦";position:absolute;inset:0;display:grid;place-items:center;font-size:15px;color:white}
-    .nav-links{display:flex;gap:28px;color:#aaa2ad;font-size:13px}
-    .nav-links a{transition:.25s}
-    .nav-links a:hover{color:#fff}
-    
-    .nav-actions{display:flex;align-items:center;gap:10px}
-    .nav-cta{
-      padding:11px 17px;border:1px solid rgba(255,255,255,.14);border-radius:13px;
-      background:rgba(255,255,255,.05);font-size:11px;font-weight:700;cursor:pointer;transition:.25s;
-    }
-    .nav-cta:hover{background:rgba(255,255,255,.12)}
-    .nav-admin-btn{
-      padding:11px 17px;border:1px solid rgba(230,67,129,.4);border-radius:13px;
-      background:rgba(230,67,129,.15);color:var(--coral);font-size:11px;font-weight:800;cursor:pointer;transition:.25s;
-    }
-    .nav-admin-btn:hover{background:var(--fuchsia);color:#fff;box-shadow:0 0 25px rgba(230,67,129,.45)}
-
-    .hero{
-      min-height:100svh;display:grid;place-items:center;
-      padding:150px 24px 90px;overflow:hidden;
-    }
-    .hero-inner{width:min(1180px,100%);display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid var(--line);
-      background:rgba(255,255,255,.035);border-radius:999px;color:#d7cfd8;font-size:11px;
-      text-transform:uppercase;letter-spacing:.16em;font-weight:800;margin-bottom:24px;
-    }
-    .pulse{width:7px;height:7px;border-radius:50%;background:var(--coral);box-shadow:0 0 14px var(--coral)}
-    h1{
-      font-size:clamp(58px,8vw,112px);line-height:.87;letter-spacing:-.075em;
-      font-weight:900;max-width:800px;
-    }
-    .gradient-text{
-      background:linear-gradient(110deg,#fff 10%,var(--coral) 45%,var(--fuchsia) 68%,#a77be0 100%);
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-    }
-    .hero-copy{max-width:600px;margin-top:28px;color:var(--muted);font-size:18px;line-height:1.7}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
-    .btn{
-      border:0;cursor:pointer;border-radius:14px;padding:15px 21px;font-weight:800;font-size:14px;
-      transition:transform .25s var(--ease),box-shadow .25s,border-color .25s;display:inline-flex;align-items:center;
-    }
-    .btn:hover{transform:translateY(-3px)}
-    .btn-primary{
-      color:white;background:linear-gradient(120deg,var(--pink),var(--fuchsia),var(--violet));
-      box-shadow:0 14px 40px rgba(230,67,129,.25);
-    }
-    .btn-secondary{color:#eee;background:rgba(255,255,255,.055);border:1px solid var(--line-bright)}
-
-    .hero-stage{position:relative;min-height:500px;display:grid;place-items:center}
-    
-    .slideshow-container {
-      width: min(390px, 72vw);
-      aspect-ratio: 1;
-      position: relative;
-      overflow: visible;
-    }
-    .slide {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background-size: contain; background-repeat: no-repeat; background-position: center;
-      opacity: 0; transition: opacity 2s ease-in-out;
-    }
-    .slide-1 {
-      background-image: url('/bg1.png');
-      animation: kenburns 14s infinite ease-in-out, fade1 14s infinite;
-    }
-    .slide-2 {
-      background-image: url('/bg2.png');
-      animation: kenburns 14s infinite ease-in-out reverse, fade2 14s infinite;
-    }
-    .particles {
-      position: absolute; top: 0; left: 0; width: 200%; height: 200%;
-      background-image: radial-gradient(rgba(255,255,255,0.4) 1px, transparent 1px);
-      background-size: 25px 25px; opacity: 0.3;
-      animation: moveParticles 30s linear infinite; pointer-events: none; z-index: 5;
-    }
-    @keyframes fade1 {
-      0%, 40% { opacity: 1; }
-      50%, 90% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    @keyframes fade2 {
-      0%, 40% { opacity: 0; }
-      50%, 90% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-    @keyframes kenburns {
-      0% { transform: scale(1) translate(0, 0); }
-      100% { transform: scale(1.15) translate(2%, 2%); }
-    }
-    @keyframes moveParticles {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(-10%, -10%) scale(1.1); }
-    }
-
-    .float-card{
-      position:absolute;border:1px solid rgba(255,255,255,.13);background:rgba(15,12,20,.66);
-      backdrop-filter:blur(18px);border-radius:18px;padding:15px 17px;box-shadow:var(--shadow);
-      animation:floatCard 6s ease-in-out infinite; z-index: 20;
-    }
-    .float-card.small{right:4%;top:16%}.float-card.tiny{left:4%;bottom:18%;animation-delay:-3s}
-    .fc-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#8f8692}
-    .fc-value{font-weight:800;font-size:15px;margin-top:5px}
-    @keyframes floatCard{50%{transform:translateY(-10px)}}
-
-
-    section{padding:105px 24px}
-    .section-inner{width:min(1180px,100%);margin:auto}
-    .section-head{display:flex;justify-content:space-between;gap:30px;align-items:flex-end;margin-bottom:34px}
-    .kicker{color:var(--coral);font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
-    h2{font-size:clamp(35px,5vw,60px);letter-spacing:-.055em;line-height:.95;margin-top:10px}
-    .section-desc{max-width:450px;color:var(--muted);line-height:1.65;font-size:14px}
-
-    .cards{display:grid;grid-template-columns:repeat(3, minmax(0, 230px));justify-content:center;gap:24px}
-    .card{
-      --rx:0deg;--ry:0deg;
-      position:relative;min-height:370px;overflow:hidden;border:1px solid var(--line);
-      border-radius:var(--radius);background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
-      transform:perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
-      transition:transform .16s ease,border-color .3s,box-shadow .3s;
-      box-shadow:0 18px 55px rgba(0,0,0,.25);
-      isolation:isolate;
-    }
-    .card:hover{border-color:rgba(235,82,121,.38);box-shadow:0 28px 75px rgba(0,0,0,.48),0 0 45px rgba(230,67,129,.08)}
-    .card::before{
-      content:"";position:absolute;inset:0;background:
-        radial-gradient(500px 250px at 50% 10%,rgba(230,67,129,.15),transparent 60%),
-        linear-gradient(180deg,transparent 35%,rgba(3,3,5,.9) 90%);
-      z-index:1;pointer-events:none;
-    }
-    .card-art{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden}
-    
-    .card-content{position:absolute;z-index:2;left:15px;right:15px;bottom:20px}
-    .card-index{font-size:10px;color:#9e94a1;letter-spacing:.16em;margin-bottom:10px}
-    .card h3{font-size:22px;letter-spacing:-.045em}
-    .card p{font-size:11px;color:#b7aeb9;line-height:1.55;margin-top:8px}
-    .card-link{display:inline-flex;gap:8px;margin-top:17px;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#fff}
-
-    .activity{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
-    .panel{
-      border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:var(--radius);
-      padding:26px;box-shadow:0 20px 60px rgba(0,0,0,.2);backdrop-filter:blur(16px)
-    }
-    .feed{display:grid;gap:13px;margin-top:22px}
-    .feed-item{display:flex;gap:13px;align-items:center;padding:14px;border:1px solid rgba(255,255,255,.07);border-radius:15px;background:rgba(255,255,255,.025)}
-    .avatar{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--violet));font-weight:900}
-    .feed-main{flex:1}.feed-main strong{font-size:13px}.feed-main span{display:block;color:#827985;font-size:11px;margin-top:3px}
-    .status{font-size:10px;color:#b8e7ca;border:1px solid rgba(139,226,174,.18);padding:6px 8px;border-radius:999px;background:rgba(139,226,174,.05)}
-
-    .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
-    .stat{padding:20px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(0,0,0,.15)}
-    .stat strong{font-size:32px;letter-spacing:-.06em}.stat span{display:block;margin-top:5px;color:#8e8591;font-size:11px;text-transform:uppercase;letter-spacing:.1em}
-
-    footer{padding:50px 24px 70px;border-top:1px solid rgba(255,255,255,.06)}
-    .footer-inner{width:min(1180px,100%);margin:auto;display:flex;justify-content:space-between;gap:20px;color:#716a75;font-size:12px}
-    .footer-brand{color:#bcb4bf;font-weight:800;letter-spacing:.12em}
-
-    /* MODAL ADMIN */
-    .admin-modal{
-      display:none;position:fixed;bottom:80px;right:20px;background:transparent;
-      z-index:1000;align-items:flex-end;justify-content:flex-end;pointer-events:none;
-    }
-    .admin-modal.is-open{display:flex}
-    .admin-box{
-      width:100%;min-width:320px;max-width:580px;max-height:80vh;overflow-y:auto;padding:26px;border-radius:22px;
-      border:1px solid var(--line-bright);background:rgba(18,15,26,.96);box-shadow: 0 20px 50px rgba(0,0,0,0.8); pointer-events:auto;
-    }
-    .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:12px}
-    .admin-close{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer}
-    .admin-field{margin-bottom:15px}
-    .admin-field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px}
-    .admin-input{width:100%;background:rgba(0,0,0,.5);border:1px solid var(--line);color:white;padding:10px 14px;border-radius:8px;font-size:14px}
-    .admin-input:focus{border-color:var(--coral);outline:none}
-
-    @media(max-width:900px){
-      .nav-links{display:none}
-      .hero-inner{grid-template-columns:1fr;text-align:center}
-      .hero-copy{margin-left:auto;margin-right:auto}
-      .actions{justify-content:center}
-      .hero-stage{min-height:390px}
-      .cards{grid-template-columns:repeat(2, minmax(0, 230px));justify-content:center}
-      .cards .card:last-child{grid-column:1/-1}
-      .activity{grid-template-columns:1fr}
-    }
-    @media(max-width:620px){
-      
-      .nav-cta,.nav-admin-btn{padding:8px 11px;font-size:11px}
-      .hero{padding:125px 18px 65px}
-      h1{font-size:clamp(51px,16vw,76px)}
-      .hero-copy{font-size:15px}
-      .hero-stage{min-height:320px}
-      .planet{width:260px}
-      .float-card{transform:scale(.85)}
-      section{padding:75px 18px}
-      .section-head{display:block}
-      .section-desc{margin-top:18px}
-      .cards{grid-template-columns:minmax(0, 230px);justify-content:center}
-      .cards .card:last-child{grid-column:auto}
-      .card{min-height:370px}
-      .panel{padding:20px}
-      .footer-inner{flex-direction:column}
-    }
-  
-    /* PERSONAJE HOLOGRÁFICO TRANSPARENTE (LEONSITO) */
-    .hero-stage {
-      position: relative;
-      min-height: 520px;
+      z-index: 100;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      isolation: isolate;
-    }
-
-    /* Pedestal holográfico de energía cósmica debajo del personaje */
-    .mascot-pedestal {
-      position: absolute;
-      bottom: 25px;
-      width: min(340px, 70vw);
-      height: 90px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, rgba(230, 67, 129, 0.45) 0%, rgba(116, 63, 155, 0.3) 40%, transparent 75%);
-      box-shadow: 0 0 50px rgba(230, 67, 129, 0.4), inset 0 0 30px rgba(241, 141, 121, 0.3);
-      border: 1px solid rgba(235, 82, 121, 0.3);
-      transform: rotateX(65deg);
-      pointer-events: none;
-      animation: pedestalPulse 4s ease-in-out infinite;
-      z-index: 1;
-    }
-
-    @keyframes pedestalPulse {
-      0%, 100% { transform: rotateX(65deg) scale(1); opacity: 0.8; }
-    }
-
-    /* Video del personaje con eliminación de fondo negro para móviles */
-    .hero-mascot-video {
-      width: min(380px, 80vw);
-      height: auto;
-      max-height: 500px;
-      object-fit: cover;
-      z-index: 2;
-      position: relative;
-      pointer-events: none;
-      /* REGLA DE ORO PARA CELULARES (iOS y Android): */
-      /* Elimina cualquier fondo negro convirtiéndolo en 100% transparente sobre el fondo espacial */
-      mix-blend-mode: screen;
-      animation: mascotFloat 5s ease-in-out infinite;
-      transform-origin: center bottom;
-      will-change: transform;
-    }
-
-    @keyframes mascotFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-14px); }
-    }
-
-    @media (max-width: 620px) {
-      .hero-stage { min-height: 400px; }
-      .hero-mascot-video { width: 290px; max-height: 380px; }
-      .mascot-pedestal { width: 240px; height: 70px; bottom: 15px; }
-    }
-    /* DYNAMIC SYNC EFFECTS */
-    .meteor-glow {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 3;
-      /* Glow is transparent normally, but lights up based on JS */
-      background: radial-gradient(
-        circle 120px at var(--meteor-x, -50%) var(--meteor-y, 20%),
-        rgba(255, 200, 100, var(--meteor-opacity, 0)),
-        transparent 70%
-      );
-      mix-blend-mode: overlay;
-      transition: opacity 0.1s;
-    }
-    
-    .interactive-btn {
-      display: inline-block;
-      margin: 10px 0;
-      background: linear-gradient(135deg, #ff4d4d, #b30000);
-      color: white;
-      border: 1px solid rgba(255, 100, 100, 0.5);
-      border-radius: 30px;
-      padding: 10px 24px;
-      font-weight: 800;
-      font-size: 1rem;
-      letter-spacing: 0.1em;
-      opacity: 0.5;
-      pointer-events: none;
-      box-shadow: 0 0 0 rgba(255, 77, 77, 0);
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      text-transform: uppercase;
-      text-align: center;
-      width: fit-content;
-    }
-    
-    .interactive-btn.pulse-active {
-      opacity: 1;
+      gap: 10px;
       pointer-events: auto;
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 77, 77, 0.8), 0 0 40px rgba(255, 77, 77, 0.4);
-      animation: buttonPulse 0.8s infinite alternate;
+      transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body.portal-open .capsule-trackpad-wrapper {
+      opacity: 0;
+      transform: translateX(-50%) translateY(40px) scale(0.92);
+      pointer-events: none;
+    }
+
+    .capsule-trackpad {
+      position: relative;
+      width: min(92vw, 380px);
+      height: 72px;
+      border-radius: 9999px;
+      background: rgba(13, 9, 20, 0.85);
+      backdrop-filter: blur(35px);
+      -webkit-backdrop-filter: blur(35px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.85),
+        0 0 40px rgba(var(--theme-rgb), 0.25),
+        inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      transition: box-shadow 0.4s ease, border-color 0.4s ease;
+    }
+
+    /* Chevron Lateral Buttons */
+    .capsule-arrow-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #9ca3af;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
       cursor: pointer;
+      z-index: 5;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
-    
-    @keyframes buttonPulse {
-      0% { box-shadow: 0 0 10px rgba(255, 77, 77, 0.6); transform: scale(1); }
-      100% { box-shadow: 0 0 30px rgba(255, 77, 77, 1), 0 0 60px rgba(255, 77, 77, 0.6); transform: scale(1.05); }
+    .capsule-arrow-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: scale(1.08);
     }
-  
-    .nav-links { display: none !important; }
-    .nav-cta { display: none !important; }
-
-    
-
-    .floating-brand {
-      position: fixed;
-      top: 24px;
-      left: 32px;
-      z-index: 1000;
+    .capsule-arrow-btn:active {
+      transform: scale(0.92);
     }
-    .floating-admin-btn {
-      position: fixed;
-      top: 24px;
-      right: 32px;
-      z-index: 1000;
-    }
-    @media(max-width:620px){
-      .floating-brand { top: 16px; left: 16px; font-size: 13px; }
-      .floating-admin-btn { top: 16px; right: 16px; padding: 8px 11px; font-size: 11px; }
+    .capsule-arrow-btn.glow-active {
+      background: rgba(var(--theme-rgb), 0.3) !important;
+      border-color: var(--theme-glow) !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 25px var(--theme-glow), inset 0 0 10px rgba(255, 255, 255, 0.3) !important;
+      transform: scale(1.15) !important;
     }
 
-
-</style>
-
-<script>
-window.onerror = function(msg, url, lineNo, columnNo, error) {
-  var errDiv = document.getElementById('debug-error');
-  if (!errDiv) {
-    errDiv = document.createElement('div');
-    errDiv.id = 'debug-error';
-    errDiv.style.position = 'fixed';
-    errDiv.style.top = '0';
-    errDiv.style.left = '0';
-    errDiv.style.width = '100%';
-    errDiv.style.background = 'red';
-    errDiv.style.color = 'white';
-    errDiv.style.zIndex = '99999999';
-    errDiv.style.padding = '10px';
-    errDiv.style.fontFamily = 'monospace';
-    document.body.appendChild(errDiv);
-  }
-  errDiv.innerHTML += '<p>' + msg + ' at ' + lineNo + ':' + columnNo + '</p>';
-  return false;
-};
-</script>
-
-</head>
-<body>
-
-  <!-- TOOLBAR MODO EDITOR -->
-  <div id="visual-editor-toolbar">
-    <span style="color:var(--cyan); font-weight:bold; font-size:12px; letter-spacing:1px;">MODO EDITOR</span>
-    <label style="background:#fff; color:#000; padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">
-      📷 SUBIR FONDO PNG
-      <input type="file" id="editor-upload-png" accept="image/png, image/jpeg" style="display:none;" />
-    </label>
-    <label style="background:#fff; color:#000; padding:8px 12px; border-radius:8px; font-size:12px; font-weight:bold; cursor:pointer;">
-      🎥 SUBIR VIDEO LEON
-      <input type="file" id="editor-upload-video" accept="video/webm, video/mp4" style="display:none;" />
-    </label>
-    <button id="editor-save-btn" style="background:var(--coral); color:#fff; border:none; padding:8px 12px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:12px;">💾 GUARDAR TEXTOS</button>
-    <button id="editor-exit-btn" style="background:transparent; color:#fff; border:1px solid #fff; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:12px;">SALIR</button>
-  </div>
-
-  <div class="stars"></div>
-  <div class="orb one"></div>
-  <div class="orb two"></div>
-
-  <div class="shell">
-
-    
-    <!-- Floating Logo -->
-    <a class="brand floating-brand" href="#inicio" aria-label="STARMAKER inicio">
-      <span class="brand-mark" aria-hidden="true"></span>
-      STARMAKER
-    </a>
-    
-    <!-- Floating Admin Button -->
-    <button type="button" class="nav-admin-btn floating-admin-btn" id="btn-open-admin">Consola Admin</button>
-
-
-    <main>
-      <section class="hero" id="inicio">
-        <div class="hero-inner">
-          <div>
-            <div class="eyebrow"><span class="pulse"></span> Plataforma digital · Live experience</div>
-            <h1>Explora un<br><span class="gradient-text">nuevo universo.</span></h1>
-            <p class="hero-copy">
-              STARMAKER conecta entretenimiento, aprendizaje y creatividad dentro de una experiencia digital inmersiva, sincronizada en tiempo real mediante Firestore.
-            </p>
-            <div class="actions">
-              <a class="btn btn-primary" href="#registro">Completar Registro →</a>
-              <button type="button" class="btn btn-secondary" id="btn-hero-admin">Panel de Control</button>
-            </div>
-          </div>
-
-          <div class="hero-stage" aria-hidden="true">
-            <div class="slideshow-container">
-              <div class="slide slide-1"></div>
-              <div class="slide slide-2"></div>
-              <div class="particles"></div>
-            </div>
-            <div class="float-card small">
-              <div class="fc-label">Estado del sistema</div>
-              <div class="fc-value">● Experiencia activa</div>
-            </div>
-            <div class="float-card tiny">
-              <div class="fc-label">Conexión</div>
-              <div class="fc-value" id="status-live-text">Realtime · Online</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-      
-    
-      <!-- SECCIÓN FORMULARIO CONECTADO A GOOGLE SHEETS -->
-      
-      <section class="section" id="formulario-registro">
-        <div class="container" style="max-width: 800px; margin: 0 auto;">
-          
-          <style>
-
-    /* MODO EDITOR VISUAL */
-    .editor-active [contenteditable="true"] {
-      outline: 2px dashed var(--cyan) !important;
-      outline-offset: 4px;
-      cursor: text;
-      transition: outline 0.2s;
+    /* Center Tactile Sliding Puck */
+    .capsule-puck {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 160px;
+      height: 52px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(var(--theme-rgb), 0.35) 0%, rgba(20, 15, 30, 0.88) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 
+        0 0 25px rgba(var(--theme-rgb), 0.45),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4);
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      color: #ffffff;
+      will-change: transform, box-shadow;
+      touch-action: none;
+      transition: background 0.4s ease, box-shadow 0.4s ease, border-color 0.3s ease;
     }
-    .editor-active [contenteditable="true"]:hover {
-      outline: 2px solid var(--coral) !important;
-      background: rgba(230, 67, 129, 0.1);
+    .capsule-puck:active {
+      cursor: grabbing;
     }
-    #visual-editor-toolbar {
-      display: none;
-      position: fixed;
-      top: 20px;
+    .capsule-puck.is-armed {
+      border-color: #ffffff !important;
+      box-shadow: 
+        0 0 35px #ffffff,
+        0 0 30px var(--theme-glow),
+        inset 0 1px 3px #ffffff !important;
+    }
+
+    .puck-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .puck-content.puck-flip-out {
+      opacity: 0;
+      transform: scale(0.7) translateY(8px);
+    }
+    .puck-content.puck-flip-in {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    .puck-icon {
+      font-size: 15px;
+      color: var(--theme-glow);
+      filter: drop-shadow(0 0 8px var(--theme-glow));
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    /* Micro-Indicators Dots */
+    .capsule-dots {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      pointer-events: auto;
+    }
+    .capsule-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .capsule-dot:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .capsule-dot.active {
+      width: 24px;
+      height: 7px;
+      border-radius: 9999px;
+      background: var(--theme-accent);
+      box-shadow: 0 0 14px var(--theme-glow);
+    }
+
+    /* CTA BUTTON HOVERING ABOVE CAPSULE */
+    .btn-magnetic {
+      position: absolute;
+      bottom: calc(max(3.5vh, env(safe-area-inset-bottom, 24px)) + 98px);
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.9);
-      border: 2px solid var(--cyan);
-      padding: 10px 20px;
-      border-radius: 30px;
-      z-index: 999999;
-      gap: 10px;
+      background: rgba(14, 10, 22, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 12px 28px;
+      border-radius: 100px;
+      color: white;
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
       align-items: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s;
+      z-index: 50;
+      white-space: nowrap;
+    }
+    .btn-magnetic:hover {
+      border-color: var(--theme-glow);
+      background: rgba(var(--theme-rgb), 0.25);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 35px rgba(var(--theme-rgb), 0.5);
+      transform: translateX(-50%) translateY(-3px);
+    }
+    @media (max-width: 600px) {
+      .capsule-trackpad-wrapper { bottom: max(2.5vh, env(safe-area-inset-bottom, 16px)); }
+      .capsule-trackpad { height: 66px; }
+      .capsule-puck { width: 145px; height: 46px; }
+      .btn-magnetic { bottom: calc(max(2.5vh, env(safe-area-inset-bottom, 16px)) + 90px); padding: 10px 22px; font-size: 0.85rem; }
+    }
+    
+    /* ── CONTENT SECTIONS ── */
+    body.portal-open {
+      overflow-y: auto !important;
+    }
+    .content-sections {
+      position: fixed; inset: 0; z-index: 2000;
+      padding: 90px 20px 60px;
+      overflow-y: auto; overflow-x: hidden;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transform: scale(0.98) translateY(20px);
+      transition: opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1);
+      background: rgba(5,4,10,0.95);
+      background-image: radial-gradient(ellipse at 50% -20%, rgba(var(--theme-rgb, 241,141,121), 0.22) 0%, transparent 70%);
+      will-change: opacity, transform;
+      perspective: 1500px;
+    }
+    .content-sections.is-visible {
+      opacity: 1; visibility: visible; pointer-events: auto;
+      transform: scale(1) translateY(0);
+      transition-delay: .1s;
+    }
+    @media (max-width: 600px) {
+      .content-sections { padding: 80px 14px 40px; }
     }
 
-            .premium-accordion-header {
-              text-align: center; margin-bottom: 20px; cursor: pointer; padding: 30px 20px; 
-              background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.5) 100%); 
-              border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; 
-              transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-              position: relative;
-              overflow: hidden;
-            }
-            .premium-accordion-header:hover {
-              border-color: rgba(255, 100, 100, 0.5);
-              box-shadow: 0 10px 30px -10px rgba(255, 77, 77, 0.2);
-              transform: translateY(-2px);
-            }
-            .premium-accordion-header.is-active {
-              border-color: rgba(255, 77, 77, 0.8);
-              background: linear-gradient(180deg, rgba(255,77,77,0.1) 0%, rgba(0,0,0,0.8) 100%);
-              box-shadow: 0 0 40px rgba(255, 77, 77, 0.15) inset;
-            }
-            .premium-accordion-icon {
-              display: inline-block; transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-              font-size: 1.2rem; opacity: 0.7; color: var(--coral); margin-left: 8px;
-            }
-            .premium-accordion-header.is-active .premium-accordion-icon {
-              transform: rotate(180deg);
-            }
-            .premium-accordion-grid {
-              display: grid;
-              grid-template-rows: 0fr;
-              transition: grid-template-rows 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            }
-            .premium-accordion-grid.is-open {
-              grid-template-rows: 1fr;
-            }
-            .premium-accordion-inner {
-              overflow: hidden;
-              opacity: 0;
-              transform: translateY(-20px) scale(0.98);
-              transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            }
-            .premium-accordion-grid.is-open .premium-accordion-inner {
-              opacity: 1;
-              transform: translateY(0) scale(1);
-              padding-top: 10px; /* spacing */
-            }
-          
-    .nav-links { display: none !important; }
-    .nav-cta { display: none !important; }
+    /* ── BACK BUTTON ── */
+    .btn-back-showroom {
+      position: fixed; top: 20px; left: 16px; z-index: 2010;
+      background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+      color: white; padding: 10px 20px; border-radius: 100px;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 8px; backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      transition: all .3s cubic-bezier(.16,1,.3,1);
+    }
+    .btn-back-showroom:hover {
+      background: rgba(255,255,255,.2);
+      transform: translateX(-4px);
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.6);
+    }
 
-    </style>
+    /* ── ACCORDION / PORTAL SIZING ── */
+    .accordion-card {
+      width: 100%;
+      display: none;
+    }
+    #card-registro { max-width: 880px; margin: 0 auto; }
+    #card-tutoriales { max-width: 1300px; margin: 0 auto; }
+    #card-dudas { max-width: 920px; margin: 0 auto; }
 
-          <div class="premium-accordion-header" id="toggle-registro" style="position: relative; overflow: visible; display: flex; align-items: center; justify-content: space-between;">
-            
-            <!-- Personaje con fondo transparente o negro (usando mix-blend-mode screen para quitar fondo negro si lo tiene) -->
-            <video id="registro-personaje-video" autoplay loop muted playsinline disablepictureinpicture style="position: absolute; right: -20px; bottom: -10px; height: 160%; z-index: 0; pointer-events: none; mix-blend-mode: screen; -webkit-mix-blend-mode: screen; object-fit: contain; opacity: 0.9;"></video>
-            
-            <div style="position: relative; z-index: 1; pointer-events: none;">
-              <div class="kicker">04 · REGISTRO Y CONVOCATORIA</div>
-              <h2 style="margin-bottom: 5px;">Postula a<br><span class="gradient-text">STARMAKER.</span> <span class="premium-accordion-icon" id="toggle-icon-registro">▼</span></h2>
-            </div>
-            <p class="section-desc" style="pointer-events: none; margin-bottom: 0;">
-              [ PROTOCOLO DE ACCESO RESTRINGIDO — PULSA PARA DESBLOQUEAR ]
-            </p>
-          </div>
+    /* ── V4.0 GLASSMORPHISM & UI DESIGN SYSTEM ── */
+    .glass-panel {
+      background: rgba(13, 9, 20, 0.65) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-radius: 24px !important;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 0 40px rgba(255, 255, 255, 0.02) !important;
+      position: relative;
+      overflow: hidden;
+    }
 
-          <div id="panel-registro-grid" class="premium-accordion-grid">
-            <div class="premium-accordion-inner">
-              <div class="panel" style="padding: 30px; border-radius: 16px; background: rgba(12, 10, 18, 0.85); border: 1px solid var(--line-bright); box-shadow: 0 20px 50px rgba(0,0,0,0.5); backdrop-filter: blur(20px);">
-                <form id="native-registration-form" style="display: flex; flex-direction: column; gap: 16px;">
-                  <script>
-                    document.getElementById('toggle-registro').addEventListener('click', function() {
-                      const grid = document.getElementById('panel-registro-grid');
-                      this.classList.toggle('is-active');
-                      grid.classList.toggle('is-open');
-                    });
-                  </script>
-              <input type="email" class="admin-input" id="reg-email" placeholder="Correo electrónico *" required />
-              <input type="text" class="admin-input" id="reg-agency" placeholder="Nombre de tu agencia *" required />
-              <input type="text" class="admin-input" id="reg-id" placeholder="Tú ID *" required />
-              <input type="text" class="admin-input" id="reg-agent-id" placeholder="ID de Tú Agente *" required />
-              <input type="text" class="admin-input" id="reg-name" placeholder="Nombre y apellido completo *" required />
-              <input type="tel" class="admin-input" id="reg-phone" placeholder="Número de teléfono (con prefijo) *" required />
-              <input type="text" class="admin-input" id="reg-nationality" placeholder="Nacionalidad *" required />
-              <input type="text" class="admin-input" id="reg-city" placeholder="¿Dónde vive? (Ciudad) *" required />
-              
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <label style="font-size: 14px; color: var(--coral);">Foto de identificación (lado de frente y atrás) * (Sube hasta 5 archivos de imagen)</label>
-                <input type="file" id="reg-id-photos" class="admin-input" accept="image/*" multiple required />
-                <div id="reg-upload-status" style="font-size: 12px; color: var(--muted);"></div>
-              </div>
+    .input-premium {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 14px 18px;
+      color: white;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.25s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+      box-sizing: border-box;
+    }
+    .input-premium:focus {
+      border-color: var(--theme-accent, #EB5279);
+      background: rgba(0, 0, 0, 0.55);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(var(--theme-rgb, 235, 82, 121), 0.25);
+    }
+    .input-premium::placeholder {
+      color: #6b7280;
+    }
+    .input-label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #9ca3af;
+      margin-bottom: 8px;
+      letter-spacing: 0.12em;
+    }
 
-              <input type="text" class="admin-input" id="reg-talent" placeholder="¿Cuál es tu talento? *" required />
-              
-              <select class="admin-input" id="reg-gender" required>
-                <option value="" disabled selected>¿Tu género? *</option>
-                <option value="femenino">Femenino</option>
-                <option value="Masculino">Masculino</option>
-                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
-                <option value="otro">Otro</option>
-              </select>
+    /* Primary Button with Shine Sweep */
+    .btn-primary {
+      background: linear-gradient(110deg, var(--theme-accent, #F18D79), var(--theme-glow, #E64381)) !important;
+      border: 0 !important;
+      color: #fff !important;
+      box-shadow: 0 15px 35px rgba(var(--theme-rgb, 241, 141, 121), 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(transparent, rgba(255, 255, 255, 0.25), transparent);
+      transform: rotate(45deg) translateY(-100%);
+      transition: transform 0.6s ease;
+    }
+    .btn-primary:hover::after {
+      transform: rotate(45deg) translateY(100%);
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 20px 45px rgba(var(--theme-rgb, 241, 141, 121), 0.5) !important;
+      filter: brightness(1.15);
+    }
 
-              <input type="text" class="admin-input" id="reg-platform" placeholder="¿Con qué plataforma has colaborado? *" required />
+    /* 3D Tilt Physics */
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: transform;
+    }
+    .tilt-content {
+      transform: translateZ(28px);
+    }
 
-              <div style="display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); padding: 16px; border-radius: 8px; background: rgba(0,0,0,0.3); margin-top: 8px;">
-                <label style="font-size: 14px; color: var(--coral); font-weight: bold;">Verificación de Identidad (Video de 10s) *</label>
-                <p style="font-size: 12px; color: var(--muted); margin: 0;">Presiona el botón, permite el acceso a tu cámara y graba un video corto presentándote.</p>
-                <div style="display: flex; gap: 10px; align-items: center; margin-top: 8px;">
-                  <button type="button" id="btn-record-video" style="background: #E64381; color: white; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%;">📹 Grabar Video (10s)</button>
-                </div>
-                <div id="record-status" style="font-size: 12px; font-weight: bold; color: #4CAF50; text-align: center; margin-top: 4px;"></div>
-                <video id="record-preview" style="display: none; width: 100%; border-radius: 8px; margin-top: 10px; border: 1px solid var(--line-bright);" autoplay muted playsinline></video>
-                <input type="hidden" id="reg-video-url" required />
-              </div>
+    /* Stagger Choreography */
+    .stagger-1 { opacity: 0; transform: translateY(20px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s; }
+    .stagger-2 { opacity: 0; transform: translateY(20px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s; }
+    .stagger-3 { opacity: 0; transform: translateY(20px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s; }
+    .content-sections.is-visible .stagger-1,
+    .content-sections.is-visible .stagger-2,
+    .content-sections.is-visible .stagger-3 {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-              <button type="submit" id="btn-submit-reg" style="background: var(--coral); color: #fff; padding: 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 16px;">Enviar Postulación</button>
-              <div id="reg-feedback" style="display: none; text-align: center; color: #4CAF50; font-weight: bold; padding: 10px;"></div>
-            </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    /* Horizontal Netflix-Style Scroll Rows */
+    .hide-scroll::-webkit-scrollbar { display: none; }
+    .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+    .scroll-row {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding: 8px 4px 20px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-item {
+      flex: 0 0 280px;
+      scroll-snap-align: start;
+      cursor: pointer;
+      border-radius: 20px !important;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .scroll-item:hover {
+      border-color: rgba(255, 255, 255, 0.25) !important;
+    }
+    .scroll-item:hover .tut-thumbnail {
+      transform: scale(1.08);
+    }
+    .scroll-item:hover .tut-play-overlay {
+      opacity: 1;
+    }
+    .tut-play-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .tut-play-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      padding-left: 3px;
+      color: white;
+      transition: transform 0.2s ease;
+    }
+    .scroll-item:hover .tut-play-btn {
+      transform: scale(1.1);
+    }
 
-      
+    /* Support AI Chat Styles */
+    .chat-msg {
+      display: flex;
+      gap: 12px;
+      max-width: 85%;
+      align-items: flex-start;
+      animation: msgPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes msgPop {
+      from { opacity: 0; transform: translateY(10px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .chat-bot {
+      align-self: flex-start;
+    }
+    .chat-user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .chat-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .chat-bot .chat-avatar {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .chat-user .chat-avatar {
+      background: rgba(235, 82, 121, 0.2);
+      color: var(--coral);
+      border: 1px solid rgba(235, 82, 121, 0.3);
+    }
+    .chat-bubble {
+      padding: 14px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .bot-bubble {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top-left-radius: 4px;
+      color: #e5e7eb;
+    }
+    .user-bubble {
+      background: linear-gradient(135deg, rgba(235, 82, 121, 0.35), rgba(241, 141, 121, 0.25));
+      border: 1px solid rgba(235, 82, 121, 0.3);
+      border-top-right-radius: 4px;
+      color: #ffffff;
+    }
+    .chat-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #d1d5db;
+      padding: 7px 14px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .chat-chip:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    .live-dot-pulse {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 10px #10B981;
+      display: inline-block;
+      animation: dotPulse 1.8s infinite;
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* Video Preview Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: modalFadeIn 0.3s ease;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .modal-content {
+      width: 100%;
+      max-width: 860px;
+      padding: 24px;
+      border-radius: 28px !important;
+      position: relative;
+    }
+
+    /* ── ADMIN WIDGET HEADER ── */
+    .old-header {
+      padding: 14px 16px; background: rgba(0,0,0,0.6); cursor: grab;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .admin-widget-header:active { cursor: grabbing; }
+    .admin-widget-content {
+      padding: 20px; overflow-y: auto; flex: 1;
+    }
+
+    .admin-input {
+      width: 100%; background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 10px; color: white; padding: 12px 14px; margin-bottom: 12px;
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px;
+    }
+    .slider-row { display: grid; grid-template-columns: 72px 1fr 50px; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: #ccc; }
+    .slider-row input[type=range] { width: 100%; accent-color: var(--theme-accent); }
+  
+    /* --- TRANSICIONES SLIDE RIGHT --- */
+    .anim-out-slide-right { 
+        animation: out-slide-right 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+    }
+    .anim-in-slide-right { 
+        animation: in-slide-right 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+    }
+    @keyframes out-slide-right { 
+        to { transform: translateX(100vw); opacity: 0; } 
+    }
+    @keyframes in-slide-right { 
+        from { transform: translateX(-100vw); opacity: 0; } 
+        to { transform: translateX(0); opacity: 1; } 
+    }
+    
+    /* Canvases para partículas */
+    #ctx-background, #ctx-foreground {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        pointer-events: none;
+    }
+    #ctx-background { z-index: 1; }
+    #ctx-foreground { z-index: 99; } /* Por encima de stage, debajo de UI superior */
+
+    
+    /* ========================================================= */
+    /* MEJORAS CINEMÁTICAS Y CORRECCIÓN DE Z-INDEX               */
+    /* ========================================================= */
+    
+    /* 1. Asegurar que las letras (universe-copy) queden ATRÁS del león */
+    .universe-copy { z-index: 60 !important; }
+    
+    /* 2. El león (mascot-wrapper) se pone ENFRENTE de las letras */
+    .mascot-wrapper {
+      z-index: 70 !important;
+      pointer-events: none; /* Evita que bloquee clics a los botones de abajo */
+      transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    
+    /* 3. Animación de la mascota al abrir un portal */
+    /* En PC: Se desplaza suavemente a la izquierda para darle espacio a la tarjeta */
+    body.portal-open .mascot-wrapper {
+      transform: translateX(-80%) scale(1.15) !important;
+      filter: drop-shadow(0 0 40px rgba(230, 67, 129, 0.3)) !important;
+    }
+    
+    /* En Móvil: Se desplaza hacia arriba y se reduce un poco */
+    @media (max-width: 800px) {
+      body.portal-open .mascot-wrapper {
+        transform: translateX(-50%) translateY(-25vh) scale(0.85) !important;
+      }
+    }
+    
+    /* 4. Efecto de Despliegue Futurista para las Tarjetas (Portales) */
+    .content-sections {
+      perspective: 1500px; /* Profundidad 3D */
+    }
+    .accordion-card {
+      /* Estado inicial (cerrado): rotado hacia atrás y más abajo */
+      opacity: 0;
+      transform: rotateX(20deg) translateY(60px) scale(0.9);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-origin: center top;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.05) !important;
+    }
+    .content-sections.is-visible .accordion-card.is-active {
+      /* Estado final (abierto): se endereza como si cayera hacia ti */
+      opacity: 1 !important;
+      display: block !important;
+      transform: rotateX(0deg) translateY(0) scale(1) !important;
+    }
+    
+    /* 5. El suelo 3D se expande espectacularmente al entrar */
+    .stage-container { transition: all 1s cubic-bezier(0.16, 1, 0.3, 1); }
+    body.portal-open .stage-container {
+      transform: scale(1.4) translateY(20px);
+      opacity: 0.3;
+    }
+
+  
+    /* SOMBRA BASE REALISTA (PISO) */
+    .mascot-ground-shadow {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 250px;
+      height: 25px;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: shadowBreathe 4s ease-in-out infinite 0.7s;
+    }
+    .mascot-ground-shadow.is-active {
+      opacity: 1;
+    }
+    @keyframes shadowBreathe {
+      0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+      50% { transform: translateX(-50%) scale(0.7); opacity: 0.4; } /* Se encoge cuando el león sube */
+    }
+
+  </style>
+
+</head>
+<body class="in-showroom">
+  <!-- CANVASES DE PARTICULAS REACTIVAS -->
+  <canvas id="ctx-background"></canvas>
+  <canvas id="ctx-foreground"></canvas>
+
+  <!-- BACKGROUND LAYERS -->
+  <div class="stardust-layer stardust-1"></div>
+  <div class="stardust-layer stardust-2"></div>
+  <div class="stars"></div>
+
+  <!-- HEADER -->
+  
+  <header>
+    <div class="brand-container">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--coral)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span class="brand">STARMAKER</span>
+    </div>
+    <button class="admin-btn-top" id="btn-open-admin">Admin Console</button>
+  </header>
 
 
-    </main>
+  <!-- ================================================================ -->
+  <!-- SHOWROOM                                                          -->
+  <!-- ================================================================ -->
+  <section class="hero-showroom" id="hero-showroom">
 
-    <footer>
-      <div class="footer-inner">
-        <div class="footer-brand">STARMAKER</div>
-        <div>Premium digital experience · Production build</div>
-        <div>© 2026 STARMAKER</div>
-      </div>
-    </footer>
-  </div>
+    <!-- 3D STAGE -->
+    <div class="stage-container" id="stage-container">
+      <div class="stage-surface"></div>
+      <div class="stage-orbit"></div>
+    </div>
 
-  <!-- MODAL ADMIN CON LOGIN & EDICIÓN FIRESTORE -->
-  <div class="admin-modal" id="admin-modal">
-    <div class="admin-box">
-      <!-- VISTA 1: LOGIN -->
-      <div id="admin-login-view">
-        <div class="admin-header">
-          <h2 style="font-size:1.15rem;font-weight:800;letter-spacing:.08em;">ACCESO ADMINISTRATIVO</h2>
-          <button class="admin-close" id="btn-close-login">✕</button>
-        </div>
-        <p style="font-size:11px;color:var(--muted);margin-bottom:16px;">Ingresa tus credenciales de administrador:</p>
+    
+    
+    
+    <!-- STARLEO SLIDER -->
+    <div class="universe-copy" id="main-slider-container">
+      <div class="slider-wrapper">
+        <!-- Showroom texts -->
+        <h1 class="hero-slide slide-p0" data-portal="0">CREA. LIVESTREAMING.<br><strong>IMPACTA.</strong></h1>
+        <h1 class="hero-slide slide-p0" data-portal="0">Únete a la red global de<br><strong>Creadores.</strong></h1>
+        <h1 class="hero-slide slide-p0" data-portal="0">Haz crecer tu audiencia<br><strong>HOY.</strong></h1>
         
-        <form id="form-auth-login">
-          <div class="admin-field">
-            <label>Usuario:</label>
-            <input type="text" class="admin-input" id="auth-email" value="" placeholder="Usuario" required autocomplete="username" />
+        <!-- Portal 1 (Registro) -->
+        <h1 class="hero-slide slide-p1" data-portal="1">Conviértete en<br><strong>Oficial.</strong></h1>
+        <h1 class="hero-slide slide-p1" data-portal="1">Monetiza tu<br><strong>Talento.</strong></h1>
+        <h1 class="hero-slide slide-p1" data-portal="1">El primer paso es<br><strong>Registrarte.</strong></h1>
+
+        <!-- Portal 2 (Tutoriales) -->
+        <h1 class="hero-slide slide-p2" data-portal="2">Aprende de los<br><strong>Mejores.</strong></h1>
+        <h1 class="hero-slide slide-p2" data-portal="2">Domina las<br><strong>Batallas PK.</strong></h1>
+        <h1 class="hero-slide slide-p2" data-portal="2">Eleva tu<br><strong>Stream.</strong></h1>
+
+        <!-- Portal 3 (Soporte) -->
+        <h1 class="hero-slide slide-p3" data-portal="3">Estamos para<br><strong>Ayudarte.</strong></h1>
+        <h1 class="hero-slide slide-p3" data-portal="3">Resuelve tus dudas<br><strong>24/7.</strong></h1>
+        <h1 class="hero-slide slide-p3" data-portal="3">Contacta a tu<br><strong>Asesor.</strong></h1>
+      </div>
+    </div>
+
+    <!-- CHARACTER VIDEOS (loaded dynamically from Firestore/Cloudinary) -->
+    <div class="mascot-wrapper" id="mascot-wrapper">
+      <div id="mascot-shadow" class="mascot-ground-shadow is-active"></div>
+      <video id="vid-p1" class="media-video-source" loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
+      <canvas id="canvas-p1" class="media-webm is-active" style="pointer-events:none;"></canvas>
+      <video id="vid-p2" class="media-video-source" loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
+      <canvas id="canvas-p2" class="media-webm" style="pointer-events:none;"></canvas>
+      <video id="vid-p3" class="media-video-source" loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
+      <canvas id="canvas-p3" class="media-webm" style="pointer-events:none;"></canvas>
+    </div>
+
+    <!-- CTA BUTTON -->
+    <button class="btn-magnetic" id="btnHeroCta" onclick="irAlPuntoActual()">
+      <span class="dot-glow"></span>
+      <span id="heroCtaText">Postula a STARMAKER ↓</span>
+    </button>
+
+    <!-- DYNAMIC CAPSULE TRACKPAD (SPRING-BACK CENTER) -->
+    <div class="capsule-trackpad-wrapper" id="capsule-trackpad-wrapper">
+      <nav class="capsule-trackpad" id="capsule-trackpad">
+        <!-- Chevron Left -->
+        <button type="button" class="capsule-arrow-btn arrow-prev" id="capsule-btn-prev" aria-label="Portal Anterior">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <!-- Sliding Tactile Puck -->
+        <div class="capsule-puck" id="capsule-puck">
+          <div class="puck-content" id="puck-content">
+            <i class="fa-solid fa-rocket puck-icon" id="puck-icon"></i>
+            <span class="puck-title" id="puck-title">Registro</span>
           </div>
-          <div class="admin-field">
-            <label>Contraseña:</label>
-            <input type="password" class="admin-input" id="auth-password" value="" placeholder="Contraseña" required autocomplete="current-password" />
-          </div>
-          <p id="auth-error-msg" style="color:var(--pink);font-size:12px;margin-bottom:12px;display:none;"></p>
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
-            INICIAR SESIÓN →
-          </button>
-        </form>
+        </div>
+
+        <!-- Chevron Right -->
+        <button type="button" class="capsule-arrow-btn arrow-next" id="capsule-btn-next" aria-label="Portal Siguiente">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </nav>
+
+      <!-- Micro-indicators Dots -->
+      <div class="capsule-dots" id="capsule-dots">
+        <span class="capsule-dot active" data-portal="0" onclick="window.trackpadSwitchPortal(0)"></span>
+        <span class="capsule-dot" data-portal="1" onclick="window.trackpadSwitchPortal(1)"></span>
+        <span class="capsule-dot" data-portal="2" onclick="window.trackpadSwitchPortal(2)"></span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================================================================ -->
+  <!-- CONTENT SECTIONS                                                  -->
+  <!-- ================================================================ -->
+  
+  <main class="content-sections" id="main-content">
+
+    <button class="btn-back-showroom" onclick="volverAlShowroom()">← Volver al Universo</button>
+
+    <!-- ================================================================ -->
+    <!-- PORTAL 1: REGISTRO (ÚNETE A LA ÉLITE)                            -->
+    <!-- ================================================================ -->
+    <div class="accordion-card" id="card-registro">
+      <div class="stagger-1" style="text-align:center;margin-bottom:32px;">
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:rgba(var(--theme-rgb),0.12);border:1px solid rgba(var(--theme-rgb),0.3);color:var(--theme-accent);font-size:12px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px;">
+          <i class="fa-solid fa-star"></i> Ecosistema Oficial STARMAKER
+        </div>
+        <h1 style="font-size:clamp(30px, 4.5vw, 50px);font-weight:900;color:white;letter-spacing:-0.03em;margin:0 0 10px;line-height:1.1;">Únete a la Élite</h1>
+        <p style="color:#9ca3af;font-size:15px;max-width:540px;margin:0 auto;">Completa tu postulación oficial como creador para acceder al programa de streamers, batallas y monetización.</p>
       </div>
 
-      <!-- VISTA 2: PANEL DE CONTROL CUANDO YA ESTÁ AUTENTICADO -->
-            <div id="admin-panel-view" style="display:none;">
-        <div class="admin-header">
-          <div>
-            <h2 style="font-size:1.15rem;font-weight:800;letter-spacing:.08em;">CONSOLA ADMINISTRATIVA</h2>
-            <span style="font-size:11px;color:var(--coral);">● Conectado a Firestore</span>
-          </div>
-          <button class="admin-close" id="btn-close-panel">✕</button>
+      <div class="glass-panel stagger-2 tilt-card" data-tilt style="padding:32px 34px;">
+        <div class="tilt-content">
+          <form id="native-registration-form" style="display:flex;flex-direction:column;gap:20px;">
+            
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:18px;">
+              <div>
+                <label class="input-label">Usuario / ID StarMaker *</label>
+                <input type="text" id="reg-id" required class="input-premium" placeholder="@streamer_oficial" />
+              </div>
+              <div>
+                <label class="input-label">ID de Tu Agente *</label>
+                <input type="text" id="reg-agent-id" required class="input-premium" placeholder="ID de Agencia / Reclutador" />
+              </div>
+              <div>
+                <label class="input-label">Nombre y Apellido Completo *</label>
+                <input type="text" id="reg-name" required class="input-premium" placeholder="Tu nombre real" />
+              </div>
+              <div>
+                <label class="input-label">Correo Electrónico *</label>
+                <input type="email" id="reg-email" required class="input-premium" placeholder="streamer@starleo.io" />
+              </div>
+              <div>
+                <label class="input-label">Teléfono (WhatsApp con prefijo) *</label>
+                <input type="tel" id="reg-phone" required class="input-premium" placeholder="+52 55 1234 5678" />
+              </div>
+              <div>
+                <label class="input-label">Nombre de tu Agencia *</label>
+                <input type="text" id="reg-agency" required class="input-premium" placeholder="Nombre de la agencia" />
+              </div>
+              <div>
+                <label class="input-label">Nacionalidad *</label>
+                <input type="text" id="reg-nationality" required class="input-premium" placeholder="Ej. México, Colombia, España..." />
+              </div>
+              <div>
+                <label class="input-label">Ciudad de Residencia *</label>
+                <input type="text" id="reg-city" required class="input-premium" placeholder="Ciudad actual" />
+              </div>
+              <div>
+                <label class="input-label">¿Cuál es tu Talento Principal? *</label>
+                <input type="text" id="reg-talent" required class="input-premium" placeholder="Canto, Baile, Charla, Gaming, DJ..." />
+              </div>
+              <div>
+                <label class="input-label">¿Tu Género? *</label>
+                <select id="reg-gender" required class="input-premium" style="background:#0a0711;color:white;cursor:pointer;">
+                  <option value="" disabled selected>Selecciona una opción</option>
+                  <option value="Femenino">Femenino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
+              <div style="grid-column: 1 / -1;">
+                <label class="input-label">¿Con qué otras plataformas has colaborado? *</label>
+                <input type="text" id="reg-platform" required class="input-premium" placeholder="TikTok Live, Bigo Live, Twitch, Kick, Ninguna..." />
+              </div>
+            </div>
+
+            <!-- VERIFICACIÓN: IDENTIFICACIÓN Y VIDEO 10S -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:18px;margin-top:6px;">
+              <!-- Foto ID -->
+              <div style="background:rgba(0,0,0,0.3);border:1px dashed rgba(255,255,255,0.15);padding:20px;border-radius:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:34px;height:34px;border-radius:10px;background:rgba(var(--theme-rgb),0.2);display:flex;align-items:center;justify-content:center;color:var(--theme-accent);">
+                    <i class="fa-solid fa-id-card"></i>
+                  </div>
+                  <div>
+                    <label class="input-label" style="margin-bottom:0;">Identificación Oficial *</label>
+                    <span style="font-size:11px;color:#8f8998;">Foto clara de frente y reverso</span>
+                  </div>
+                </div>
+                <input type="file" id="reg-id-photos" class="input-premium" style="padding:10px;cursor:pointer;" accept="image/*" multiple />
+                <div id="reg-upload-status" style="font-size:12px;color:#4ade80;font-weight:600;"></div>
+              </div>
+
+              <!-- Video Verificación 10s -->
+              <div style="background:rgba(0,0,0,0.3);border:1px dashed rgba(255,255,255,0.15);padding:20px;border-radius:18px;display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <div style="width:34px;height:34px;border-radius:10px;background:rgba(236,72,153,0.2);display:flex;align-items:center;justify-content:center;color:#EC4899;">
+                    <i class="fa-solid fa-video"></i>
+                  </div>
+                  <div>
+                    <label class="input-label" style="margin-bottom:0;">Video de Verificación (10s) *</label>
+                    <span style="font-size:11px;color:#8f8998;">Grabación rápida de tu rostro</span>
+                  </div>
+                </div>
+                <button type="button" id="btn-record-video" class="btn-primary" style="padding:12px 18px;border-radius:12px;font-size:13px;width:100%;">
+                  <i class="fa-solid fa-camera"></i> Grabar Video (10s)
+                </button>
+                <div id="record-status" style="font-size:12px;font-weight:bold;color:#4ade80;text-align:center;"></div>
+                <video id="record-preview" style="display:none;width:100%;border-radius:12px;border:1px solid rgba(255,255,255,0.1);max-height:160px;object-fit:cover;" autoplay muted playsinline></video>
+                <input type="hidden" id="reg-video-url" />
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="btn-submit-reg" class="btn-primary" style="width:100%;padding:18px 24px;border-radius:16px;font-size:14px;letter-spacing:0.12em;margin-top:6px;">
+              <span>SOLICITAR ACCESO VIP</span> <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <div id="reg-feedback" style="display:none;text-align:center;color:#4ade80;font-weight:bold;padding:16px;background:rgba(74,222,128,0.1);border-radius:14px;border:1px solid rgba(74,222,128,0.2);"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- PORTAL 2: ACADEMIA STARMAKER (TUTORIALES NETFLIX STYLE)          -->
+    <!-- ================================================================ -->
+    <div class="accordion-card" id="card-tutoriales">
+      <div class="stagger-1" style="margin-bottom:32px;padding:0 8px;">
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:rgba(236,72,153,0.12);border:1px solid rgba(236,72,153,0.3);color:#EC4899;font-size:12px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px;">
+          <i class="fa-solid fa-graduation-cap"></i> Academia Pro
+        </div>
+        <h1 style="font-size:clamp(30px, 4.5vw, 48px);font-weight:900;color:white;letter-spacing:-0.03em;margin:0 0 10px;line-height:1.1;">Academia StarMaker</h1>
+        <p style="color:#9ca3af;font-size:15px;">Sube de nivel tus habilidades de transmisión, domina las batallas PK y maximiza tus ganancias.</p>
+      </div>
+
+      <!-- Admin links dynamic container -->
+      <div id="tutoriales-list" style="margin-bottom:24px;"></div>
+
+      <!-- Fila 1: Fundamentos del Live -->
+      <div class="stagger-2" style="margin-bottom:36px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:0 8px;">
+          <h3 style="font-size:18px;font-weight:800;color:white;display:flex;align-items:center;gap:12px;">
+            <span style="display:inline-block;width:4px;height:20px;background:#EC4899;border-radius:2px;box-shadow:0 0 12px #EC4899;"></span>
+            Fundamentos del Live
+          </h3>
+          <span style="font-size:11px;color:#8f8998;font-weight:600;"><i class="fa-solid fa-arrows-left-right"></i> Desliza para explorar</span>
         </div>
 
-        <div style="margin-top:24px; padding-top: 16px;">
-          <label class="admin-label">BASE DE DATOS (USUARIOS REGISTRADOS)</label>
-          <button type="button" id="btn-download-db" class="admin-input" style="background: #4CAF50; color: white; border:none; cursor: pointer; text-transform: uppercase; font-weight: bold; width: 100%; margin-bottom: 12px; padding: 16px; border-radius: 8px;">Descargar DATABASE (.CSV / Excel)</button>
+        <div class="scroll-row hide-scroll">
+          <!-- Card 1 -->
+          <div class="glass-panel scroll-item tilt-card" data-tilt onclick="abrirVideoModal('Configura tu Set-up Pro', 'https://images.unsplash.com/photo-1516280440502-a2f0729792bf?w=800', '04:20')">
+            <div class="tilt-content" style="height:100%;display:flex;flex-direction:column;">
+              <div style="height:160px;position:relative;overflow:hidden;background:#000;">
+                <img src="https://images.unsplash.com/photo-1516280440502-a2f0729792bf?w=500" class="tut-thumbnail" style="width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;" />
+                <div class="tut-play-overlay">
+                  <div class="tut-play-btn" style="background:#EC4899;box-shadow:0 0 24px #EC4899;"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 8px;border-radius:6px;font-size:10px;color:white;font-weight:800;">04:20</div>
+              </div>
+              <div style="padding:16px;flex-grow:1;background:rgba(18,14,26,0.7);display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                  <h4 style="color:white;font-weight:800;font-size:14px;margin:0 0 6px;line-height:1.2;">Configura tu Set-up</h4>
+                  <p style="color:#9ca3af;font-size:11px;margin:0 0 14px;line-height:1.4;">Aprende a usar luces, cámara y encuadre a tu favor.</p>
+                </div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                  <div style="width:100%;height:100%;background:#EC4899;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="glass-panel scroll-item tilt-card" data-tilt onclick="abrirVideoModal('Retención de Audiencia', 'https://images.unsplash.com/photo-1580519542014-2252848ff70c?w=800', '12:15')">
+            <div class="tilt-content" style="height:100%;display:flex;flex-direction:column;">
+              <div style="height:160px;position:relative;overflow:hidden;background:#000;">
+                <img src="https://images.unsplash.com/photo-1580519542014-2252848ff70c?w=500" class="tut-thumbnail" style="width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;" />
+                <div class="tut-play-overlay">
+                  <div class="tut-play-btn" style="background:#EC4899;box-shadow:0 0 24px #EC4899;"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 8px;border-radius:6px;font-size:10px;color:white;font-weight:800;">12:15</div>
+              </div>
+              <div style="padding:16px;flex-grow:1;background:rgba(18,14,26,0.7);display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                  <h4 style="color:white;font-weight:800;font-size:14px;margin:0 0 6px;line-height:1.2;">Retención de Audiencia</h4>
+                  <p style="color:#9ca3af;font-size:11px;margin:0 0 14px;line-height:1.4;">Técnicas psicológicas probadas para que no se vayan de tu Live.</p>
+                </div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                  <div style="width:45%;height:100%;background:#EC4899;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="glass-panel scroll-item tilt-card" data-tilt onclick="abrirVideoModal('Audio y Voz Cristalina', 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800', '08:45')">
+            <div class="tilt-content" style="height:100%;display:flex;flex-direction:column;">
+              <div style="height:160px;position:relative;overflow:hidden;background:#000;">
+                <img src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=500" class="tut-thumbnail" style="width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;" />
+                <div class="tut-play-overlay">
+                  <div class="tut-play-btn" style="background:#EC4899;box-shadow:0 0 24px #EC4899;"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div style="position:absolute;top:10px;left:10px;background:#EC4899;padding:3px 8px;border-radius:6px;font-size:9px;color:white;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;">Popular</div>
+                <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 8px;border-radius:6px;font-size:10px;color:white;font-weight:800;">08:45</div>
+              </div>
+              <div style="padding:16px;flex-grow:1;background:rgba(18,14,26,0.7);display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                  <h4 style="color:white;font-weight:800;font-size:14px;margin:0 0 6px;line-height:1.2;">Audio y Micrófonos</h4>
+                  <p style="color:#9ca3af;font-size:11px;margin:0 0 14px;line-height:1.4;">Ecualización y presets para una voz atractiva y nítida.</p>
+                </div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                  <div style="width:20%;height:100%;background:#EC4899;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="glass-panel scroll-item tilt-card" data-tilt onclick="abrirVideoModal('Iluminación de Neón', 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=800', '06:10')">
+            <div class="tilt-content" style="height:100%;display:flex;flex-direction:column;">
+              <div style="height:160px;position:relative;overflow:hidden;background:#000;">
+                <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=500" class="tut-thumbnail" style="width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;" />
+                <div class="tut-play-overlay">
+                  <div class="tut-play-btn" style="background:#EC4899;box-shadow:0 0 24px #EC4899;"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 8px;border-radius:6px;font-size:10px;color:white;font-weight:800;">06:10</div>
+              </div>
+              <div style="padding:16px;flex-grow:1;background:rgba(18,14,26,0.7);display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                  <h4 style="color:white;font-weight:800;font-size:14px;margin:0 0 6px;line-height:1.2;">Iluminación Escénica</h4>
+                  <p style="color:#9ca3af;font-size:11px;margin:0 0 14px;line-height:1.4;">Crea atmósfera visual con luces RGB y aros de luz sin gastar de más.</p>
+                </div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                  <div style="width:0%;height:100%;background:#EC4899;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Fila 2: Monetización y Batallas PK -->
+      <div class="stagger-3" style="margin-bottom:36px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:0 8px;">
+          <h3 style="font-size:18px;font-weight:800;color:white;display:flex;align-items:center;gap:12px;">
+            <span style="display:inline-block;width:4px;height:20px;background:#F59E0B;border-radius:2px;box-shadow:0 0 12px #F59E0B;"></span>
+            Monetización y Batallas PK
+          </h3>
+          <span style="font-size:11px;color:#8f8998;font-weight:600;"><i class="fa-solid fa-arrows-left-right"></i> Desliza para explorar</span>
+        </div>
+
+        <div class="scroll-row hide-scroll">
+          <!-- Card 1 -->
+          <div class="glass-panel scroll-item tilt-card" data-tilt onclick="abrirVideoModal('Ganar Batallas PK', 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800', '08:50')">
+            <div class="tilt-content" style="height:100%;display:flex;flex-direction:column;">
+              <div style="height:160px;position:relative;overflow:hidden;background:#000;">
+                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500" class="tut-thumbnail" style="width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;" />
+                <div class="tut-play-overlay">
+                  <div class="tut-play-btn" style="background:#F59E0B;box-shadow:0 0 24px #F59E0B;color:#000;"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div style="position:absolute;top:10px;left:10px;background:#ef4444;padding:3px 8px;border-radius:6px;font-size:9px;color:white;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;">Nuevo</div>
+                <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 8px;border-radius:6px;font-size:10px;color:white;font-weight:800;">08:50</div>
+              </div>
+              <div style="padding:16px;flex-grow:1;background:rgba(18,14,26,0.7);display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                  <h4 style="color:white;font-weight:800;font-size:14px;margin:0 0 6px;line-height:1.2;">Ganar Batallas PK</h4>
+                  <p style="color:#9ca3af;font-size:11px;margin:0 0 14px;line-height:1.4;">Estrategias y dinámicas para incentivar regalos y donaciones.</p>
+                </div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                  <div style="width:80%;height:100%;background:#F59E0B;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="glass-panel scroll-item tilt-card" data-tilt onclick="abrirVideoModal('Multiplicadores de Diamantes', 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800', '15:30')">
+            <div class="tilt-content" style="height:100%;display:flex;flex-direction:column;">
+              <div style="height:160px;position:relative;overflow:hidden;background:#000;">
+                <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=500" class="tut-thumbnail" style="width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;" />
+                <div class="tut-play-overlay">
+                  <div class="tut-play-btn" style="background:#F59E0B;box-shadow:0 0 24px #F59E0B;color:#000;"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 8px;border-radius:6px;font-size:10px;color:white;font-weight:800;">15:30</div>
+              </div>
+              <div style="padding:16px;flex-grow:1;background:rgba(18,14,26,0.7);display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                  <h4 style="color:white;font-weight:800;font-size:14px;margin:0 0 6px;line-height:1.2;">Multiplicador de Diamantes</h4>
+                  <p style="color:#9ca3af;font-size:11px;margin:0 0 14px;line-height:1.4;">Aprovecha los horarios pico de StarMaker y combos especiales.</p>
+                </div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                  <div style="width:30%;height:100%;background:#F59E0B;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="glass-panel scroll-item tilt-card" data-tilt onclick="abrirVideoModal('Fidelización de Donadores VIP', 'https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?w=800', '10:15')">
+            <div class="tilt-content" style="height:100%;display:flex;flex-direction:column;">
+              <div style="height:160px;position:relative;overflow:hidden;background:#000;">
+                <img src="https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?w=500" class="tut-thumbnail" style="width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease;" />
+                <div class="tut-play-overlay">
+                  <div class="tut-play-btn" style="background:#F59E0B;box-shadow:0 0 24px #F59E0B;color:#000;"><i class="fa-solid fa-play"></i></div>
+                </div>
+                <div style="position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);padding:3px 8px;border-radius:6px;font-size:10px;color:white;font-weight:800;">10:15</div>
+              </div>
+              <div style="padding:16px;flex-grow:1;background:rgba(18,14,26,0.7);display:flex;flex-direction:column;justify-content:space-between;">
+                <div>
+                  <h4 style="color:white;font-weight:800;font-size:14px;margin:0 0 6px;line-height:1.2;">Fidelizar Donadores VIP</h4>
+                  <p style="color:#9ca3af;font-size:11px;margin:0 0 14px;line-height:1.4;">Cómo tratar a tus top supporters para construir lealtad a largo plazo.</p>
+                </div>
+                <div style="width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
+                  <div style="width:10%;height:100%;background:#F59E0B;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- PORTAL 3: SOPORTE ÉLITE (AI BOT CHAT & AGENT WHATSAPP)           -->
+    <!-- ================================================================ -->
+    <div class="accordion-card" id="card-dudas">
+      <div class="stagger-1" style="text-align:center;margin-bottom:28px;">
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10B981;font-size:12px;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px;">
+          <i class="fa-solid fa-headset"></i> Atención Oficial 24/7
+        </div>
+        <h1 style="font-size:clamp(30px, 4.5vw, 48px);font-weight:900;color:white;letter-spacing:-0.03em;margin:0 0 10px;line-height:1.1;">Soporte Élite</h1>
+        <p style="color:#9ca3af;font-size:15px;max-width:560px;margin:0 auto;">Asistencia inmediata con nuestra IA entrenada para Streamers y contacto directo con tu Agente asignado.</p>
+      </div>
+
+      <!-- WhatsApp Advisors from Firestore Admin -->
+      <div id="soporte-list" style="margin-bottom:20px;"></div>
+
+      <!-- Glass Chat Box -->
+      <div class="glass-panel stagger-2" style="display:flex;flex-direction:column;height:580px;border-radius:28px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.7);">
+        <!-- Chat Header -->
+        <div style="padding:16px 22px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg, #34D399, #059669);display:flex;align-items:center;justify-content:center;color:white;font-size:18px;box-shadow:0 0 18px rgba(16,185,129,0.45);">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+              <h3 style="color:white;font-weight:800;font-size:15px;margin:0 0 3px;">StarMaker Support AI</h3>
+              <p style="color:#34D399;font-size:11px;margin:0;font-weight:700;display:flex;align-items:center;gap:6px;">
+                <span class="live-dot-pulse"></span> En línea · Respuestas al instante
+              </p>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <button type="button" onclick="conectarAsesorHumano()" style="background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.4);color:#25D366;padding:8px 14px;border-radius:12px;font-size:12px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.3s;">
+              <i class="fa-brands fa-whatsapp"></i> Hablar con Agente
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="chat-messages" style="flex-grow:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;">
+          <!-- Message 1: Bot welcome -->
+          <div class="chat-msg chat-bot">
+            <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
+            <div class="chat-bubble bot-bubble">
+              ¡Hola creador! 👋 Soy tu asistente inteligente de STARMAKER. Estoy aquí para resolver cualquier duda sobre tu registro, batallas PK, diamantes o problemas con la app. ¿En qué te ayudo hoy?
+            </div>
+          </div>
+
+          <!-- Quick Chips -->
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-left:46px;">
+            <button type="button" class="chat-chip" onclick="enviarMensajeChip('¿Cuáles son los requisitos para ser streamer oficial?')">Requisitos de Ingreso</button>
+            <button type="button" class="chat-chip" onclick="enviarMensajeChip('¿Cómo funcionan los bonos y batallas PK?')">Batallas PK y Bonos</button>
+            <button type="button" class="chat-chip" onclick="enviarMensajeChip('¿Cuánto tardan en revisar mi postulación?')">Tiempo de Aprobación</button>
+            <button type="button" class="chat-chip" onclick="enviarMensajeChip('¿Cómo y cuándo se cobran los diamantes?')">Cobro de Diamantes</button>
+          </div>
+        </div>
+
+        <!-- Chat Input Box -->
+        <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.4);">
+          <form id="chat-form" onsubmit="enviarMensajeChat(event)" style="display:flex;align-items:center;gap:10px;position:relative;">
+            <input type="text" id="chat-input" class="input-premium" placeholder="Escribe tu consulta o duda aquí..." style="padding-right:52px;" autocomplete="off" />
+            <button type="submit" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:10px;background:#10B981;border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(16,185,129,0.4);transition:all 0.2s;">
+              <i class="fa-solid fa-paper-plane" style="font-size:13px;"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- VIDEO PREVIEW MODAL -->
+  <div id="video-preview-modal" class="modal-backdrop" style="display:none;" onclick="cerrarVideoModal(event)">
+    <div class="modal-content glass-panel" onclick="event.stopPropagation()">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h3 id="modal-video-title" style="color:white;font-weight:800;font-size:18px;margin:0;">Tutorial</h3>
+        <button onclick="cerrarVideoModal()" style="background:rgba(255,255,255,0.1);border:none;color:white;width:34px;height:34px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div style="border-radius:16px;overflow:hidden;background:#000;position:relative;padding-bottom:56.25%;height:0;">
+        <iframe id="modal-video-iframe" src="" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen allow="autoplay"></iframe>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT DE CONEXIÓN CON FIREBASE V10 -->
+  
+  <!-- LOGIN MODAL -->
+  <div class="login-modal" id="login-modal">
+    <div class="login-box">
+      <h3 style="margin-bottom:20px; font-weight:800;">Acceso Admin</h3>
+      <input type="text" id="login-user" class="admin-input" placeholder="Usuario" />
+      <input type="password" id="login-pass" class="admin-input" placeholder="Contraseña" />
+      <button id="btn-login-submit" style="width:100%;padding:12px;background:var(--coral);color:white;border:none;border-radius:10px;font-weight:800;cursor:pointer;margin-top:10px;">Entrar</button>
+      <button id="btn-login-cancel" style="width:100%;padding:12px;background:transparent;color:#b9b0ba;border:none;cursor:pointer;margin-top:5px;font-size:12px;">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- ADMIN WIDGET -->
+  <div class="admin-widget" id="admin-widget">
+    <div class="admin-widget-header" id="admin-widget-header">
+      <h3 style="font-size:14px;font-weight:800;letter-spacing:1px;margin:0;">PANEL ADMIN</h3>
+      <button id="btn-close-admin" style="background:transparent;border:none;color:#b9b0ba;font-size:18px;cursor:pointer;">✕</button>
+    </div>
+    <div class="admin-widget-content">
+      <div id="admin-error-msg" style="display:none;background:rgba(235,82,121,0.2);border:1px solid #EB5279;padding:12px;border-radius:8px;color:#EB5279;font-size:12px;margin-bottom:16px;font-weight:bold;"></div>
+
+      <button id="btn-download-db" style="width:100%;padding:14px;background:#4ade80;color:#000;border:none;border-radius:12px;font-weight:800;cursor:pointer;margin-bottom:24px;">📥 Descargar DATABASE (.CSV)</button>
+
+      <hr style="border-color:rgba(255,255,255,0.1);margin:0 0 24px;">
+
+      <h3 style="margin-bottom:8px;font-size:14px;">CONFIGURACIÓN DE PERSONAJES</h3>
+      <p style="font-size:11px;color:#b9b0ba;margin-bottom:16px;">Sube el video en dos formatos y ajusta tamaño y posición.</p>
+      <div id="admin-portals-config"></div>
+
+      <hr style="border-color:rgba(255,255,255,0.1);margin:24px 0;">
+
+      <h3 style="margin-bottom:12px;font-size:14px;">TUTORIALES</h3>
+      <input type="text" id="admin-tut-1" class="admin-input" placeholder="Tutorial 1 (URL de YouTube)" />
+      <input type="text" id="admin-tut-2" class="admin-input" placeholder="Tutorial 2 (URL de YouTube)" />
+      <input type="text" id="admin-tut-3" class="admin-input" placeholder="Tutorial 3 (URL de YouTube)" />
+
+      <h3 style="margin:16px 0 12px;font-size:14px;">SOPORTE (WhatsApp)</h3>
+      <input type="text" id="admin-wa-1" class="admin-input" placeholder="WhatsApp 1 (enlace)" />
+      <input type="text" id="admin-wa-2" class="admin-input" placeholder="WhatsApp 2 (enlace)" />
+      <input type="text" id="admin-wa-3" class="admin-input" placeholder="WhatsApp 3 (enlace)" />
+
+      <button id="btn-save-links" style="width:100%;padding:14px;background:var(--fuchsia);color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer;margin-top:8px;">💾 Guardar Tutoriales y Soporte</button>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- JAVASCRIPT                                                        -->
+  <!-- ================================================================ -->
   <script type="module">
-    import { initializeApp } from "firebase/app";
-    import { getFirestore, doc, onSnapshot, setDoc, collection, addDoc, getDocs } from "firebase/firestore";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-    import { upload } from "@vercel/blob/client";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyC3iwfeStY1ANVcGIsH8rJD-8rJ5n_p_fE",
-      authDomain: "starmaker-505b7.firebaseapp.com",
-      projectId: "starmaker-505b7",
-      storageBucket: "starmaker-505b7.firebasestorage.app",
-      messagingSenderId: "52809712878",
-      appId: "1:52809712878:web:49c92142f243a951a5dfff",
-      measurementId: "G-MYD1M5XRTY"
-    };
+// ── GLOBALS ─────────────────────────────────────────────────────────────────
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const stateDocRef = doc(db, "systemSettings", "globalStateDev4");
+// ── DYNAMIC SLIDER LOGIC ─────────────────────────────────────────────────────
+let sliderInterval = null;
+let currentSliderIndex = 0;
+let hasShowroomPlayed = false;
 
-    const defaultCards = [
-      {
-        id: "card-streamer",
-        title: "León",
-        subtitle: "Mascota Holográfica",
-        badge: "LIVE HUB",
-        link: "#formulario-registro",
-        videoUrl: "/leonsito.webm"
-      }
-    ];
-
-    function renderCards(cards) {
-      const container = document.getElementById("cards-grid-box");
-      if (!container) return;
-      container.innerHTML = "";
-
-      cards.forEach((card, idx) => {
-        const padIndex = String(idx + 1).padStart(2, "0");
-        const article = document.createElement("article");
-        article.className = "card";
-        article.innerHTML = `
-          <div class="card-art" style="height: 100%;">
-            <div class="meteor-glow"></div>
-            <video class="hero-mascot-video" src="${card.videoUrl || ''}" autoplay loop muted playsinline disablepictureinpicture style="position: absolute; width: 100%; height: 100%; z-index: 2; object-fit: contain; pointer-events: none; mix-blend-mode: screen; -webkit-mix-blend-mode: screen; transform: translate(var(--video-x, 0px), var(--video-y, 0px)) scale(var(--video-scale, 1));"></video>
-            
-            <div class="card-content" style="position: absolute; bottom: 20px; left: 0; width: 100%; z-index: 3; display: flex; justify-content: center; padding: 0;">
-              <button class="interactive-btn" onclick="window.location.href='${card.link || '#formulario-registro'}'">EXPLORAR →</button>
-            </div>
-          </div>
-        `;
-
-        // Sync Logic
-        const videoEl = article.querySelector('.hero-mascot-video');
-        const glowEl = article.querySelector('.meteor-glow');
-        const btnEl = article.querySelector('.interactive-btn');
-
-        if (videoEl) {
-          videoEl.addEventListener('timeupdate', () => {
-            const time = videoEl.currentTime;
-            const duration = videoEl.duration || 10;
-            
-            // Si el video dura menos de 6 segundos, calculamos en base a porcentajes (del 60% al 85% del video)
-            let isTriggered = false;
-            let progress = 0;
-
-            if (duration < 6) {
-              const startPct = 0.6;
-              const endPct = 0.85;
-              const currentPct = time / duration;
-              if (currentPct >= startPct && currentPct <= endPct) {
-                isTriggered = true;
-                progress = (currentPct - startPct) / (endPct - startPct);
-              }
-            } else {
-              if (time >= 6 && time <= 8.5) {
-                isTriggered = true;
-                progress = (time - 6) / 2.5;
-              }
-            }
-            
-            if (isTriggered) {
-              btnEl.classList.add('pulse-active');
-              glowEl.style.setProperty('--meteor-x', `${progress * 150 - 25}%`);
-              glowEl.style.setProperty('--meteor-y', `${20 + Math.sin(progress * Math.PI) * 15}%`);
-              glowEl.style.setProperty('--meteor-opacity', '0.8');
-            } else {
-              btnEl.classList.remove('pulse-active');
-              glowEl.style.setProperty('--meteor-opacity', '0');
-            }
-          });
-        }
-
-        article.addEventListener("pointermove", (e) => {
-          const rect = article.getBoundingClientRect();
-          const x = (e.clientX - rect.left) / rect.width;
-          const y = (e.clientY - rect.top) / rect.height;
-          article.style.setProperty("--rx", `${(0.5 - y) * 8}deg`);
-          article.style.setProperty("--ry", `${(x - 0.5) * 8}deg`);
-        });
-
-        article.addEventListener("pointerleave", () => {
-          article.style.setProperty("--rx", "0deg");
-          article.style.setProperty("--ry", "0deg");
-        });
-
-        container.appendChild(article);
-      });
-    }
-
-    renderCards(defaultCards);
-
-    // ESCUCHAR EN TIEMPO REAL CON FIRESTORE ONSNAPSHOT
-    onSnapshot(stateDocRef, (snap) => {
-      if (snap.exists()) {
-        const data = snap.data();
-        if (data.theme?.primary) {
-          document.documentElement.style.setProperty("--fuchsia", data.theme.primary);
-          document.documentElement.style.setProperty("--coral", data.theme.primary);
-          const colEl = document.getElementById("editor-theme-color");
-          if (colEl) colEl.value = data.theme.primary;
-        }
-        
-          // Apply dynamic backgrounds
-          if (data.bg1) {
-            document.body.style.backgroundImage = `url(${data.bg1})`;
-          }
-          if (data.videoUrl) {
-             
-             document.querySelectorAll(".hero-mascot-video").forEach(vidEl => {
-                vidEl.src = data.videoUrl;
-                vidEl.load();
-             });
-          }
-          if (data.textos) {
-            const editableElements = document.querySelectorAll('.hero h1, .hero p, .accordion-header h3, .platform-item span, .footer-content p, .highlight');
-            editableElements.forEach((el, index) => {
-              if (data.textos['texto_' + index]) {
-                el.innerHTML = data.textos['texto_' + index];
-              }
-            });
-          }
-
-        if (Array.isArray(data.cards) && data.cards.length > 0) {
-          renderCards(data.cards);
-          if (data.cards[0]) {
-            document.getElementById("editor-c1-title").value = data.cards[0].title || "";
-            document.getElementById("editor-c1-desc").value = data.cards[0].subtitle || "";
-          }
-
-          
-          if (data.layout) {
-
-            
-            document.documentElement.style.setProperty("--video-scale", data.layout.videoScale || 1);
-            document.documentElement.style.setProperty("--video-x", (data.layout.videoX || 0) + "px");
-            document.documentElement.style.setProperty("--video-y", (data.layout.videoY || 0) + "px");
-
-            if(true) {
-              
-              document.getElementById("admin-video-scale").value = data.layout.videoScale || 1;
-              document.getElementById("admin-video-x").value = data.layout.videoX || 0;
-              document.getElementById("admin-video-y").value = data.layout.videoY || 0;
-              
-              
-              document.getElementById("val-video-scale").textContent = data.layout.videoScale || 1;
-              document.getElementById("val-video-x").textContent = (data.layout.videoX || 0) + "px";
-              document.getElementById("val-video-y").textContent = (data.layout.videoY || 0) + "px";
-            }
-          }
-          // Load settings for tutorials and WA
-          if (data.whatsapp) {
-            if (document.getElementById("admin-wa-1")) document.getElementById("admin-wa-1").value = data.whatsapp[0] || "";
-            if (document.getElementById("admin-wa-2")) document.getElementById("admin-wa-2").value = data.whatsapp[1] || "";
-            if (document.getElementById("admin-wa-3")) document.getElementById("admin-wa-3").value = data.whatsapp[2] || "";
-            
-            const waList = document.getElementById("soporte-list");
-            if (waList) {
-              waList.innerHTML = data.whatsapp.map((link, i) => {
-                if(!link) return '';
-                return `<a href="${link}" target="_blank" style="padding: 16px 24px; background: #25D366; color: white; text-decoration: none; border-radius: 20px; font-weight: bold;">Soporte Opción ${i+1}</a>`;
-              }).join("");
-            }
-          }
-                    if (data.registroVideo !== undefined) {
-            if (document.getElementById("admin-registro-video")) document.getElementById("admin-registro-video").value = data.registroVideo || "";
-            if (document.getElementById("registro-personaje-video")) document.getElementById("registro-personaje-video").src = data.registroVideo || "";
-          }
-
-          const tuts = data.tutorials || [];
-          if (data.tut1) tuts[0] = data.tut1;
-          if (data.tut2) tuts[1] = data.tut2;
-          if (data.tut3) tuts[2] = data.tut3;
-
-          if (tuts.length > 0) {
-            if (document.getElementById("admin-tut-1")) document.getElementById("admin-tut-1").value = tuts[0] || "";
-            if (document.getElementById("admin-tut-2")) document.getElementById("admin-tut-2").value = tuts[1] || "";
-            if (document.getElementById("admin-tut-3")) document.getElementById("admin-tut-3").value = tuts[2] || "";
-            
-            const tutList = document.getElementById("tutoriales-list");
-            if (tutList) {
-              tutList.innerHTML = tuts.map(url => {
-                if(!url) return '';
-                return `<div style="background: rgba(0,0,0,0.5); padding: 12px; border-radius: 12px;"><a href="${url}" target="_blank" style="color: var(--coral);">Ver Tutorial ↗</a></div>`;
-              }).join("");
-            }
-          }
-
-        }
-      }
-    });
-
-    // CONTROL DEL MODAL ADMIN Y AUTH
-    const modal = document.getElementById("admin-modal");
-    const openBtn = document.getElementById("btn-open-admin");
-    const openHeroBtn = document.getElementById("btn-hero-admin");
-    const closeLogin = document.getElementById("btn-close-login");
-    const closePanel = document.getElementById("btn-close-panel");
-    const loginView = document.getElementById("admin-login-view");
-    const panelView = document.getElementById("admin-panel-view");
-
-    let isHardcodedAuthenticated = false;
-    function openAdmin() {
-      modal.classList.add("is-open");
-      if (!isHardcodedAuthenticated) {
-        if(loginView) loginView.style.display = "block";
-        panelView.style.display = "none";
-      } else {
-        if(loginView) loginView.style.display = "none";
-        panelView.style.display = "block";
-      }
-    }
-
-    openBtn.onclick = openAdmin;
-    if (openHeroBtn) openHeroBtn.onclick = openAdmin;
-    closeLogin.onclick = () => modal.classList.remove("is-open");
-    closePanel.onclick = () => modal.classList.remove("is-open");
-
-    // FORMULARIO DE LOGIN
-    const formLogin = document.getElementById("form-auth-login");
-    const authError = document.getElementById("auth-error-msg");
-
-    formLogin.onsubmit = async (e) => {
-      e.preventDefault();
-      authError.style.display = "none";
-      const em = document.getElementById("auth-email").value.trim();
-      const pw = document.getElementById("auth-password").value;
-
-      if (em === "SANTIstp" && pw === "Namekusein123") {
-        isHardcodedAuthenticated = true;
-        loginView.style.display = "none";
-        panelView.style.display = "block";
-        document.getElementById("auth-email").value = "";
-        document.getElementById("auth-password").value = "";
-      } else {
-        authError.textContent = "Usuario o contraseña incorrectos.";
-        authError.style.display = "block";
-      }
-    };
-
-    // GUARDAR EN FIRESTORE
-    const saveBtn = document.getElementById("btn-save-firestore");
-    const saveMsg = document.getElementById("save-msg-feedback");
-
-    saveBtn.onclick = async () => {
-      saveBtn.disabled = true;
-      saveBtn.textContent = "GUARDANDO EN FIRESTORE...";
-
-      
-      const layout = {
-        
-
-        
-        videoScale: parseFloat(document.getElementById("admin-video-scale")?.value || 1),
-        videoX: parseInt(document.getElementById("admin-video-x")?.value || 0),
-        videoY: parseInt(document.getElementById("admin-video-y")?.value || 0)
-      };
-
-
-      const whatsapp = [
-        document.getElementById("admin-wa-1")?.value || "",
-        document.getElementById("admin-wa-2")?.value || "",
-        document.getElementById("admin-wa-3")?.value || ""
-      ];
-
-      const cleanState = JSON.parse(JSON.stringify({ theme: newTheme, cards: newCards, whatsapp, tutorials, layout, registroVideo }));
-
-      try {
-        await setDoc(stateDocRef, cleanState, { merge: true });
-        saveMsg.textContent = "✓ Sincronizado exitosamente con Firestore";
-        saveMsg.style.display = "block";
-        setTimeout(() => { saveMsg.style.display = "none"; modal.classList.remove("is-open"); }, 1400);
-      } catch (err) {
-        saveMsg.textContent = "⚠ Error: " + err.message;
-        saveMsg.style.display = "block";
-      } finally {
-        saveBtn.disabled = false;
-        saveBtn.textContent = "GUARDAR EN FIRESTORE EN TIEMPO REAL";
-      }
-    };
-
-    // UPLOADER A VERCEL SERVERLESS
-    const fileInput = document.getElementById("media-file-input");
-    const statusLabel = document.getElementById("upload-status-label");
-
-    if (fileInput) {
-      fileInput.onchange = async (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        statusLabel.textContent = "Transmitiendo por Serverless Proxy...";
-        try {
-          const reader = new FileReader();
-          const b64 = await new Promise((res, rej) => {
-            reader.onload = () => res(reader.result.split(',')[1]);
-            reader.onerror = () => rej(new Error("Error leyendo archivo"));
-            reader.readAsDataURL(file);
-          });
-
-          const cleanName = String(file.name || "media").replace(/[^a-zA-Z0-9._-]/g, "_").slice(-120);
-          const response = await fetch("/api/upload-image", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ fileBase64: b64, mimeType: file.type, fileName: cleanName })
-          });
-
-          const data = await response.json();
-          if (!response.ok) throw new Error(data.error || "Fallo en la subida");
-          statusLabel.textContent = "✓ Subido: " + data.url;
-        } catch (err) {
-          statusLabel.textContent = "⚠ Error: " + err.message;
-        }
-      };
-    }
+function playSlider(portalId) {
+  clearInterval(sliderInterval);
+  const texts = Array.from(document.querySelectorAll(`.hero-slide[data-portal="${portalId}"]`));
+  document.querySelectorAll('.hero-slide').forEach(el => el.classList.remove('active'));
   
+  if (texts.length === 0) return;
+  
+  // If it's showroom (0) and it already played, do nothing
+  if (portalId === 0 && hasShowroomPlayed) return;
+
+  currentSliderIndex = 0;
+  texts[0].classList.add('active');
+
+  sliderInterval = setInterval(() => {
+    texts.forEach(el => el.classList.remove('active'));
+    currentSliderIndex++;
     
-    const inputs = ["video-scale", "video-x", "video-y"];
-    inputs.forEach(id => {
-      const el = document.getElementById("admin-" + id);
-      const valEl = document.getElementById("val-" + id);
-      if (el) {
-        el.addEventListener("input", (e) => {
-          const val = e.target.value;
-          const unit = id.includes("x") || id.includes("y") ? "px" : "";
-          document.documentElement.style.setProperty("--" + id, val + unit);
-          if (valEl) valEl.textContent = val + unit;
-        });
+    if (currentSliderIndex < texts.length) {
+      texts[currentSliderIndex].classList.add('active');
+    } else {
+      // Finished the 3 texts
+      clearInterval(sliderInterval);
+      if (portalId === 0) {
+        hasShowroomPlayed = true; // Never show showroom again until refresh
+      } else {
+        // Leave it blank or loop? User said "cada panel tiene los propios y tendran 4 segundos de cambiar entre si".
+        // It implies looping for portals? Or maybe it just ends. Let's make it loop for portals, but end for showroom.
+        currentSliderIndex = 0;
+        texts[currentSliderIndex].classList.add('active');
+        sliderInterval = setInterval(() => {
+           texts.forEach(el => el.classList.remove('active'));
+           currentSliderIndex++;
+           if(currentSliderIndex >= texts.length) currentSliderIndex = 0;
+           texts[currentSliderIndex].classList.add('active');
+        }, 4000);
       }
-    });
-    // === VIDEO RECORDER HANDLER ===
-    const btnRecord = document.getElementById("btn-record-video");
-    const recordPreview = document.getElementById("record-preview");
-    const recordStatus = document.getElementById("record-status");
-    const regVideoUrl = document.getElementById("reg-video-url");
+    }
+  }, 4000); // 4 seconds per message
+}
 
-    if (btnRecord) {
-      btnRecord.onclick = async () => {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { width: { ideal: 480 }, height: { ideal: 640 }, frameRate: { ideal: 15 } }, 
-            audio: true 
-          });
-          recordPreview.srcObject = stream;
-          recordPreview.style.display = "block";
-          recordPreview.muted = true;
-          recordPreview.play();
+// Start Showroom slider on load
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => playSlider(0), 1000);
+});
 
-          let options = { videoBitsPerSecond: 250000 };
-          if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-            options.mimeType = 'video/webm;codecs=vp9';
-          } else if (MediaRecorder.isTypeSupported('video/webm')) {
-            options.mimeType = 'video/webm';
-          } else if (MediaRecorder.isTypeSupported('video/mp4')) {
-            options.mimeType = 'video/mp4';
-          }
+window.puntoActualId = 'card-registro';
+window.currentPortal = 1;
 
-          const recorder = new MediaRecorder(stream, options);
-          const chunks = [];
-          
-          recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
-          
-          recorder.onstop = async () => {
-            stream.getTracks().forEach(t => t.stop());
-            recordPreview.style.display = "none";
-            recordStatus.textContent = "Comprimiendo y subiendo video...";
-            recordStatus.style.color = "#E64381";
-            btnRecord.disabled = true;
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-            const blob = new Blob(chunks, { type: recorder.mimeType || 'video/webm' });
-            const fileName = 'verif_' + Date.now() + '.webm';
-            
-            try {
-              // 1. Obtener el mejor servidor de GoFile disponible
-              const serverRes = await fetch("https://api.gofile.io/servers");
-              const serverData = await serverRes.json();
-              if(serverData.status !== "ok") throw new Error("No se pudo contactar al servidor de videos.");
-              const bestServer = serverData.data.servers[0].name;
+// ── FIREBASE ─────────────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyC3iwfeStY1ANVcGIsH8rJD-8rJ5n_p_fE",
+  authDomain: "starmaker-505b7.firebaseapp.com",
+  projectId: "starmaker-505b7"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const stateDocRef = doc(db, "systemSettings", "globalStateDev4");
 
-              // 2. Subir el video a GoFile
-              const formData = new FormData();
-              formData.append("file", blob, fileName);
-              
-              formData.append("token", "LBRXKRTeYjMsKssLNP2ndcCb6SUi3rBP");
-              const uploadRes = await fetch(`https://${bestServer}.gofile.io/contents/uploadfile`, {
-                method: "POST",
-                body: formData
-              });
-              const uploadData = await uploadRes.json();
-              
-              if(uploadData.status !== "ok") throw new Error("Error al procesar el video.");
-              
-              // 3. Obtener el link público
-              const url = uploadData.data.downloadPage;
-              
-              regVideoUrl.value = url;
-              recordStatus.textContent = "✓ Video grabado y subido exitosamente";
-              recordStatus.style.color = "#4CAF50";
-            } catch(e) {
-              recordStatus.textContent = "⚠ Error al subir: " + e.message;
-              recordStatus.style.color = "red";
-              btnRecord.disabled = false;
-              btnRecord.textContent = "Reintentar Grabación";
-              btnRecord.style.background = "#E64381";
-            }
-          };
+const adminErrorBox = document.getElementById('admin-error-msg');
 
-          recorder.start();
-          btnRecord.textContent = "🔴 Grabando (10s)...";
-          btnRecord.style.background = "red";
-          btnRecord.disabled = true;
+function showAdminError(err) {
+  console.error(err);
+  if (!adminErrorBox) return;
+  adminErrorBox.style.display = "block";
+  if (err.message?.includes("RESOURCE_EXHAUSTED") || err.code === "resource-exhausted") {
+    adminErrorBox.innerHTML = "🚨 <b>Firebase Bloqueado (Límite Excedido)</b><br>Tu base de datos alcanzó el límite gratuito. No se pueden guardar cambios. Actualiza a Blaze en la consola de Firebase o elimina el documento globalStateDev4 manualmente.";
+  } else {
+    adminErrorBox.innerText = "Error: " + err.message;
+  }
+}
 
-          let timeLeft = 10;
-          const interval = setInterval(() => {
-            timeLeft--;
-            if(timeLeft > 0) {
-              btnRecord.textContent = `🔴 Grabando (${timeLeft}s)...`;
-            } else {
-              clearInterval(interval);
-              recorder.stop();
-              btnRecord.textContent = "Procesando...";
-              btnRecord.style.background = "#77707d";
-            }
-          }, 1000);
+// ── DOCK NAVIGATION ───────────────────────────────────────────────────────────
+window.seleccionarPunto = function(portalId, targetId, ctaText, accent, glow, rgb, btnEl) {
+  currentPortalIndex = (Number(portalId) - 1 + PORTALES.length) % PORTALES.length;
+  
+  // Sync Trackpad Puck & Dots
+  const puck = document.getElementById('capsule-puck');
+  const puckIcon = document.getElementById('puck-icon');
+  const puckTitle = document.getElementById('puck-title');
+  const pData = PORTALES[currentPortalIndex];
+  if (pData && puckIcon && puckTitle) {
+    puckIcon.className = 'fa-solid ' + pData.icon + ' puck-icon';
+    puckTitle.innerText = pData.name;
+    if (puck) {
+      puck.style.background = `linear-gradient(135deg, rgba(${rgb}, 0.35) 0%, rgba(20, 15, 30, 0.88) 100%)`;
+      puck.style.boxShadow = `0 0 25px rgba(${rgb}, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.4)`;
+    }
+  }
+  document.querySelectorAll('.capsule-dot').forEach((d, idx) => {
+    if (idx === currentPortalIndex) d.classList.add('active');
+    else d.classList.remove('active');
+  });
+  window.puntoActualId = targetId;
+  window.currentPortal = portalId;
 
-        } catch (err) {
-          alert("Error accediendo a la cámara. Asegúrate de dar permisos: " + err.message);
-        }
-      };
+  // Modificar State para partículas
+  window.State.isTransitioning = true;
+  const stageEl = document.getElementById('stage-container');
+  if (stageEl) {
+    const rect = stageEl.getBoundingClientRect();
+    window.State.targetPortalCenter = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+  }
+  if (window.particleSys) window.particleSys.setColor(rgb);
+
+  // Animación Slide Right en el main (acordeón y cartas)
+  const mainContent = document.getElementById('main-content');
+  if (mainContent) {
+    mainContent.classList.remove('anim-in-slide-right');
+    mainContent.classList.add('anim-out-slide-right');
+    setTimeout(() => {
+        mainContent.classList.remove('anim-out-slide-right');
+        mainContent.classList.add('anim-in-slide-right');
+    }, 600);
+  }
+
+  setTimeout(() => {
+     window.State.isTransitioning = false;
+  }, 600);
+
+  // Colors
+  const root = document.documentElement;
+  root.style.setProperty('--theme-accent', accent);
+  root.style.setProperty('--theme-glow',   glow);
+  root.style.setProperty('--theme-rgb',    rgb);
+
+  playSlider(portalId);
+  // CTA text
+  const ctaEl = document.getElementById('heroCtaText');
+  if (ctaEl) ctaEl.innerText = ctaText;
+
+  // Dock active state
+  document.querySelectorAll('.dock-btn').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  // Switch video
+  [1,2,3].forEach(id => {
+    const v = document.getElementById('vid-p' + id);
+    if (!v) return;
+    if (id === portalId) {
+      if (v.src && !v.src.endsWith('/') && !v.src.endsWith(location.origin + '/')) {
+        document.getElementById('canvas-p' + id).classList.add('is-active');
+        v.play().catch(() => {});
+      } else {
+        const c = document.getElementById('canvas-p' + id); if(c) c.classList.remove('is-active');
+      }
+    } else {
+      const c = document.getElementById('canvas-p' + id); if(c) c.classList.remove('is-active');
+      v.pause();
+    }
+  });
+
+  // Stage pulse
+  const stage  = document.getElementById('stage-container');
+  const mascot = document.getElementById('mascot-wrapper');
+  if (stage && mascot) {
+    stage.classList.add('portal-prep'); mascot.classList.add('portal-prep');
+    setTimeout(() => { stage.classList.remove('portal-prep'); mascot.classList.remove('portal-prep'); }, 350);
+  }
+};
+
+window.irAlPuntoActual = function() {
+  document.body.classList.remove('in-showroom');
+  document.body.classList.add('portal-open');       // ← allow scroll
+  const main = document.getElementById('main-content');
+  if (!main) return;
+  main.classList.add('is-visible');
+  main.scrollTop = 0;
+
+  document.querySelectorAll('.accordion-card').forEach(c => {
+    c.style.display = 'none';
+    c.classList.remove('is-active');
+  });
+  const card = document.getElementById(window.puntoActualId);
+  if (card) {
+    card.style.display = 'block';
+    card.classList.add('is-active');
+  }
+};
+
+window.volverAlShowroom = function() {
+  document.body.classList.remove('portal-open');    // ← block scroll again
+  const main = document.getElementById('main-content');
+  if (main) main.classList.remove('is-visible');
+  setTimeout(() => {
+    document.body.classList.add('in-showroom');
+    document.querySelectorAll(".slider-text").forEach(el => el.classList.remove("active"));
+    const v = document.getElementById('vid-p' + window.currentPortal);
+    if (v && v.src && !v.src.endsWith('/')) v.play().catch(() => {});
+  }, 450);
+};
+
+// ── FIRESTORE SYNC ────────────────────────────────────────────────────────────
+onSnapshot(stateDocRef, snap => {
+  if (!snap.exists()) return;
+  const data = snap.data();
+
+  [1,2,3].forEach(id => {
+    // Transforms
+    const s = data['p' + id + '_s'] ?? 1;
+    const x = data['p' + id + '_x'] ?? 0;
+    const y = data['p' + id + '_y'] ?? 0;
+    const root = document.documentElement;
+    root.style.setProperty('--vp' + id + '-s', s);
+    root.style.setProperty('--vp' + id + '-x', x + 'px');
+    root.style.setProperty('--vp' + id + '-y', y + 'px');
+
+    // Sync sliders if admin panel is open
+    const sl_s = document.getElementById('sl-s-' + id);
+    if (sl_s) {
+      sl_s.value = s;
+      document.getElementById('val-s-' + id).innerText = Number(s).toFixed(2);
+      document.getElementById('sl-x-' + id).value = x;
+      document.getElementById('val-x-' + id).innerText = x + 'px';
+      document.getElementById('sl-y-' + id).value = y;
+      document.getElementById('val-y-' + id).innerText = y + 'px';
     }
 
-    // === FORM SUBMIT HANDLER ===
-    const regForm = document.getElementById("native-registration-form");
-    if (regForm) {
-      regForm.onsubmit = async (e) => {
-        e.preventDefault();
-        if (!document.getElementById("reg-video-url").value) {
-          alert("Por favor, completa la verificación de video de 10 segundos antes de enviar el formulario.");
-          return;
+    // Video source
+    const mp4 = data['p' + id + '_safari'];
+    const webm = data['p' + id + '_chrome'];
+    const src  = isSafari ? (mp4 || webm) : (webm || mp4);
+
+    const v = document.getElementById('vid-p' + id);
+    if (!v) return;
+
+    if (v.dataset.uploading) return; // Ignorar si está previsualizando localmente
+
+    if (src) {
+      if (v.src !== src) { 
+        const clone = v.cloneNode();
+        clone.setAttribute('crossorigin', 'anonymous');
+        clone.src = src;
+        v.parentNode.replaceChild(clone, v);
+        window.processors[id].video = clone;
+        window.processors[id].isPlaying = false;
+        window.processors[id].bindVideo();
+        clone.load();
+        if (window.currentPortal === id) {
+          document.getElementById('canvas-p' + id).classList.add('is-active');
+          clone.play().catch(() => {});
         }
-        const btn = document.getElementById("btn-submit-reg");
-        const feedback = document.getElementById("reg-feedback");
-        const status = document.getElementById("reg-upload-status");
+      } else if (window.currentPortal === id) {
+        document.getElementById('canvas-p' + id).classList.add('is-active');
+        v.play().catch(() => {});
+      }
+    } else {
+      v.removeAttribute('src'); v.load();
+      const c = document.getElementById('canvas-p' + id); if(c) c.classList.remove('is-active');
+    }
+  });
+
+  // Tutorials
+  const tuts   = data.tutorials?.length ? data.tutorials : [data.tut1, data.tut2, data.tut3];
+  const tutEl  = document.getElementById('tutoriales-list');
+  if (tutEl) {
+    const items = tuts.filter(Boolean);
+    tutEl.innerHTML = items.length
+      ? `<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;">` +
+        items.map((u, i) => `<a href="${u}" target="_blank" class="glass-panel" style="padding:12px 20px;border-radius:14px;color:white;text-decoration:none;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:8px;border-color:rgba(236,72,153,0.3);"><i class="fa-solid fa-circle-play" style="color:#EC4899"></i> Video Destacado ${i+1} ↗</a>`).join('') +
+        `</div>`
+      : '';
+  }
+  // Support / WhatsApp
+  const wa    = data.whatsapp || [];
+  const waEl  = document.getElementById('soporte-list');
+  if (waEl) {
+    const links = wa.filter(Boolean);
+    waEl.innerHTML = links.length
+      ? `<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:20px;">` +
+        links.map((l, i) => `<a href="${l}" target="_blank" style="padding:12px 20px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;text-decoration:none;border-radius:14px;font-weight:800;font-size:13px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 20px rgba(37,211,102,.3);transition:transform 0.2s;"><i class="fa-brands fa-whatsapp" style="font-size:16px;"></i> WhatsApp Asesor ${i+1} ↗</a>`).join('') +
+        `</div>`
+      : '';
+  }
+
+  // Fill admin inputs
+  if (tuts[0]) { const el = document.getElementById('admin-tut-1'); if(el) el.value = tuts[0]; }
+  if (tuts[1]) { const el = document.getElementById('admin-tut-2'); if(el) el.value = tuts[1]; }
+  if (tuts[2]) { const el = document.getElementById('admin-tut-3'); if(el) el.value = tuts[2]; }
+  if (wa[0])   { const el = document.getElementById('admin-wa-1');  if(el) el.value = wa[0];   }
+  if (wa[1])   { const el = document.getElementById('admin-wa-2');  if(el) el.value = wa[1];   }
+  if (wa[2])   { const el = document.getElementById('admin-wa-3');  if(el) el.value = wa[2];   }
+
+}, err => { console.warn("Firestore:", err.message); });
+
+// ── ADMIN: BUILD PORTAL CONTROLS ─────────────────────────────────────────────
+const portalsContainer = document.getElementById('admin-portals-config');
+if (portalsContainer) {
+  const portals = [
+    { id: 1, name: 'Registro',     color: '#F18D79' },
+    { id: 2, name: 'Tutoriales',   color: '#E64381' },
+    { id: 3, name: 'Soporte',      color: '#743F9B' }
+  ];
+  portalsContainer.innerHTML = portals.map(p => `
+    <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;margin-bottom:20px;">
+      <h4 style="color:${p.color};font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;">Portal ${p.id} — ${p.name}</h4>
+
+      <label style="font-size:11px;color:#b9b0ba;display:block;margin-bottom:6px;">Video Safari / iOS (.mp4 con HEVC + canal alfa)</label>
+      <label style="display:block;padding:12px 16px;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.2);border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;text-align:center;margin-bottom:12px;" id="lbl-safari-${p.id}">
+        📂 Subir MP4 (Safari)
+        <input type="file" style="display:none;" accept="video/mp4" onchange="uploadVideo(this,'p${p.id}_safari','mp4','lbl-safari-${p.id}')" />
+      </label>
+
+      <label style="font-size:11px;color:#b9b0ba;display:block;margin-bottom:6px;">Video Chrome / Android (.webm VP9 con canal alfa)</label>
+      <label style="display:block;padding:12px 16px;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.2);border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;text-align:center;margin-bottom:16px;" id="lbl-chrome-${p.id}">
+        📂 Subir WebM (Chrome)
+        <input type="file" style="display:none;" accept="video/webm" onchange="uploadVideo(this,'p${p.id}_chrome','webm','lbl-chrome-${p.id}')" />
+      </label>
+
+      <button onclick="deleteVideo(${p.id})" style="width:100%;padding:10px;margin-bottom:16px;background:rgba(255,100,100,.1);color:#ff6464;border:1px solid rgba(255,100,100,.2);border-radius:8px;cursor:pointer;font-size:12px;font-weight:800;">🗑️ Eliminar Video de este Portal</button>
+      <p style="font-size:11px;color:#b9b0ba;margin-bottom:8px;">Ajuste de posición y tamaño</p>
+      <div class="slider-row">
+        <span>Escala</span>
+        <input id="sl-s-${p.id}" type="range" min="0.3" max="3" step="0.05" value="1" oninput="liveTransform(${p.id})" />
+        <span id="val-s-${p.id}">1.00</span>
+      </div>
+      <div class="slider-row">
+        <span>Pos X</span>
+        <input id="sl-x-${p.id}" type="range" min="-200" max="200" step="5" value="0" oninput="liveTransform(${p.id})" />
+        <span id="val-x-${p.id}">0px</span>
+      </div>
+      <div class="slider-row">
+        <span>Pos Y</span>
+        <input id="sl-y-${p.id}" type="range" min="-200" max="200" step="5" value="0" oninput="liveTransform(${p.id})" />
+        <span id="val-y-${p.id}">0px</span>
+      </div>
+      <button onclick="saveTransform(${p.id})" style="width:100%;padding:10px;margin-top:6px;background:rgba(255,255,255,.1);color:white;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:800;">💾 Guardar Posición</button>
+    </div>
+  `).join('');
+}
+
+// ── ADMIN: DELETE VIDEO ──────────────────────────────────────────────────────
+window.deleteVideo = async id => {
+  if (!confirm('¿Seguro que deseas borrar el video de este portal?')) return;
+  try {
+    await setDoc(stateDocRef, {
+      ['p' + id + '_safari']: null,
+      ['p' + id + '_chrome']: null
+    }, { merge: true });
+    alert('Video borrado de la base de datos.');
+    
+    // Restaurar los botones
+    const lblSafari = document.getElementById('lbl-safari-' + id);
+    if(lblSafari) {
+      lblSafari.innerHTML = `📂 Subir MP4 (Safari)<input type="file" style="display:none;" accept="video/mp4" onchange="uploadVideo(this,'p${id}_safari','mp4','lbl-safari-${id}')" />`;
+      lblSafari.style.color = '';
+    }
+    const lblChrome = document.getElementById('lbl-chrome-' + id);
+    if(lblChrome) {
+      lblChrome.innerHTML = `📂 Subir WebM (Chrome)<input type="file" style="display:none;" accept="video/webm" onchange="uploadVideo(this,'p${id}_chrome','webm','lbl-chrome-${id}')" />`;
+      lblChrome.style.color = '';
+    }
+  } catch(e) {
+    showAdminError(e);
+  }
+};
+
+// ── ADMIN: LIVE TRANSFORM ────────────────────────────────────────────────────
+window.liveTransform = id => {
+  // Forzar cambio al portal actual si no lo estamos viendo
+  if (window.currentPortal !== id) {
+    window.seleccionarPunto(Number(id), window.puntoActualId || 'card-registro', 'Editando Posición...', '#FFF', '#FFF', '255,255,255');
+  }
+  const s = document.getElementById('sl-s-' + id).value;
+  const x = document.getElementById('sl-x-' + id).value;
+  const y = document.getElementById('sl-y-' + id).value;
+  document.getElementById('val-s-' + id).innerText = Number(s).toFixed(2);
+  document.getElementById('val-x-' + id).innerText = x + 'px';
+  document.getElementById('val-y-' + id).innerText = y + 'px';
+  const root = document.documentElement;
+  root.style.setProperty('--vp' + id + '-s', s);
+  root.style.setProperty('--vp' + id + '-x', x + 'px');
+  root.style.setProperty('--vp' + id + '-y', y + 'px');
+};
+
+// ── ADMIN: SAVE TRANSFORM ────────────────────────────────────────────────────
+window.saveTransform = async id => {
+  const s = parseFloat(document.getElementById('sl-s-' + id).value);
+  const x = parseInt(document.getElementById('sl-x-' + id).value);
+  const y = parseInt(document.getElementById('sl-y-' + id).value);
+  try {
+    await setDoc(stateDocRef, { ['p'+id+'_s']: s, ['p'+id+'_x']: x, ['p'+id+'_y']: y }, { merge: true });
+    alert('Posición del Portal ' + id + ' guardada ✅');
+  } catch(err) { showAdminError(err); }
+};
+
+// ── ADMIN: UPLOAD VIDEO (Cloudinary) ─────────────────────────────────────────
+window.uploadVideo = async (input, fieldName, ext, lblId) => {
+  const file = input.files[0];
+  if (!file) return;
+
+  // -- 1. PREVISUALIZACIÓN INMEDIATA LOCAL (URL.createObjectURL) --
+  const portalId = fieldName.charAt(1); // ej. p1_chrome -> '1'
+  const videoURL = URL.createObjectURL(file);
+  const v = document.getElementById('vid-p' + portalId);
+  if (v) {
+    const clone = v.cloneNode();
+    clone.removeAttribute('crossorigin');
+    clone.dataset.uploading = 'true';
+    clone.src = videoURL;
+    v.parentNode.replaceChild(clone, v);
+    window.processors[portalId].video = clone;
+    window.processors[portalId].isPlaying = false;
+    window.processors[portalId].bindVideo();
+    clone.load();
+    clone.play().catch(e => console.warn(e));
+    // Forzamos que se muestre este portal para probar
+    window.seleccionarPunto(Number(portalId), window.puntoActualId || 'card-registro', 'Previsualizando...', '#FFF', '#FFF', '255,255,255');
+  }
+
+  const lbl = document.getElementById(lblId);
+
+  if (file.size > 200 * 1024 * 1024) { alert('Video muy pesado. Máximo 200 MB.'); return; }
+  if (ext === 'mp4'  && !file.type.includes('mp4'))  { alert('Sube un archivo .mp4 válido.'); return; }
+  if (ext === 'webm' && !file.type.includes('webm')) { alert('Sube un archivo .webm válido.'); return; }
+
+  if (lbl) { lbl.innerText = '⏳ Subiendo a Cloudinary...'; lbl.style.color = 'var(--coral)'; }
+
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', 'STARMAKER');
+    const res  = await fetch('https://api.cloudinary.com/v1_1/k6x0ampi/video/upload', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!data.secure_url) throw new Error(data.error?.message || 'Error en Cloudinary');
+    await setDoc(stateDocRef, { [fieldName]: data.secure_url }, { merge: true });
+    if (lbl) { lbl.innerText = '✅ ' + file.name; lbl.style.color = '#4ade80'; }
+    delete v.dataset.uploading;
+  } catch(err) {
+    showAdminError(err);
+    if (lbl) { lbl.innerText = '❌ Reintentar'; lbl.style.color = 'var(--pink)'; }
+    if(v) delete v.dataset.uploading;
+  }
+};
+
+
+// ── PARTICLE ENGINE (REDUCIDO 20% Y REACTIVO) ──────────────────────────────
+window.State = { mouse: { currentX: 0.5, currentY: 0.5 }, viewport: { w: window.innerWidth, h: window.innerHeight }, isTransitioning: false, targetPortalCenter: null };
+
+class ParticleEngine {
+    constructor() {
+        this.cBg = document.getElementById('ctx-background');
+        this.cFg = document.getElementById('ctx-foreground');
+        if(!this.cBg || !this.cFg) return;
+        this.ctxBg = this.cBg.getContext('2d', { alpha: true });
+        this.ctxFg = this.cFg.getContext('2d', { alpha: true });
+        this.particles = [];
+        this.currentColor = '230, 67, 129'; // Default pink
         
-        btn.disabled = true;
-        btn.textContent = "Subiendo archivos y enviando...";
-        feedback.style.display = "none";
-        status.textContent = "";
-
-        try {
-          const fileInput = document.getElementById("reg-id-photos");
-          const files = fileInput.files;
-          const photoUrls = [];
-
-          // Upload files to GoFile with user's token
-          for(let i=0; i < Math.min(files.length, 5); i++) {
-            const file = files[i];
-            if (file.size > 50 * 1024 * 1024) throw new Error("Un archivo excede los 50MB"); 
-            status.textContent = `Subiendo foto ${i+1} de ${Math.min(files.length, 5)} a tu cuenta segura...`;
-            
-            
-            const buffer = await file.arrayBuffer();
-            const base64 = btoa(new Uint8Array(buffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
-            const ext = file.name.split('.').pop() || 'jpg';
-            const uploadRes = await fetch('/api/upload-file', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fileBase64: base64, ext })
+        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('pointermove', (e) => {
+            window.State.mouse.currentX = e.clientX / window.State.viewport.w;
+        });
+        
+        this.resize();
+        this.spawnParticles();
+        requestAnimationFrame(() => this.render());
+    }
+    resize() {
+        window.State.viewport.w = window.innerWidth;
+        window.State.viewport.h = window.innerHeight;
+        const d = window.devicePixelRatio || 1, w = window.State.viewport.w, h = window.State.viewport.h;
+        this.cBg.width = w * d; this.cBg.height = h * d;
+        this.cFg.width = w * d; this.cFg.height = h * d;
+        this.ctxBg.scale(d, d); this.ctxFg.scale(d, d);
+    }
+    setColor(rgbString) { this.currentColor = rgbString; }
+    spawnParticles() {
+        this.particles = [];
+        const c = window.innerWidth < 768 ? 12 : 24; // Reducido al 20% (Móvil: 12, PC: 24)
+        for(let i=0; i<c; i++) {
+            this.particles.push({
+                x: Math.random() * window.State.viewport.w, y: Math.random() * window.State.viewport.h,
+                size: Math.random() * 2 + 0.5, speed: Math.random() * 0.8 + 0.2,
+                isFg: Math.random() > 0.65, opacity: Math.random() * 0.6 + 0.2,
+                angle: Math.random() * Math.PI * 2, wobbleSpd: Math.random() * 0.02 + 0.01, wobbleDist: Math.random() * 1.5 + 0.5
             });
-            const data = await uploadRes.json();
-            if (!data.url) throw new Error("Error subiendo foto");
-            photoUrls.push(data.url);
-
-          }
-
-          // === ENVÍO DIRECTO A EXCEL ONLINE (VÍA NUESTRO BACKEND) ===
-          status.textContent = "Guardando registro de forma segura...";
-          
-          // Construimos el objeto JSON estructurado con todos los campos
-          const registroPayload = {
-            nombre: document.getElementById("reg-name").value,
-            email: document.getElementById("reg-email").value,
-            telefono: document.getElementById("reg-phone").value,
-            agencia: document.getElementById("reg-agency").value,
-            tuId: document.getElementById("reg-id").value,
-            agentId: document.getElementById("reg-agent-id").value,
-            nacionalidad: document.getElementById("reg-nationality").value,
-            ciudad: document.getElementById("reg-city").value,
-            talento: document.getElementById("reg-talent").value,
-            genero: document.getElementById("reg-gender").value,
-            plataforma: document.getElementById("reg-platform").value,
-            videoUrl: document.getElementById("reg-video-url").value,
-            fotosUrl: photoUrls.join(" | ") // Separamos los links por un |
-          };
-
-          // Llamamos a nuestro propio backend en Vercel (totalmente invisible y sin CORS)
-          const dbResponse = await fetch('/api/submit-excel', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(registroPayload)
-          });
-
-          const dbResult = await dbResponse.json();
-
-          if (!dbResponse.ok) {
-            throw new Error(dbResult.error || "Fallo de conexión con la base de datos.");
-          }
-          
-          // Imprimimos confirmación en consola para debug
-          console.log("¡Éxito! Registro guardado en la nube:", registroPayload);
-          
-          feedback.textContent = "¡Registro completado y guardado con éxito!";
-          feedback.style.display = "block";
-          regForm.reset();
-          document.getElementById("record-preview").style.display = "none";
-          document.getElementById("record-status").textContent = "";
-          status.textContent = "";
-        } catch(err) {
-          alert("Error al enviar el registro: " + err.message);
-          feedback.textContent = "Ocurrió un error. Inténtalo nuevamente.";
-          feedback.style.color = "red";
-          feedback.style.display = "block";
-        } finally {
-          btn.disabled = false;
-          btn.textContent = "Enviar Postulación";
         }
-      };
     }
-
-
-    
-          alert("¡Video de Registro actualizado con éxito!");
-        } catch(err) {
-          alert("Error al subir Video: " + err.message);
-        } finally {
-          location.reload();
-        }
-      });
-    }
-
-    
-            alert("Tutorial " + (index+1) + " subido con éxito!");
-          } catch(err) {
-            alert("Error: " + err.message);
-          } finally {
-            location.reload();
-          }
+    render() {
+        this.ctxBg.clearRect(0, 0, window.State.viewport.w, window.State.viewport.h);
+        this.ctxFg.clearRect(0, 0, window.State.viewport.w, window.State.viewport.h);
+        
+        const wind = (window.State.mouse.currentX - 0.5) * 6;
+        
+        this.particles.forEach(p => {
+            if (window.State.isTransitioning && window.State.targetPortalCenter) {
+                const dx = window.State.targetPortalCenter.x - p.x;
+                const dy = window.State.targetPortalCenter.y - p.y;
+                p.x += dx * 0.03 * (p.isFg ? 1.5 : 0.8);
+                p.y += dy * 0.03 * (p.isFg ? 1.5 : 0.8);
+                p.speed *= 1.05; 
+            } else {
+                p.y -= p.speed * 0.4;
+                p.x += Math.sin(p.angle) * p.wobbleDist + wind * (p.isFg ? 1 : 0.3);
+            }
+            p.angle += p.wobbleSpd;
+            if (p.y < -20) p.y = window.State.viewport.h + 20;
+            if (p.x < -20) p.x = window.State.viewport.w + 20;
+            if (p.x > window.State.viewport.w + 20) p.x = -20;
+            
+            const ctx = p.isFg ? this.ctxFg : this.ctxBg;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.shadowBlur = p.isFg ? 14 : 6;
+            ctx.shadowColor = `rgba(${this.currentColor}, 0.9)`;
+            ctx.fillStyle = p.isFg ? `rgba(255, 255, 255, ${p.opacity})` : `rgba(${this.currentColor}, ${p.opacity * 0.7})`;
+            ctx.fill();
         });
-      }
-    });
-
-    // Todos los elementos de texto que queremos que sean editables
-    const editableElements = document.querySelectorAll('.hero h1, .hero p, .accordion-header h3, .platform-item span, .footer-content p, .highlight');
-    
-    if (btnModoEditor) {
-      btnModoEditor.addEventListener("click", () => {
-        // Cerrar panel admin y abrir modo editor
-        document.getElementById("admin-modal").classList.remove("is-open");
-        editorToolbar.style.display = "flex";
-        document.body.classList.add("editor-active");
-        
-        // Hacer textos editables
-        editableElements.forEach(el => {
-          el.contentEditable = "true";
-          // Guardar su valor original por si queremos deshacer
-          if(!el.hasAttribute("data-original")) {
-            el.setAttribute("data-original", el.innerHTML);
-          }
-        });
-      });
+        requestAnimationFrame(() => this.render());
     }
+}
+window.particleSys = new ParticleEngine();
 
-    if (editorExitBtn) {
-      editorExitBtn.addEventListener("click", () => {
-        editorToolbar.style.display = "none";
-        document.body.classList.remove("editor-active");
-        editableElements.forEach(el => el.contentEditable = "false");
-      });
+
+// ── CHROMA KEY PROCESSOR (CANVAS) ─────────────────────────────────────────────
+class VideoProcessor {
+    constructor(videoId, canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d', { willReadFrequently: true, alpha: true });
+        this.isPlaying = false;
+        this.video = document.getElementById(videoId);
+        this.lastTime = -1;
+        if (!this.video) return;
+        
+        this.bindVideo();
     }
     
-    // Función genérica para subir a GoFile (Directo desde el navegador, sin problemas de CORS)
-    
-    async function uploadToBlob(file) {
-      const newBlob = await upload(file.name, file, {
-        access: 'public',
-        handleUploadUrl: '/api/upload',
-      });
-      return newBlob.url;
-    }
-
-    async function uploadToGoFile(file) {
-      const srvRes = await fetch("https://api.gofile.io/servers");
-      const srvData = await srvRes.json();
-      const server = srvData.data.servers[0].name;
-
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("token", "LBRXKRTeYjMsKssLNP2ndcCb6SUi3rBP");
-
-      const res = await fetch(`https://${server}.gofile.io/contents/uploadfile`, {
-        method: "POST",
-        body: formData
-      });
-      
-      const uploadData = await res.json();
-      if (uploadData.status !== "ok") throw new Error("Error al subir a GoFile");
-      
-      // GoFile devuelve un downloadPage. Intentamos extraer el link directo si la API lo provee, 
-      // de lo contrario usamos la página de descarga.
-      return uploadData.data.downloadPage;
-    }
-
-    if (uploadPngInput) {
-      uploadPngInput.addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
-        
-        const oldLabel = uploadPngInput.parentElement.innerHTML;
-        uploadPngInput.parentElement.innerHTML = "⏳ SUBIENDO...";
-        
-        try {
-          const url = await uploadToBlob(file);
-          await setDoc(stateDocRef, { bg1: url, bg2: url }, { merge: true });
-          alert("¡Fondo PNG actualizado con éxito!");
-        } catch(err) {
-          alert("Error al subir PNG: " + err.message);
-        } finally {
-          location.reload(); 
-        }
-      });
-    }
-
-    if (uploadVideoInput) {
-      uploadVideoInput.addEventListener("change", async (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
-        
-        const oldLabel = uploadVideoInput.parentElement.innerHTML;
-        uploadVideoInput.parentElement.innerHTML = "⏳ SUBIENDO...";
-        
-        try {
-          const url = await uploadToBlob(file);
-          await setDoc(stateDocRef, { videoUrl: url }, { merge: true });
-          alert("¡Video Holográfico actualizado con éxito!");
-        } catch(err) {
-          alert("Error al subir Video: " + err.message);
-        } finally {
-          location.reload();
-        }
-      });
-    }
-
-    if (editorSaveBtn) {
-      editorSaveBtn.addEventListener("click", async () => {
-        editorSaveBtn.textContent = "⏳ GUARDANDO...";
-        const textosGuardados = {};
-        editableElements.forEach((el, index) => {
-          textosGuardados['texto_' + index] = el.innerHTML;
+    bindVideo() {
+        this.video.addEventListener('loadedmetadata', () => {
+            // REDUCCIÓN DE ESCALA PARA SUPER RENDIMIENTO (maxW 360 en lugar de 512)
+            // Esto reduce la cantidad de píxeles a procesar a la mitad, eliminando el lag.
+            const maxW = 360; 
+            const ratio = this.video.videoWidth / this.video.videoHeight || 1;
+            this.canvas.width = Math.min(this.video.videoWidth, maxW);
+            this.canvas.height = this.canvas.width / ratio;
         });
 
-        try {
-          await setDoc(stateDocRef, { textos: textosGuardados }, { merge: true });
-          editorSaveBtn.textContent = "✓ GUARDADO";
-          setTimeout(() => editorSaveBtn.textContent = "💾 GUARDAR TEXTOS", 2000);
-        } catch(e) {
-          alert("Error al guardar: " + e.message);
-          editorSaveBtn.textContent = "💾 GUARDAR TEXTOS";
-        }
-      });
+        this.video.addEventListener('play', () => { 
+            if(!this.isPlaying) {
+                this.isPlaying = true; 
+                this.processFrame(); 
+            }
+        });
+        this.video.addEventListener('pause', () => this.isPlaying = false);
+        this.video.addEventListener('ended', () => this.isPlaying = false);
     }
-
-
-    // === DATABASE DOWNLOAD HANDLER ===
-    const btnDownload = document.getElementById("btn-download-db");
-    if (btnDownload) {
-      btnDownload.onclick = async () => {
-        btnDownload.disabled = true;
-        btnDownload.textContent = "Generando CSV...";
-        try {
-          const snapshot = await getDocs(collection(db, "registros_form"));
-          if (snapshot.empty) {
-            alert("No hay registros en la base de datos.");
+    
+    processFrame() {
+        if (!this.isPlaying || this.video.paused || this.video.ended) return;
+        
+        // OPTIMIZACIÓN 1: No procesar el mismo frame 2 veces si la pantalla va a 60/120hz
+        if (this.video.currentTime === this.lastTime) {
+            requestAnimationFrame(() => this.processFrame());
             return;
-          }
+        }
+        this.lastTime = this.video.currentTime;
 
-          let csv = "Fecha,Correo,Agencia,Tu ID,ID Agente,Nombre Completo,Teléfono,Nacionalidad,Ciudad,Fotos(URLs),Talento,Género,Plataforma,Video Verificación\n";
-          snapshot.forEach(docSnap => {
-            const d = docSnap.data();
-            const fotosStr = (d.photos || []).join(" ; ");
-            const row = [
-              d.timestamp || "", d.email || "", d.agency || "", d.tuId || "", d.agentId || "", 
-              d.fullName || "", d.phone || "", d.nationality || "", d.city || "", 
-              fotosStr, d.talent || "", d.gender || "", d.platform || "", d.verificationVideo || ""
-            ].map(val => `"${String(val).replace(/"/g, '""')}"`);
-            csv += row.join(",") + "\n";
-          });
+        this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+        
+        try {
+            const frameData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+            const data = frameData.data;
+            const l = data.length;
+            
+            // OPTIMIZACIÓN 2: Loop desenrollado y matemáticas rápidas nativas
+            for (let i = 0; i < l; i += 4) {
+                let r = data[i];
+                let g = data[i + 1];
+                let b = data[i + 2];
+                
+                // Filtro estricto para proteger el ojo: solo blancos muy puros (fondo)
+                if (r > 235 && g > 235 && b > 235) {
+                    let max = r > g ? (r > b ? r : b) : (g > b ? g : b);
+                    let min = r < g ? (r < b ? r : b) : (g < b ? g : b);
+                    
+                    if ((max - min) < 15) { // Muy Neutral
+                        if (min > 245) {
+                            data[i + 3] = 0; // Transparencia total
+                        } else {
+                            // Feathering de 235 a 245
+                            let p = (min - 235) / 10; 
+                            data[i + 3] = 255 * (1 - p); 
+                        }
+                    }
+                }
+            }
+            this.ctx.putImageData(frameData, 0, 0);
+        } catch(e) { }
+        
+        requestAnimationFrame(() => this.processFrame());
+    }
+}
+window.processors = {
+    1: new VideoProcessor('vid-p1', 'canvas-p1'),
+    2: new VideoProcessor('vid-p2', 'canvas-p2'),
+    3: new VideoProcessor('vid-p3', 'canvas-p3')
+};
 
-          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-          const link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.setAttribute("download", "Starmaker_Registros.csv");
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+// ── ADMIN: SAVE LINKS ─────────────────────────────────────────────────────────
+document.getElementById('btn-save-links').onclick = async () => {
+  const tuts = [1,2,3].map(i => document.getElementById('admin-tut-' + i)?.value || '');
+  const wa   = [1,2,3].map(i => document.getElementById('admin-wa-'  + i)?.value || '');
+  try {
+    await setDoc(stateDocRef, { tutorials: tuts, tut1: tuts[0], tut2: tuts[1], tut3: tuts[2], whatsapp: wa }, { merge: true });
+    alert('¡Enlaces guardados! ✅');
+  } catch(err) { showAdminError(err); }
+};
+
+// ── ADMIN LOGIN & WIDGET LOGIC ────────────────────────────────────────────────
+document.getElementById('btn-open-admin').onclick  = () => document.getElementById('login-modal').classList.add('is-open');
+document.getElementById('btn-login-cancel').onclick = () => document.getElementById('login-modal').classList.remove('is-open');
+
+document.getElementById('btn-login-submit').onclick = () => {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value.trim();
+  if (u.toUpperCase() === 'SANTI' && p === '1234') {
+    document.getElementById('login-modal').classList.remove('is-open');
+    document.getElementById('admin-widget').classList.add('is-open');
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+  } else {
+    alert('Credenciales incorrectas');
+  }
+};
+
+document.getElementById('btn-close-admin').onclick = () => document.getElementById('admin-widget').classList.remove('is-open');
+
+// Draggable Widget Logic
+const widget = document.getElementById('admin-widget');
+const header = document.getElementById('admin-widget-header');
+let isDragging = false, startX, startY, startLeft, startTop;
+
+header.addEventListener('mousedown', (e) => {
+  if (e.target.id === 'btn-close-admin') return;
+  isDragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  const rect = widget.getBoundingClientRect();
+  startLeft = rect.left;
+  startTop = rect.top;
+  document.body.style.userSelect = 'none';
+});
+window.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+  widget.style.left = (startLeft + dx) + 'px';
+  widget.style.top = (startTop + dy) + 'px';
+  widget.style.right = 'auto'; // Disable right positioning so left works
+});
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  document.body.style.userSelect = '';
+});
+
+// Touch support for mobile dragging
+header.addEventListener('touchstart', (e) => {
+  if (e.target.id === 'btn-close-admin') return;
+  isDragging = true;
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+  const rect = widget.getBoundingClientRect();
+  startLeft = rect.left;
+  startTop = rect.top;
+}, {passive: true});
+window.addEventListener('touchmove', (e) => {
+  if (!isDragging) return;
+  const dx = e.touches[0].clientX - startX;
+  const dy = e.touches[0].clientY - startY;
+  widget.style.left = (startLeft + dx) + 'px';
+  widget.style.top = (startTop + dy) + 'px';
+  widget.style.right = 'auto';
+}, {passive: true});
+window.addEventListener('touchend', () => {
+  isDragging = false;
+});
+
+
+// ── ADMIN: DOWNLOAD CSV ───────────────────────────────────────────────────────
+document.getElementById('btn-download-db').onclick = async () => {
+  try {
+    const snap = await getDocs(collection(db, 'registros_form'));
+    let csv = "Fecha,Nombre,Email,Teléfono,Nacionalidad,Ciudad,Talento,ID,AgentID,Agencia,Plataforma,Video,Fotos\n";
+    const safe = s => `"${(s||'').toString().replace(/"/g,'""')}"`;
+    snap.forEach(d => {
+      const c = d.data();
+      csv += [safe(c.createdAt),safe(c.nombre),safe(c.email),safe(c.telefono),safe(c.nacionalidad),safe(c.ciudad),safe(c.talento),safe(c.tuId),safe(c.agentId),safe(c.agencia),safe(c.plataforma),safe(c.videoUrl),safe(c.fotosUrl)].join(',') + '\n';
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+    a.download = 'StarMaker_DB.csv'; a.click();
+  } catch(err) { showAdminError(err); }
+};
+
+// ── VIDEO RECORDER (10s) ──────────────────────────────────────────────────────
+const btnRecord    = document.getElementById('btn-record-video');
+const recordPrev   = document.getElementById('record-preview');
+const recordStatus = document.getElementById('record-status');
+const regVideoUrl  = document.getElementById('reg-video-url');
+
+if (btnRecord) {
+  btnRecord.onclick = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 480 }, height: { ideal: 640 }, frameRate: { ideal: 15 } },
+        audio: true
+      });
+      recordPrev.srcObject = stream;
+      recordPrev.style.display = 'block';
+      recordPrev.muted = true;
+      recordPrev.play();
+
+      const opts = {};
+      if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) opts.mimeType = 'video/webm;codecs=vp9';
+      else if (MediaRecorder.isTypeSupported('video/webm'))       opts.mimeType = 'video/webm';
+      else if (MediaRecorder.isTypeSupported('video/mp4'))        opts.mimeType = 'video/mp4';
+      opts.videoBitsPerSecond = 250000;
+
+      const recorder = new MediaRecorder(stream, opts);
+      const chunks   = [];
+      recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+      recorder.onstop = async () => {
+        stream.getTracks().forEach(t => t.stop());
+        recordPrev.style.display = 'none';
+        recordStatus.textContent = 'Subiendo video seguro...';
+        btnRecord.disabled = true;
+
+        const blob = new Blob(chunks, { type: recorder.mimeType || 'video/webm' });
+        const ext  = (recorder.mimeType || '').includes('mp4') ? 'mp4' : 'webm';
+        const fd   = new FormData();
+        fd.append('file', blob, 'verificacion.' + ext);
+        fd.append('upload_preset', 'STARMAKER');
+
+        try {
+          const res  = await fetch('https://api.cloudinary.com/v1_1/k6x0ampi/video/upload', { method: 'POST', body: fd });
+          const data = await res.json();
+          if (!data.secure_url) throw new Error('Fallo Cloudinary');
+          regVideoUrl.value = data.secure_url;
+          recordStatus.textContent = '✅ Video listo.';
         } catch(err) {
-          alert("Error descargando BD: " + err.message);
-        } finally {
-          btnDownload.disabled = false;
-          btnDownload.textContent = "Descargar DATABASE (.CSV)";
+          recordStatus.textContent = '❌ Error al subir. Intenta de nuevo.';
+          btnRecord.disabled = false;
         }
       };
+
+      recorder.start();
+      btnRecord.textContent = '🔴 Grabando... (10s)';
+      setTimeout(() => { if (recorder.state === 'recording') recorder.stop(); }, 10000);
+    } catch(err) { alert('Error con la cámara: ' + err.message); }
+  };
+}
+
+// ── REGISTRATION FORM ─────────────────────────────────────────────────────────
+const regForm = document.getElementById('native-registration-form');
+if (regForm) {
+  regForm.onsubmit = async e => {
+    e.preventDefault();
+
+    const btn      = document.getElementById('btn-submit-reg');
+    const feedback = document.getElementById('reg-feedback');
+    const status   = document.getElementById('reg-upload-status');
+    const videoUrl = document.getElementById('reg-video-url').value;
+
+    // Validación manual clara
+    const fileInput = document.getElementById('reg-id-photos');
+    if (!fileInput.files || fileInput.files.length === 0) {
+      status.textContent = '⚠️ Por favor sube al menos una foto de tu identificación.';
+      fileInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
     }
+    if (!videoUrl) {
+      status.textContent = '⚠️ Necesitas grabar tu video de verificación de 10 segundos antes de enviar.';
+      document.getElementById('btn-record-video').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Subiendo archivos...';
+    feedback.style.display = 'none';
+    status.textContent = '';
+
+    try {
+      // Upload ID photos to Cloudinary
+      const files     = Array.from(fileInput.files).slice(0, 5);
+      const photoUrls = [];
+
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].size > 50 * 1024 * 1024) throw new Error(`La foto ${i+1} excede 50 MB`);
+        status.textContent = `Subiendo foto ${i+1} de ${files.length}...`;
+        const fd = new FormData();
+        fd.append('file', files[i]);
+        fd.append('upload_preset', 'STARMAKER');
+        const res  = await fetch('https://api.cloudinary.com/v1_1/k6x0ampi/auto/upload', { method: 'POST', body: fd });
+        const data = await res.json();
+        if (!data.secure_url) throw new Error(`Error subiendo foto ${i+1}`);
+        photoUrls.push(data.secure_url);
+      }
+
+      status.textContent = 'Guardando en la base de datos...';
+
+      const payload = {
+        nombre:       document.getElementById('reg-name').value.trim(),
+        email:        document.getElementById('reg-email').value.trim(),
+        telefono:     document.getElementById('reg-phone').value.trim(),
+        agencia:      document.getElementById('reg-agency').value.trim(),
+        tuId:         document.getElementById('reg-id').value.trim(),
+        agentId:      document.getElementById('reg-agent-id').value.trim(),
+        nacionalidad: document.getElementById('reg-nationality').value.trim(),
+        ciudad:       document.getElementById('reg-city').value.trim(),
+        talento:      document.getElementById('reg-talent').value.trim(),
+        genero:       document.getElementById('reg-gender').value,
+        plataforma:   document.getElementById('reg-platform').value.trim(),
+        videoUrl,
+        fotosUrl: photoUrls.join(' | '),
+        createdAt: new Date().toISOString()
+      };
+
+      // 1. Send to Excel via Power Automate webhook (CRITICAL)
+      status.textContent = 'Enviando a Excel...';
+      const sheetRes = await fetch('/api/submit-excel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!sheetRes.ok) {
+        const errData = await sheetRes.json().catch(() => ({}));
+        throw new Error(errData.error || `Error en servidor Excel: ${sheetRes.status}`);
+      }
+
+      // 2. Save to Firestore (Backup - Non critical)
+      try {
+        status.textContent = 'Guardando copia de seguridad...';
+        await addDoc(collection(db, 'registros_form'), payload);
+      } catch(fbErr) {
+        console.warn("No se pudo guardar en Firestore (quizás límite excedido), pero el Excel sí se guardó:", fbErr);
+        // Ignoramos el error para que la interfaz muestre éxito, ya que Excel (lo principal) funcionó
+      }
+
+      // SUCCESS
+      status.textContent = '';
+      feedback.textContent = '¡✅ POSTULACIÓN ENVIADA CON ÉXITO! Nos pondremos en contacto contigo.';
+      feedback.style.display = 'block';
+      regForm.reset();
+      
+      // Reset video hidden field and status
+      document.getElementById('reg-video-url').value = '';
+      document.getElementById('record-status').textContent = '';
+      
+      // Reset record button
+      const btnRecord = document.getElementById('btn-record-video');
+      if (btnRecord) {
+        btnRecord.disabled = false;
+        btnRecord.textContent = '📹 Grabar Video (10s)';
+      }
+      
+      setTimeout(() => { 
+        window.volverAlShowroom(); 
+        
+        // Esconder el mensaje de éxito y restaurar el botón de envío 
+        // DESPUÉS de que la tarjeta se haya escondido (500ms de transición)
+        setTimeout(() => {
+          feedback.style.display = 'none';
+          btn.disabled = false;
+          btn.textContent = 'Enviar Postulación →';
+        }, 500);
+        
+      }, 4000);
+
+    } catch(err) {
+      status.textContent = '❌ Error: ' + err.message;
+      btn.disabled = false;
+      btn.textContent = 'Enviar Postulación →';
+    }
+  };
+}
+  
+// ── OPTIMIZED 3D TILT PHYSICS (ZERO LAG / 120FPS) ──────────────────────────
+function initTiltPhysics() {
+  const cards = document.querySelectorAll('.tilt-card');
+  cards.forEach(card => {
+    let rect = null;
+    let rafId = null;
+
+    card.addEventListener('mouseenter', () => {
+      rect = card.getBoundingClientRect();
+    });
+
+    card.addEventListener('mousemove', e => {
+      if (!rect) rect = card.getBoundingClientRect();
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -7;
+        const rotateY = ((x - centerX) / centerX) * 7;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+    });
+
+    card.addEventListener('mouseleave', () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      rect = null;
+    });
+  });
+}
+
+// ── INTERACTIVE SUPPORT CHAT ENGINE ─────────────────────────────────────────
+window.enviarMensajeChat = function(e) {
+  if (e) e.preventDefault();
+  const input = document.getElementById('chat-input');
+  const chatMessages = document.getElementById('chat-messages');
+  if (!input || !chatMessages) return;
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Append user message
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg chat-user';
+  userDiv.innerHTML = `
+    <div class="chat-avatar"><i class="fa-solid fa-user"></i></div>
+    <div class="chat-bubble user-bubble">${text}</div>
+  `;
+  chatMessages.appendChild(userDiv);
+  input.value = '';
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // Typing indicator
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'chat-msg chat-bot';
+  typingDiv.id = 'bot-typing-indicator';
+  typingDiv.innerHTML = `
+    <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
+    <div class="chat-bubble bot-bubble" style="color:#9ca3af;font-style:italic;">
+      <i class="fa-solid fa-circle-notch fa-spin"></i> Escribiendo...
+    </div>
+  `;
+  chatMessages.appendChild(typingDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  // Bot response with smart knowledge
+  setTimeout(() => {
+    const indicator = document.getElementById('bot-typing-indicator');
+    if (indicator) indicator.remove();
+
+    const lower = text.toLowerCase();
+    let reply = "";
+
+    if (lower.includes('registro') || lower.includes('postul') || lower.includes('aprob') || lower.includes('tiempo')) {
+      reply = "Tu postulación es revisada directamente por los reclutadores oficiales de la agencia en 24 a 48 horas hábiles. Asegúrate de haber completado tu video de 10s y adjuntado tu identificación con buena iluminación.";
+    } else if (lower.includes('diamante') || lower.includes('cobr') || lower.includes('pago') || lower.includes('dinero') || lower.includes('retir')) {
+      reply = "Los diamantes que recibes durante tus Lives se reflejan en tiempo real. Los pagos se procesan los días 15 y 30 de cada mes directamente a tu cuenta bancaria o monedero electrónico.";
+    } else if (lower.includes('pk') || lower.includes('batalla') || lower.includes('bono') || lower.includes('evento')) {
+      reply = "¡Las batallas PK multiplican las donaciones con bonos de x1.5 a x2.5! Además, si ganas 3 batallas consecutivas en horario estelar de la agencia, desbloqueas premios especiales en diamantes.";
+    } else if (lower.includes('asesor') || lower.includes('humano') || lower.includes('whatsapp') || lower.includes('agente') || lower.includes('persona')) {
+      reply = "Puedes hablar directamente con un Agente Oficial de STARMAKER vía WhatsApp. Toca el botón 'Hablar con Agente' arriba a la derecha para iniciar la conversación.";
+    } else if (lower.includes('audio') || lower.includes('micro') || lower.includes('luces') || lower.includes('setup')) {
+      reply = "Te sugerimos revisar la sección 'Academia StarMaker' en el Portal de Tutoriales. Allí tienes guías visuales paso a paso para configurar tu iluminación y micrófono con la mejor calidad.";
+    } else {
+      reply = "¡Excelente consulta! Como streamer oficial de STARMAKER cuentas con acompañamiento continuo. Puedes consultar guías en la Academia o tocar 'Hablar con Agente' para asistencia técnica humana en WhatsApp.";
+    }
+
+    const botDiv = document.createElement('div');
+    botDiv.className = 'chat-msg chat-bot';
+    botDiv.innerHTML = `
+      <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
+      <div class="chat-bubble bot-bubble">${reply}</div>
+    `;
+    chatMessages.appendChild(botDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }, 450);
+};
+
+window.enviarMensajeChip = function(txt) {
+  const input = document.getElementById('chat-input');
+  if (input) {
+    input.value = txt;
+    window.enviarMensajeChat();
+  }
+};
+
+window.conectarAsesorHumano = function() {
+  const waContainer = document.getElementById('soporte-list');
+  const firstLink = waContainer ? waContainer.querySelector('a') : null;
+  if (firstLink && firstLink.href) {
+    window.open(firstLink.href, '_blank');
+  } else {
+    window.open('https://api.whatsapp.com/send?text=Hola%2C%20solicito%20asistencia%20oficial%20de%20STARMAKER%20Streamers', '_blank');
+  }
+};
+
+// ── VIDEO PREVIEW MODAL ──────────────────────────────────────────────────────
+window.abrirVideoModal = function(title, previewUrl, duration) {
+  const modal = document.getElementById('video-preview-modal');
+  const titleEl = document.getElementById('modal-video-title');
+  const iframe = document.getElementById('modal-video-iframe');
+  if (!modal) return;
+  if (titleEl) titleEl.textContent = title + (duration ? ` (${duration})` : '');
+  if (iframe) iframe.src = "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1";
+  modal.style.display = 'flex';
+};
+
+window.cerrarVideoModal = function(e) {
+  if (e && e.target && e.target.id !== 'video-preview-modal' && !e.target.closest('button')) return;
+  const modal = document.getElementById('video-preview-modal');
+  const iframe = document.getElementById('modal-video-iframe');
+  if (modal) modal.style.display = 'none';
+  if (iframe) iframe.src = '';
+};
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') window.cerrarVideoModal();
+});
+
+// Initialize physics on load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initTiltPhysics);
+} else {
+  initTiltPhysics();
+}
+
+
+// ── PORTALES CONFIGURATION (CYBER VISIONOS) ─────────────────────────────────
+const PORTALES = [
+  {
+    id: 1,
+    targetId: 'card-registro',
+    name: 'Registro',
+    icon: 'fa-rocket',
+    ctaText: 'Postula a STARMAKER ↓',
+    accent: '#8B5CF6',
+    glow: '#A78BFA',
+    rgb: '139, 92, 246'
+  },
+  {
+    id: 2,
+    targetId: 'card-tutoriales',
+    name: 'Academia',
+    icon: 'fa-film',
+    ctaText: 'Ver Tutoriales Pro ↓',
+    accent: '#EC4899',
+    glow: '#F472B6',
+    rgb: '236, 72, 153'
+  },
+  {
+    id: 3,
+    targetId: 'card-dudas',
+    name: 'Soporte AI',
+    icon: 'fa-robot',
+    ctaText: 'Contactar Soporte ↓',
+    accent: '#10B981',
+    glow: '#34D399',
+    rgb: '16, 185, 129'
+  }
+];
+
+let currentPortalIndex = 0;
+let isTrackpadDragging = false;
+let trackpadStartX = 0;
+let trackpadCurrentX = 0;
+let trackpadDragStartTime = 0;
+let trackpadHasVibrated = false;
+
+function initCapsuleTrackpad() {
+  const puck = document.getElementById('capsule-puck');
+  const btnPrev = document.getElementById('capsule-btn-prev');
+  const btnNext = document.getElementById('capsule-btn-next');
+  const stageEl = document.getElementById('stage-container');
+  const mascotEl = document.getElementById('mascot-wrapper');
+  if (!puck) return;
+
+  const maxTravel = 95;
+  const threshold = 45;
+
+  puck.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    puck.setPointerCapture(e.pointerId);
+    isTrackpadDragging = true;
+    trackpadStartX = e.clientX;
+    trackpadCurrentX = e.clientX;
+    trackpadDragStartTime = performance.now();
+    trackpadHasVibrated = false;
+
+    puck.style.cursor = 'grabbing';
+    puck.style.transition = 'none';
+  });
+
+  puck.addEventListener('pointermove', e => {
+    if (!isTrackpadDragging) return;
+    trackpadCurrentX = e.clientX;
+    const rawDelta = trackpadCurrentX - trackpadStartX;
+    const sign = Math.sign(rawDelta);
+    const absDelta = Math.abs(rawDelta);
+
+    // Non-linear rubber-banding resistance
+    const resistedDelta = sign * Math.min(maxTravel, Math.pow(absDelta, 0.88) * 1.3);
+    const stretch = 1 + (absDelta / 400);
+
+    puck.style.transform = `translate(calc(-50% + ${resistedDelta}px), -50%) scaleX(${stretch})`;
+
+    // Reacción 3D en tiempo real en el Escenario Superior (Stage 3D & Holograma)
+    if (stageEl) {
+      const tiltY = (resistedDelta / maxTravel) * 22;
+      const tiltZ = (resistedDelta / maxTravel) * 8;
+      stageEl.style.transition = 'none';
+      stageEl.style.transform = `translateX(calc(-50% + ${resistedDelta * 0.4}px)) rotateX(72deg) rotateY(${tiltY}deg) rotateZ(${tiltZ}deg)`;
+    }
+    if (mascotEl) {
+      const tiltY = (resistedDelta / maxTravel) * 16;
+      mascotEl.style.transition = 'none';
+      mascotEl.style.transform = `translateX(calc(-50% + ${resistedDelta * 0.5}px)) rotateY(${tiltY}deg)`;
+    }
+
+    // Directional chevron neon glow feedback
+    if (resistedDelta > 15) {
+      btnNext?.classList.add('glow-active');
+      btnPrev?.classList.remove('glow-active');
+    } else if (resistedDelta < -15) {
+      btnPrev?.classList.add('glow-active');
+      btnNext?.classList.remove('glow-active');
+    } else {
+      btnPrev?.classList.remove('glow-active');
+      btnNext?.classList.remove('glow-active');
+    }
+
+    // Armed State + Haptic feedback
+    if (Math.abs(resistedDelta) >= threshold) {
+      if (!puck.classList.contains('is-armed')) {
+        puck.classList.add('is-armed');
+        if (!trackpadHasVibrated && navigator.vibrate) {
+          navigator.vibrate(18);
+          trackpadHasVibrated = true;
+        }
+      }
+    } else {
+      puck.classList.remove('is-armed');
+      trackpadHasVibrated = false;
+    }
+  });
+
+  const onPointerEnd = e => {
+    if (!isTrackpadDragging) return;
+    isTrackpadDragging = false;
+    try { puck.releasePointerCapture(e.pointerId); } catch(_) {}
+
+    puck.style.cursor = 'grab';
+    btnPrev?.classList.remove('glow-active');
+    btnNext?.classList.remove('glow-active');
+
+    const rawDelta = trackpadCurrentX - trackpadStartX;
+    const sign = Math.sign(rawDelta);
+    const absDelta = Math.abs(rawDelta);
+    const resistedDelta = sign * Math.min(maxTravel, Math.pow(absDelta, 0.88) * 1.3);
+    const duration = performance.now() - trackpadDragStartTime;
+
+    // Direct tap on puck opens portal
+    if (absDelta < 6 && duration < 280) {
+      puck.style.transition = 'transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1)';
+      puck.style.transform = 'translate(-50%, -50%) scaleX(1)';
+      if (stageEl) {
+        stageEl.style.transition = 'transform 500ms cubic-bezier(0.25, 1, 0.5, 1)';
+        stageEl.style.transform = 'translateX(-50%) rotateX(72deg)';
+      }
+      if (mascotEl) {
+        mascotEl.style.transition = 'transform 500ms cubic-bezier(0.25, 1, 0.5, 1)';
+        mascotEl.style.transform = 'translateX(-50%)';
+      }
+      window.irAlPuntoActual();
+      return;
+    }
+
+    // Elastic spring-back return
+    puck.style.transition = 'transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 300ms ease, border-color 300ms ease';
+    puck.style.transform = 'translate(-50%, -50%) scaleX(1)';
+    puck.classList.remove('is-armed');
+
+    // Reset 3D Stage
+    if (stageEl) {
+      stageEl.style.transition = 'transform 550ms cubic-bezier(0.25, 1, 0.5, 1)';
+      stageEl.style.transform = 'translateX(-50%) rotateX(72deg)';
+    }
+    if (mascotEl) {
+      mascotEl.style.transition = 'transform 550ms cubic-bezier(0.25, 1, 0.5, 1)';
+      mascotEl.style.transform = 'translateX(-50%)';
+    }
+
+    // Navigation trigger
+    if (Math.abs(resistedDelta) >= threshold) {
+      if (sign > 0) {
+        window.trackpadGoNext();
+      } else {
+        window.trackpadGoPrev();
+      }
+    }
+  };
+
+  puck.addEventListener('pointerup', onPointerEnd);
+  puck.addEventListener('pointercancel', onPointerEnd);
+
+  // Chevron lateral button clicks
+  btnPrev?.addEventListener('click', () => {
+    btnPrev.classList.add('glow-active');
+    setTimeout(() => btnPrev.classList.remove('glow-active'), 250);
+    window.trackpadGoPrev();
+  });
+  btnNext?.addEventListener('click', () => {
+    btnNext.classList.add('glow-active');
+    setTimeout(() => btnNext.classList.remove('glow-active'), 250);
+    window.trackpadGoNext();
+  });
+
+  // Keyboard navigation (ArrowLeft / ArrowRight)
+  window.addEventListener('keydown', e => {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
+    if (e.key === 'ArrowLeft') {
+      btnPrev?.classList.add('glow-active');
+      setTimeout(() => btnPrev?.classList.remove('glow-active'), 250);
+      window.trackpadGoPrev();
+    } else if (e.key === 'ArrowRight') {
+      btnNext?.classList.add('glow-active');
+      setTimeout(() => btnNext?.classList.remove('glow-active'), 250);
+      window.trackpadGoNext();
+    }
+  });
+}
+
+window.trackpadSwitchPortal = function(index) {
+  currentPortalIndex = (index + PORTALES.length) % PORTALES.length;
+  const p = PORTALES[currentPortalIndex];
+
+  // Core selection
+  window.seleccionarPunto(p.id, p.targetId, p.ctaText, p.accent, p.glow, p.rgb);
+
+  // Puck update with flip animation
+  const puck = document.getElementById('capsule-puck');
+  const puckContent = document.getElementById('puck-content');
+  const puckIcon = document.getElementById('puck-icon');
+  const puckTitle = document.getElementById('puck-title');
+
+  if (puckContent) {
+    puckContent.classList.add('puck-flip-out');
+    setTimeout(() => {
+      if (puckIcon) puckIcon.className = `fa-solid ${p.icon} puck-icon`;
+      if (puckTitle) puckTitle.innerText = p.name;
+      puckContent.classList.remove('puck-flip-out');
+      puckContent.classList.add('puck-flip-in');
+      setTimeout(() => puckContent.classList.remove('puck-flip-in'), 200);
+    }, 120);
+  }
+
+  if (puck) {
+    puck.style.background = `linear-gradient(135deg, rgba(${p.rgb}, 0.35) 0%, rgba(20, 15, 30, 0.88) 100%)`;
+    puck.style.boxShadow = `0 0 25px rgba(${p.rgb}, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.4)`;
+  }
+
+  // Micro-indicators dots update
+  const dots = document.querySelectorAll('.capsule-dot');
+  dots.forEach((dot, idx) => {
+    if (idx === currentPortalIndex) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
+  });
+};
+
+window.trackpadGoNext = function() {
+  window.trackpadSwitchPortal(currentPortalIndex + 1);
+};
+
+window.trackpadGoPrev = function() {
+  window.trackpadSwitchPortal(currentPortalIndex - 1);
+};
+
+  initCapsuleTrackpad();
 </script>
-
-  
-  <!-- SVG Icons Template -->
-  <svg style="display:none;">
-    <defs>
-      <g id="icon-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></g>
-      <g id="icon-form"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></g>
-      <g id="icon-video"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></g>
-      <g id="icon-support"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></g>
-    </defs>
-  </svg>
-
-  
-
-
-  
-
-
-  <script>
-    
-  </script>
-
 </body>
 </html>
