@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>STARMAKER — Universo Digital</title>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -962,6 +967,779 @@
       50% { transform: translateX(-50%) scale(0.7); opacity: 0.4; } /* Se encoge cuando el león sube */
     }
 
+  
+/* ════════════════════════════════════════════════════════════════════ */
+/* EXECUTIVE COMMAND SUITE (ADMIN STARLEO) SCOPED STYLES               */
+/* ════════════════════════════════════════════════════════════════════ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 8px 28px rgba(var(--neon-rgb, 212, 175, 122), 0.22), inset 0 1px 0 rgba(255,255,255,0.25); }
+  50% { box-shadow: 0 12px 36px rgba(var(--neon-rgb, 212, 175, 122), 0.38), inset 0 1px 0 rgba(255,255,255,0.35); }
+}
+
+#adminExecutiveOverlay {
+  --bg: radial-gradient(circle at 15% 0%, rgba(212, 175, 122, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(148, 130, 219, 0.06) 0%, transparent 45%),
+        linear-gradient(180deg, #06070a 0%, #0a0c12 50%, #050608 100%);
+  --surface: rgba(16, 19, 28, 0.78);
+  --surface2: rgba(24, 28, 40, 0.72);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(212, 175, 122, 0.28);
+  --text: #f4f5f8;
+  --muted: #8b92a5;
+  --primary: #D4AF7A;
+  --cyan: #E6C89C;
+  --pink: #B892FF;
+  --green: #45D09E;
+  --yellow: #E8B960;
+  --danger: #E06C75;
+  --radius: 20px;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --bg-color: #06070a;
+  --card-color: #10131c;
+  --neon: #D4AF7A;
+  --neon-rgb: 212, 175, 122;
+
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.55;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: none;
+  -webkit-font-smoothing: antialiased;
+}
+#adminExecutiveOverlay.is-open {
+  display: block;
+}
+#adminExecutiveOverlay * {
+  box-sizing: border-box;
+}
+#adminExecutiveOverlay button,
+#adminExecutiveOverlay input,
+#adminExecutiveOverlay select,
+#adminExecutiveOverlay textarea {
+  font: inherit;
+}
+#adminExecutiveOverlay button,
+#adminExecutiveOverlay a {
+  touch-action: manipulation;
+}
+#adminExecutiveOverlay a {
+  color: inherit;
+  text-decoration: none;
+}
+#adminExecutiveOverlay .hidden {
+  display: none !important;
+}
+
+
+#adminExecutiveOverlay {
+  --bg: radial-gradient(circle at 15% 0%, rgba(212, 175, 122, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(148, 130, 219, 0.06) 0%, transparent 45%),
+        linear-gradient(180deg, #06070a 0%, #0a0c12 50%, #050608 100%);
+  --surface: rgba(16, 19, 28, 0.78);
+  --surface2: rgba(24, 28, 40, 0.72);
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(212, 175, 122, 0.28);
+  --text: #f4f5f8;
+  --muted: #8b92a5;
+  --primary: #D4AF7A;
+  --cyan: #E6C89C;
+  --pink: #B892FF;
+  --green: #45D09E;
+  --yellow: #E8B960;
+  --danger: #E06C75;
+  --radius: 20px;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --bg-color: #06070a;
+  --card-color: #10131c;
+  --neon: #D4AF7A;
+  --neon-rgb: 212, 175, 122;
+}
+
+/* * */
+
+/* html */
+
+/* body */
+
+#adminExecutiveOverlay button, #adminExecutiveOverlay input, #adminExecutiveOverlay select, #adminExecutiveOverlay textarea { font: inherit; }
+#adminExecutiveOverlay button, #adminExecutiveOverlay a { touch-action: manipulation; }
+#adminExecutiveOverlay a { color: inherit; text-decoration: none; }
+#adminExecutiveOverlay .hidden { display: none !important; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 8px 28px rgba(var(--neon-rgb), 0.22), inset 0 1px 0 rgba(255,255,255,0.25); }
+  50% { box-shadow: 0 12px 36px rgba(var(--neon-rgb), 0.38), inset 0 1px 0 rgba(255,255,255,0.35); }
+}
+
+/* Base Luxury Components */
+#adminExecutiveOverlay .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.02em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  backdrop-filter: blur(12px);
+}
+#adminExecutiveOverlay .btn:active { transform: scale(0.97); }
+#adminExecutiveOverlay .btn-primary {
+  color: #090a0f;
+  font-weight: 700;
+  background: linear-gradient(135deg, #EAD1AA 0%, var(--primary) 55%, #B68D52 100%);
+  border-color: rgba(255, 255, 255, 0.22);
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+#adminExecutiveOverlay .btn-primary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 14px 35px rgba(var(--neon-rgb), 0.35);
+}
+#adminExecutiveOverlay .btn-secondary {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+#adminExecutiveOverlay .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+#adminExecutiveOverlay .btn-danger {
+  background: rgba(224, 108, 117, 0.08);
+  color: var(--danger);
+  border-color: rgba(224, 108, 117, 0.22);
+}
+#adminExecutiveOverlay .btn-danger:hover {
+  background: rgba(224, 108, 117, 0.15);
+  border-color: rgba(224, 108, 117, 0.4);
+}
+#adminExecutiveOverlay .btn-icon { width: 38px; height: 38px; padding: 0; border-radius: 11px; }
+
+#adminExecutiveOverlay .kicker {
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--primary);
+  opacity: 0.9;
+}
+#adminExecutiveOverlay .neon { color: var(--primary); }
+
+/* Forms & Inputs */
+#adminExecutiveOverlay .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+#adminExecutiveOverlay .field { display: grid; gap: 6px; }
+#adminExecutiveOverlay .field.full { grid-column: 1 / -1; }
+#adminExecutiveOverlay .field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #c5cad8;
+  letter-spacing: 0.02em;
+}
+#adminExecutiveOverlay .control {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(8, 10, 16, 0.75);
+  color: var(--text);
+  border-radius: 11px;
+  padding: 11px 14px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+#adminExecutiveOverlay .control:focus {
+  border-color: var(--primary);
+  background: rgba(12, 15, 24, 0.95);
+  box-shadow: 0 0 0 3px rgba(var(--neon-rgb), 0.14);
+}
+#adminExecutiveOverlay .metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 10px;
+  font-size: 12.5px;
+}
+#adminExecutiveOverlay .notice {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(232, 185, 96, 0.25);
+  background: rgba(232, 185, 96, 0.06);
+  color: var(--yellow);
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+/* Chips & Badges */
+#adminExecutiveOverlay .chip, #adminExecutiveOverlay .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+#adminExecutiveOverlay button.chip { cursor: pointer; }
+#adminExecutiveOverlay button.chip.active-filter {
+  box-shadow: 0 0 0 2px var(--primary);
+  background: rgba(var(--neon-rgb), 0.18);
+  color: #fff;
+}
+#adminExecutiveOverlay .badge {
+  background: rgba(var(--neon-rgb), 0.1);
+  border: 1px solid rgba(var(--neon-rgb), 0.25);
+  color: var(--primary);
+}
+#adminExecutiveOverlay .chip {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted);
+}
+#adminExecutiveOverlay .chip.green {
+  color: var(--green);
+  border-color: rgba(69, 208, 158, 0.25);
+  background: rgba(69, 208, 158, 0.08);
+}
+#adminExecutiveOverlay .chip.yellow {
+  color: var(--yellow);
+  border-color: rgba(232, 185, 96, 0.25);
+  background: rgba(232, 185, 96, 0.08);
+}
+#adminExecutiveOverlay .chip.red {
+  color: var(--danger);
+  border-color: rgba(224, 108, 117, 0.25);
+  background: rgba(224, 108, 117, 0.08);
+}
+#adminExecutiveOverlay .empty {
+  text-align: center;
+  padding: 40px 24px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Modals & Drawers */
+#adminExecutiveOverlay .modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(3, 4, 8, 0.84);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  display: none;
+  place-items: center;
+  padding: 16px;
+}
+#adminExecutiveOverlay .modal.open { display: grid; }
+#adminExecutiveOverlay .modal-box {
+  width: min(760px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  background: linear-gradient(165deg, #131722 0%, #0b0d14 100%);
+  border: 1px solid rgba(var(--neon-rgb), 0.28);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  position: relative;
+  padding: 28px;
+}
+#adminExecutiveOverlay .modal-box .close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  display: grid;
+  place-items: center;
+  transition: 0.2s;
+}
+#adminExecutiveOverlay .modal-box .close:hover { background: rgba(255, 255, 255, 0.1); }
+#adminExecutiveOverlay .modal-head { margin-bottom: 18px; }
+#adminExecutiveOverlay .modal-head h3 { margin: 0 40px 6px 0; font-size: 21px; font-weight: 700; }
+
+#adminExecutiveOverlay .drawer {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 4, 8, 0.75);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 150;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#adminExecutiveOverlay .drawer.open { opacity: 1; pointer-events: auto; }
+#adminExecutiveOverlay .drawer-panel {
+  width: min(680px, 100%);
+  margin: 0 auto;
+  max-height: 90vh;
+  overflow: auto;
+  background: linear-gradient(180deg, #141824 0%, #0c0e16 100%);
+  border-top: 1px solid rgba(var(--neon-rgb), 0.32);
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  border-radius: 26px 26px 0 0;
+  padding: 28px;
+  transform: translateY(30px);
+  transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.7);
+}
+#adminExecutiveOverlay .drawer.open .drawer-panel { transform: none; }
+
+#adminExecutiveOverlay #toastWrap {
+  position: fixed;
+  right: 20px;
+  bottom: 22px;
+  z-index: 300;
+  display: grid;
+  gap: 10px;
+  width: min(360px, calc(100vw - 40px));
+}
+#adminExecutiveOverlay .toast {
+  background: rgba(18, 21, 32, 0.95);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(var(--neon-rgb), 0.35);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-size: 12px;
+  box-shadow: var(--shadow);
+  animation: rise 0.3s ease-out;
+}
+
+/* Executive Admin Shell */
+#adminExecutiveOverlay .admin-shell { min-height: 100vh; }
+#adminExecutiveOverlay .admin-header {
+  padding: 18px 28px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: rgba(6, 7, 11, 0.78);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  flex-wrap: wrap;
+}
+#adminExecutiveOverlay .admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+#adminExecutiveOverlay .admin-crest {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: linear-gradient(135deg, rgba(var(--neon-rgb), 0.2), rgba(var(--neon-rgb), 0.04));
+  border: 1px solid rgba(var(--neon-rgb), 0.35);
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  box-shadow: 0 0 24px rgba(var(--neon-rgb), 0.15);
+}
+#adminExecutiveOverlay .admin-brand small {
+  display: block;
+  color: var(--primary);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+#adminExecutiveOverlay .admin-brand strong {
+  font-family: "Clash Display", sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.03em;
+  font-weight: 600;
+}
+#adminExecutiveOverlay .live {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  border: 1px solid rgba(69, 208, 158, 0.28);
+  color: var(--green);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(69, 208, 158, 0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+#adminExecutiveOverlay .admin-content {
+  max-width: 1320px;
+  margin: auto;
+  padding: 0 24px 90px;
+}
+#adminExecutiveOverlay .admin-tabs {
+  display: flex;
+  gap: 8px;
+  overflow: auto;
+  padding: 16px 2px 20px;
+  position: sticky;
+  top: 75px;
+  z-index: 60;
+  background: linear-gradient(180deg, rgba(6, 7, 11, 0.92) 65%, transparent 100%);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+#adminExecutiveOverlay .admin-tab {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--muted);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+#adminExecutiveOverlay .admin-tab:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+#adminExecutiveOverlay .admin-tab.active {
+  color: #090a0f;
+  font-weight: 700;
+  background: linear-gradient(135deg, #EAD1AA 0%, var(--primary) 100%);
+  border-color: transparent;
+  box-shadow: 0 6px 22px rgba(var(--neon-rgb), 0.28);
+}
+
+/* Luxury Widgets & Grid */
+#adminExecutiveOverlay .admin-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+#adminExecutiveOverlay .widget {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  min-height: 155px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s, box-shadow 0.35s;
+  border: 1px solid var(--line);
+  background: linear-gradient(155deg, rgba(22, 26, 38, 0.72) 0%, rgba(12, 14, 22, 0.82) 100%);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow);
+}
+#adminExecutiveOverlay .widget:hover {
+  border-color: rgba(var(--neon-rgb), 0.32);
+  transform: translateY(-3px);
+}
+#adminExecutiveOverlay .widget.pinned {
+  border-color: var(--primary);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(var(--neon-rgb), 0.14);
+}
+#adminExecutiveOverlay .full-view { opacity: 1; transition: 0.25s; }
+#adminExecutiveOverlay .minimal-view {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s;
+}
+#adminExecutiveOverlay .glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  background: radial-gradient(circle at 50% -20%, rgba(var(--neon-rgb), 0.14), transparent 65%);
+  transition: 0.35s;
+}
+#adminExecutiveOverlay .widget:hover .glow, #adminExecutiveOverlay .widget.pinned .glow { opacity: 0.9; }
+#adminExecutiveOverlay .widget-pad { padding: 22px; }
+#adminExecutiveOverlay .widget-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+#adminExecutiveOverlay .widget-head h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 4px 0 0;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+#adminExecutiveOverlay .widget-head p { font-size: 11px; color: var(--muted); margin: 0; }
+#adminExecutiveOverlay .switch {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  transition: 0.25s;
+  position: relative;
+  cursor: pointer;
+}
+#adminExecutiveOverlay .switch:hover { color: var(--text); border-color: rgba(255, 255, 255, 0.18); }
+#adminExecutiveOverlay .widget.pinned .switch {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: rgba(var(--neon-rgb), 0.1);
+}
+#adminExecutiveOverlay .kpi {
+  font-family: "Clash Display", sans-serif;
+  font-size: clamp(2.1rem, 5vw, 3.1rem);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Request List & Items */
+#adminExecutiveOverlay .request-list { display: grid; gap: 10px; }
+#adminExecutiveOverlay .request {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 15px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.022);
+  border: 1px solid var(--line);
+  transition: border-color 0.2s, background 0.2s;
+}
+#adminExecutiveOverlay .request:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.13);
+}
+#adminExecutiveOverlay .request strong { font-size: 13px; font-weight: 600; }
+#adminExecutiveOverlay .request .meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+#adminExecutiveOverlay .request-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+#adminExecutiveOverlay .mini { width: 34px; height: 34px; padding: 0; border-radius: 10px; font-size: 11px; }
+#adminExecutiveOverlay .btn.mini:not(.btn-icon) { width: auto; padding: 7px 13px; height: auto; }
+#adminExecutiveOverlay .avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(var(--neon-rgb), 0.18), rgba(255, 255, 255, 0.03));
+  border: 1px solid rgba(var(--neon-rgb), 0.28);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 14px;
+  overflow: hidden;
+}
+
+/* Indicators & Progress */
+#adminExecutiveOverlay .status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.4);
+}
+#adminExecutiveOverlay .status-dot.green { background: var(--green); box-shadow: 0 0 10px rgba(69, 208, 158, 0.6); }
+#adminExecutiveOverlay .status-dot.yellow { background: var(--yellow); }
+#adminExecutiveOverlay .status-dot.red { background: var(--danger); }
+
+#adminExecutiveOverlay .activity { display: grid; gap: 4px; }
+#adminExecutiveOverlay .event {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  align-items: center;
+}
+#adminExecutiveOverlay .event:last-child { border: 0; }
+#adminExecutiveOverlay .event i { color: var(--primary); }
+#adminExecutiveOverlay .event p { margin: 0; font-size: 12px; font-weight: 500; }
+#adminExecutiveOverlay .event small, #adminExecutiveOverlay .event time { color: var(--muted); font-size: 10.5px; }
+
+#adminExecutiveOverlay .progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 999px;
+  overflow: hidden;
+  width: 100%;
+}
+#adminExecutiveOverlay .progress-bar span {
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, var(--primary), #F3E0BE);
+  border-radius: inherit;
+}
+
+#adminExecutiveOverlay .chart-box { height: 230px; }
+#adminExecutiveOverlay .chart-range { display: flex; gap: 6px; margin-bottom: 8px; }
+#adminExecutiveOverlay .range {
+  font-size: 10.5px;
+  font-weight: 600;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  padding: 6px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+#adminExecutiveOverlay .range.active {
+  color: #090a0f;
+  font-weight: 700;
+  border-color: transparent;
+  background: var(--primary);
+}
+#adminExecutiveOverlay .carousel-preview {
+  height: 240px;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  background: #08090e;
+  border: 1px solid var(--line);
+}
+#adminExecutiveOverlay .range-input { width: 100%; accent-color: var(--primary); cursor: pointer; }
+
+#adminExecutiveOverlay .bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  background: rgba(8, 10, 15, 0.92);
+  border-top: 1px solid var(--line);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+}
+#adminExecutiveOverlay .bottom-nav button {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  padding: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  cursor: pointer;
+}
+#adminExecutiveOverlay .bottom-nav button.active { color: var(--primary); }
+
+/* Card Video Editor Stage */
+#adminExecutiveOverlay .card-video-editor-stage {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px dashed rgba(var(--neon-rgb), 0.28);
+  border-radius: 16px;
+  background: radial-gradient(circle at center, rgba(var(--neon-rgb), 0.08), transparent 60%), #07080d;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+#adminExecutiveOverlay .card-video-editor-stage:active { cursor: grabbing; }
+#adminExecutiveOverlay .card-video-drag-hint {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(6, 7, 11, 0.72);
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  color: var(--primary);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+#adminExecutiveOverlay .video-transform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+#adminExecutiveOverlay .video-transform-grid label { display: grid; gap: 5px; color: var(--muted); font-size: 10.5px; font-weight: 500; }
+#adminExecutiveOverlay .video-transform-grid output { color: var(--primary); font-size: 11px; font-weight: 700; }
+#adminExecutiveOverlay .video-transform-grid input { width: 100%; accent-color: var(--primary); }
+
+@media(min-width: 700px) {
+
+  #adminExecutiveOverlay .form-grid { grid-template-columns: 1fr 1fr; }
+  #adminExecutiveOverlay .admin-grid { grid-template-columns: repeat(2, 1fr); }
+  #adminExecutiveOverlay .span-2 { grid-column: span 2; }
+  #adminExecutiveOverlay .bottom-nav { display: none; }
+
+}
+@media(min-width: 1050px) {
+
+  #adminExecutiveOverlay .admin-grid { grid-template-columns: repeat(4, 1fr); }
+  #adminExecutiveOverlay .span-2 { grid-column: span 2; }
+  #adminExecutiveOverlay .span-3 { grid-column: span 3; }
+  #adminExecutiveOverlay .span-4 { grid-column: span 4; }
+
+}
+@media(max-width: 700px) {
+
+  #adminExecutiveOverlay .form-grid { grid-template-columns: 1fr; }
+  #adminExecutiveOverlay .video-transform-grid { grid-template-columns: 1fr; }
+  #adminExecutiveOverlay .card-video-editor-stage { height: 190px; }
+  #adminExecutiveOverlay .admin-content { padding: 0 14px 100px; }
+  #adminExecutiveOverlay .admin-header { padding: 14px 16px; }
+
+}
+
+
   </style>
 
 </head>
@@ -982,7 +1760,7 @@
       <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--coral)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
       <span class="brand">STARMAKER</span>
     </div>
-    <button class="admin-btn-top" id="btn-open-admin">Admin Console</button>
+    <button class="admin-btn-top" id="btn-open-admin" onclick="openExecutiveAdmin()"><i data-lucide="crown" style="width:14px;height:14px;display:inline-block;vertical-align:middle;margin-right:6px;color:#D4AF7A"></i> Executive Console</button>
   </header>
 
 
@@ -1482,48 +2260,181 @@
   </div>
 
   
-  <!-- LOGIN MODAL -->
-  <div class="login-modal" id="login-modal">
-    <div class="login-box">
-      <h3 style="margin-bottom:20px; font-weight:800;">Acceso Admin</h3>
-      <input type="text" id="login-user" class="admin-input" placeholder="Usuario" />
-      <input type="password" id="login-pass" class="admin-input" placeholder="Contraseña" />
-      <button id="btn-login-submit" style="width:100%;padding:12px;background:var(--coral);color:white;border:none;border-radius:10px;font-weight:800;cursor:pointer;margin-top:10px;">Entrar</button>
-      <button id="btn-login-cancel" style="width:100%;padding:12px;background:transparent;color:#b9b0ba;border:none;cursor:pointer;margin-top:5px;font-size:12px;">Cancelar</button>
+  
+  <!-- ================================================================ -->
+  <!-- EXECUTIVE COMMAND SUITE (ADMIN STARLEO)                           -->
+  <!-- ================================================================ -->
+  <div id="adminExecutiveOverlay" class="admin-executive-overlay" style="display:none;">
+
+
+<section id="adminApp" class="admin-shell">
+  <header class="admin-header">
+    <div class="admin-brand">
+      <div class="admin-crest"><i data-lucide="crown" width="18"></i></div>
+      <div>
+        <small>Executive Command Suite</small>
+        <strong>STARLEO <span style="color:var(--muted);font-weight:400">/ CONSOLE</span></strong>
+      </div>
     </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span class="live" id="syncBadge"><span class="status-dot green"></span>SYNC ACTIVE</span>
+      <button class="btn btn-secondary mini" onclick="openPublicPreview()" title="Ver cómo lucen las tarjetas públicas"><i data-lucide="eye" width="14"></i> Vista Previa</button>
+      <button class="btn btn-secondary mini" onclick="openNewRequestModal()" title="Registrar solicitud">+ Solicitud</button>
+      <button class="btn btn-secondary mini" onclick="exportCandidatesCsv()" title="Exportar CSV de postulantes"><i data-lucide="download" width="14"></i> CSV</button>
+      <button class="btn btn-secondary btn-icon" id="adminExit" onclick="openModal('lockModal')" title="Bloquear Consola"><i data-lucide="lock" width="15"></i></button>
+      <button class="btn btn-primary mini" onclick="closeExecutiveAdmin()" style="margin-left:8px;background:linear-gradient(135deg,#e06c75,#be3447);color:#fff;border-color:rgba(255,255,255,0.2)" title="Volver a la App"><i data-lucide="arrow-left" width="14"></i> Volver a la App</button>
+    </div>
+  </header>
+
+  <div class="admin-content">
+    <nav class="admin-tabs" id="adminTabs">
+      <button class="admin-tab active" data-tab="overview">Overview Ejecutivo</button>
+      <button class="admin-tab" data-tab="requests">Solicitudes</button>
+      <button class="admin-tab" data-tab="verification">Verificación</button>
+      <button class="admin-tab" data-tab="support">Concierge & Soporte</button>
+      <button class="admin-tab" data-tab="activity">Auditoría</button>
+      <button class="admin-tab" data-tab="settings">Configuración Master</button>
+    </nav>
+    <div id="adminView"></div>
   </div>
 
-  <!-- ADMIN WIDGET -->
-  <div class="admin-widget" id="admin-widget">
-    <div class="admin-widget-header" id="admin-widget-header">
-      <h3 style="font-size:14px;font-weight:800;letter-spacing:1px;margin:0;">PANEL ADMIN</h3>
-      <button id="btn-close-admin" style="background:transparent;border:none;color:#b9b0ba;font-size:18px;cursor:pointer;">✕</button>
+  <nav class="bottom-nav" id="adminBottom">
+    <button data-tab="overview" class="active"><i data-lucide="layout-dashboard" width="18"></i>Overview</button>
+    <button data-tab="requests"><i data-lucide="inbox" width="18"></i>Solicitudes</button>
+    <button data-tab="verification"><i data-lucide="video" width="18"></i>Videos</button>
+    <button data-tab="settings"><i data-lucide="sliders" width="18"></i>Master</button>
+  </nav>
+</section>
+
+<!-- Drawer de revisión de solicitudes -->
+<div class="drawer" id="drawer" onclick="if(event.target===this)closeDrawer()">
+  <div class="drawer-panel" id="drawerPanel"></div>
+</div>
+
+<!-- Modal de revisión de video / PDF -->
+<div class="modal" id="videoReviewModal" onclick="if(event.target===this)closeModal('videoReviewModal')">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal('videoReviewModal')">×</button>
+    <div class="modal-head">
+      <span class="kicker" id="mediaModalKicker">Media Inspection</span>
+      <h3 id="mediaModalTitle">Reproductor Multimedia</h3>
     </div>
-    <div class="admin-widget-content">
-      <div id="admin-error-msg" style="display:none;background:rgba(235,82,121,0.2);border:1px solid #EB5279;padding:12px;border-radius:8px;color:#EB5279;font-size:12px;margin-bottom:16px;font-weight:bold;"></div>
+    <div id="reviewVideoArea"></div>
+  </div>
+</div>
 
-      <button id="btn-download-db" style="width:100%;padding:14px;background:#4ade80;color:#000;border:none;border-radius:12px;font-weight:800;cursor:pointer;margin-bottom:24px;">📥 Descargar DATABASE (.CSV)</button>
-
-      <hr style="border-color:rgba(255,255,255,0.1);margin:0 0 24px;">
-
-      <h3 style="margin-bottom:8px;font-size:14px;">CONFIGURACIÓN DE PERSONAJES</h3>
-      <p style="font-size:11px;color:#b9b0ba;margin-bottom:16px;">Sube el video en dos formatos y ajusta tamaño y posición.</p>
-      <div id="admin-portals-config"></div>
-
-      <hr style="border-color:rgba(255,255,255,0.1);margin:24px 0;">
-
-      <h3 style="margin-bottom:12px;font-size:14px;">TUTORIALES</h3>
-      <input type="text" id="admin-tut-1" class="admin-input" placeholder="Tutorial 1 (URL de YouTube)" />
-      <input type="text" id="admin-tut-2" class="admin-input" placeholder="Tutorial 2 (URL de YouTube)" />
-      <input type="text" id="admin-tut-3" class="admin-input" placeholder="Tutorial 3 (URL de YouTube)" />
-
-      <h3 style="margin:16px 0 12px;font-size:14px;">SOPORTE (WhatsApp)</h3>
-      <input type="text" id="admin-wa-1" class="admin-input" placeholder="WhatsApp 1 (enlace)" />
-      <input type="text" id="admin-wa-2" class="admin-input" placeholder="WhatsApp 2 (enlace)" />
-      <input type="text" id="admin-wa-3" class="admin-input" placeholder="WhatsApp 3 (enlace)" />
-
-      <button id="btn-save-links" style="width:100%;padding:14px;background:var(--fuchsia);color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer;margin-top:8px;">💾 Guardar Tutoriales y Soporte</button>
+<!-- Modal Nueva Solicitud -->
+<div class="modal" id="newRequestModal" onclick="if(event.target===this)closeModal('newRequestModal')">
+  <div class="modal-box" style="max-width:540px">
+    <button class="close" onclick="closeModal('newRequestModal')">×</button>
+    <div class="modal-head">
+      <span class="kicker">Talent Onboarding</span>
+      <h3>Registrar Nueva Solicitud</h3>
     </div>
+    <div class="form-grid">
+      <div class="field"><label>Nombre Completo *</label><input class="control" id="nrName" placeholder="Ej. Sofía Villalobos"></div>
+      <div class="field"><label>Usuario (@handle) *</label><input class="control" id="nrUser" placeholder="Ej. @sofia_star"></div>
+      <div class="field"><label>País *</label>
+        <select class="control" id="nrCountry">
+          <option value="México">México</option>
+          <option value="Colombia">Colombia</option>
+          <option value="Argentina">Argentina</option>
+          <option value="España">España</option>
+          <option value="Chile">Chile</option>
+          <option value="Perú">Perú</option>
+        </select>
+      </div>
+      <div class="field"><label>Estado Inicial</label>
+        <select class="control" id="nrStatus">
+          <option value="EN REVISIÓN">EN REVISIÓN</option>
+          <option value="APROBADA">APROBADA</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label>Video de Verificación (URL o Subir Archivo)</label>
+        <div style="display:flex;gap:8px">
+          <input class="control" id="nrVideoUrl" placeholder="https://... o sube un archivo →">
+          <label class="btn btn-secondary" style="white-space:nowrap;cursor:pointer">
+            <i data-lucide="upload" width="14"></i> Subir
+            <input type="file" accept="video/*" style="display:none" onchange="handleNewRequestVideoUpload(this.files[0])">
+          </label>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+      <button class="btn btn-secondary" onclick="closeModal('newRequestModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createNewRequest()">Guardar Expediente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Nuevo Ticket -->
+<div class="modal" id="newTicketModal" onclick="if(event.target===this)closeModal('newTicketModal')">
+  <div class="modal-box" style="max-width:500px">
+    <button class="close" onclick="closeModal('newTicketModal')">×</button>
+    <div class="modal-head">
+      <span class="kicker">Concierge Desk</span>
+      <h3>Crear Ticket de Soporte</h3>
+    </div>
+    <div class="form-grid">
+      <div class="field"><label>Nombre del Usuario *</label><input class="control" id="ntName" placeholder="Ej. Andrea López"></div>
+      <div class="field"><label>Departamento *</label>
+        <select class="control" id="ntCat"></select>
+      </div>
+      <div class="field full"><label>Mensaje o Consulta *</label><textarea class="control" id="ntMsg" rows="3" placeholder="Describe el motivo de asistencia..."></textarea></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px">
+      <button class="btn btn-secondary" onclick="closeModal('newTicketModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createNewTicket()">Registrar Ticket</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Calibrador de Mascota Adicional -->
+<div class="modal" id="extraMascotModal" onclick="if(event.target===this)closeModal('extraMascotModal')">
+  <div class="modal-box" style="max-width:560px">
+    <button class="close" onclick="closeModal('extraMascotModal')">×</button>
+    <div class="modal-head">
+      <span class="kicker">3D Spatial Calibrator</span>
+      <h3 id="extraMascotModalTitle">Calibrar Mascota</h3>
+    </div>
+    <div id="extraMascotModalBody"></div>
+  </div>
+</div>
+
+<!-- Modal Vista Previa Pública -->
+<div class="modal" id="publicPreviewModal" onclick="if(event.target===this)closeModal('publicPreviewModal')">
+  <div class="modal-box" style="width:min(1100px,100%)">
+    <button class="close" onclick="closeModal('publicPreviewModal')">×</button>
+    <div class="modal-head">
+      <span class="kicker">Live Public Simulation</span>
+      <h3>Vista Previa de Tarjetas Holográficas</h3>
+    </div>
+    <div id="publicPreviewArea" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:14px"></div>
+  </div>
+</div>
+
+<!-- Modal de Bloqueo Ejecutivo -->
+<div class="modal" id="lockModal">
+  <div class="modal-box" style="max-width:420px;text-align:center">
+    <div class="admin-crest" style="width:56px;height:56px;margin:0 auto 16px;border-radius:18px"><i data-lucide="shield-lock" width="26"></i></div>
+    <span class="kicker">Sesión Protegida</span>
+    <h3 style="margin:6px 0 8px;font-size:22px">Command Suite Bloqueada</h3>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:20px">Ingresa tus credenciales administrativas o pulsa desbloquear para reanudar.</p>
+    <div class="field" style="text-align:left;margin-bottom:12px">
+      <label>Contraseña / PIN Master</label>
+      <input class="control" id="unlockPass" type="password" placeholder="••••••••" onkeypress="if(event.key==='Enter')unlockConsole()">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('lockModal');closeExecutiveAdmin()">Volver a la App</button>
+      <button class="btn btn-primary" style="flex:2" onclick="unlockConsole()">Desbloquear Consola</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastWrap"></div>
+
+
   </div>
 
   <!-- ================================================================ -->
@@ -1531,7 +2442,7 @@
   <!-- ================================================================ -->
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, addDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 // ── GLOBALS ─────────────────────────────────────────────────────────────────
 
@@ -2191,101 +3102,1534 @@ window.processors = {
     3: new VideoProcessor(3, 'vid-p3', 'canvas-p3')
 };
 
-// ── ADMIN: SAVE LINKS ─────────────────────────────────────────────────────────
-document.getElementById('btn-save-links').onclick = async () => {
-  const tuts = [1,2,3].map(i => document.getElementById('admin-tut-' + i)?.value || '');
-  const wa   = [1,2,3].map(i => document.getElementById('admin-wa-'  + i)?.value || '');
-  try {
-    await setDoc(stateDocRef, { tutorials: tuts, tut1: tuts[0], tut2: tuts[1], tut3: tuts[2], whatsapp: wa }, { merge: true });
-    alert('¡Enlaces guardados! ✅');
-  } catch(err) { showAdminError(err); }
+
+// ════════════════════════════════════════════════════════════════════
+// EXECUTIVE COMMAND SUITE JAVASCRIPT ENGINE
+// ════════════════════════════════════════════════════════════════════
+
+const defaultMascotConfig = (gif) => ({
+  gif,
+  active: true,
+  x: 0,
+  y: 0,
+  scale: 100,
+  rotation: 0,
+  opacity: 1,
+  layer: 2,
+  size: 180,
+});
+
+const defaultState = {
+  themeColor: "#D4AF7A",
+  cardColor: "#10131c",
+  character: {
+    videoUrl: "https://i.yourimageshare.com/OURJfjNq2x.webm",
+    bubbles: [
+      { text: "¡Hola! Bienvenido a STARLEO.", start: 0, end: 4 },
+      { text: "Inicia tu registro como Streamer Oficial.", start: 5, end: 9 }
+    ],
+    scale: 100
+  },
+  carouselSettings: { speed: 4500, glow: 55, scale: 100, autoplay: true },
+  carousel: [],
+  requests: [
+    { id: "SL-2026-48291", name: "Valeria Mendoza", user: "@valeria_live", country: "México", status: "EN REVISIÓN", video: true, videoUrl: "https://i.yourimageshare.com/OURJfjNq2x.webm", date: "25/09/2026, 18:30" },
+    { id: "SL-2026-19402", name: "Carlos Rivera", user: "@charly_stream", country: "Colombia", status: "APROBADA", video: true, videoUrl: "https://i.yourimageshare.com/OURJfjNq2x.webm", date: "24/09/2026, 14:15" },
+    { id: "SL-2026-33910", name: "Camila Solís", user: "@cami_music", country: "Argentina", status: "APROBADA", video: false, videoUrl: "", date: "23/09/2026, 11:40" }
+  ],
+  events: [
+    ["Nueva solicitud recibida", "Valeria Mendoza · SL-2026-48291", "Hace 12 min"],
+    ["Solicitud aprobada", "Carlos Rivera · SL-2026-19402", "Ayer, 15:00"],
+    ["Calibración Holográfica", "Tarjeta SER STREAMER actualizada", "Ayer, 12:20"]
+  ],
+  activity: [],
+  tutorials: [
+    { title: "Guía de Iluminación y Audio", desc: "Configura tu estudio antes de transmitir", type: "video", url: "https://i.yourimageshare.com/OURJfjNq2x.webm" },
+    { title: "Protocolo de Emisión Oficial", desc: "Manual ejecutivo para nuevos talentos", type: "pdf", url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" }
+  ],
+  tickets: [
+    { id: "TICK-4012", name: "Sofía Herrera", cat: "Oficial de Livestreaming", msg: "¿Cómo vinculo mi ID de la app para el corte mensual?", status: "ABIERTO", date: "25/09/2026" },
+    { id: "TICK-3988", name: "Diego Morales", cat: "Oficial de Recarga", msg: "Confirmación de liquidación de diamantes.", status: "RESUELTO", date: "24/09/2026" }
+  ],
+  qualityCriteria: {
+    minDuration: "01:00 min",
+    framing: "ESTÁNDAR ALTO",
+    audio: "OBLIGATORIO",
+    filters: "ESTRICTAMENTE NO"
+  },
+  socials: { instagram: "https://instagram.com", tiktok: "https://tiktok.com", facebook: "https://facebook.com" },
+  cards: [
+    { title: "SER STREAMER", desc: "Comienza tu proceso para convertirte en Streamer Oficial.", icon: "mic", videoUrl: "", videoTransform: { x: 0, y: 0, scale: 100 }, link: "#/registro-streamer", btn: "Iniciar registro", color: "#D4AF7A" },
+    { title: "APRENDER", desc: "Domina las herramientas de transmisión de alto impacto.", icon: "graduation-cap", videoUrl: "", videoTransform: { x: 0, y: 0, scale: 100 }, link: "#/tutoriales", btn: "Ver tutoriales", color: "#9D8DF1" },
+    { title: "NECESITO AYUDA", desc: "Asistencia ejecutiva personalizada con nuestro equipo.", icon: "life-buoy", videoUrl: "", videoTransform: { x: 0, y: 0, scale: 100 }, link: "#/soporte", btn: "Contactar soporte", color: "#45D09E" }
+  ],
+  panelMascots: {
+    streamer: defaultMascotConfig("https://i.yourimageshare.com/OURJfjNq2x.webm"),
+    aprender: defaultMascotConfig("https://i.yourimageshare.com/OURJfjNq2x.webm"),
+    soporte: defaultMascotConfig("https://i.yourimageshare.com/OURJfjNq2x.webm"),
+    registro: defaultMascotConfig(""),
+    guias: defaultMascotConfig(""),
+    support1: defaultMascotConfig(""),
+    support2: defaultMascotConfig(""),
+    support3: defaultMascotConfig(""),
+  },
+  supportContacts: [
+    { id: 'recargas', name: 'Oficial de Recarga', role: 'Banca, recargas y liquidaciones', avatar: '💎', whatsapp: '5215500000000', email: 'recargas@starleo.app', issues: 'Recargas, Compras, Pagos, Monedas' },
+    { id: 'livestreaming', name: 'Oficial de Livestreaming', role: 'Dirección de talento y emisiones', avatar: '🎙️', whatsapp: '5215500000001', email: 'talento@starleo.app', issues: 'Registro, Live, Eventos, PK, Recompensas' },
+    { id: 'verificacion', name: 'Oficial de Verificación', role: 'Cumplimiento e identidad', avatar: '🛡️', whatsapp: '5215500000002', email: 'verificacion@starleo.app', issues: 'Identidad, Documentos, Validación' }
+  ],
+  idleTime: 300000,
+  notes: "• Revisar solicitudes con video pendientes antes de las 20:00.\n• Validar métricas de retención de nuevos streamers."
 };
 
-// ── ADMIN LOGIN & WIDGET LOGIC ────────────────────────────────────────────────
-document.getElementById('btn-open-admin').onclick  = () => document.getElementById('login-modal').classList.add('is-open');
-document.getElementById('btn-login-cancel').onclick = () => document.getElementById('login-modal').classList.remove('is-open');
+let state = JSON.parse(localStorage.getItem("starleo_admin_luxury_state") || "null") || JSON.parse(JSON.stringify(defaultState));
+let requestFilter = "ALL";
+let requestSearch = "";
+let ticketFilter = "ALL";
+let adminTab = "overview";
+let chart = null;
 
-document.getElementById('btn-login-submit').onclick = () => {
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value.trim();
-  if (u.toUpperCase() === 'SANTI' && p === '1234') {
-    document.getElementById('login-modal').classList.remove('is-open');
-    document.getElementById('admin-widget').classList.add('is-open');
-    document.getElementById('login-user').value = '';
-    document.getElementById('login-pass').value = '';
-  } else {
-    alert('Credenciales incorrectas');
+const clone = (v) => JSON.parse(JSON.stringify(v));
+const esc = s => s === undefined || s === null ? "" : s.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/\'/g, "&#39;");
+const icon = (n, s = 16) => `<i data-lucide="${n}" width="${s}"></i>`;
+const icons = () => window.lucide && lucide.createIcons();
+
+function save() {
+  try {
+    localStorage.setItem("starleo_admin_luxury_state", JSON.stringify(state));
+  } catch (e) {
+    console.warn("Quota local excedida, manteniendo en memoria", e);
+  }
+  updateMemoryChart();
+}
+
+function addActivity(action, detail = "") {
+  const timeStr = new Date().toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" });
+  const entry = [String(action || "Actividad"), String(detail || ""), timeStr];
+  state.activity = Array.isArray(state.activity) ? state.activity : [];
+  state.activity.unshift(entry);
+  state.events = Array.isArray(state.events) ? state.events : [];
+  state.events.unshift(entry);
+  save();
+}
+
+function applySavedTheme() {
+  const c = state.themeColor || "#D4AF7A";
+  const overlay = document.getElementById("adminExecutiveOverlay");
+  if (overlay) {
+    overlay.style.setProperty('--primary', c);
+    overlay.style.setProperty('--neon', c);
+    if (/^#[0-9a-f]{6}$/i.test(c)) {
+      const r = parseInt(c.slice(1, 3), 16), g = parseInt(c.slice(3, 5), 16), b = parseInt(c.slice(5, 7), 16);
+      overlay.style.setProperty('--neon-rgb', `${r}, ${g}, ${b}`);
+    }
+    if (state.cardColor) {
+      overlay.style.setProperty('--surface', state.cardColor);
+    }
+  }
+}
+
+function toast(t, m = "") {
+  const e = document.createElement("div");
+  e.className = "toast";
+  e.innerHTML = `<strong style="font-size:12px;color:var(--primary)">${esc(t)}</strong>${m ? `<br><small style="color:var(--muted)">${esc(m)}</small>` : ""}`;
+  document.getElementById("toastWrap").appendChild(e);
+  setTimeout(() => e.remove(), 4000);
+}
+
+function openModal(id) { document.getElementById(id)?.classList.add("open"); icons(); }
+function closeModal(id) { document.getElementById(id)?.classList.remove("open"); }
+
+// Universal File Uploader: Cloudinary CDN integration with instant fallback
+async function uploadFileUniversal(file) {
+  if (!file) throw new Error("Selecciona un archivo.");
+
+  // 1. Try Cloudinary first if online
+  if (navigator.onLine && location.protocol.startsWith("http")) {
+    try {
+      const isVideo = file.type.includes("video") || file.name.endsWith(".webm") || file.name.endsWith(".mp4");
+      const endpoint = isVideo
+        ? "https://api.cloudinary.com/v1_1/k6x0ampi/video/upload"
+        : "https://api.cloudinary.com/v1_1/k6x0ampi/auto/upload";
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("upload_preset", "STARMAKER");
+      const res = await fetch(endpoint, { method: "POST", body: fd });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.secure_url) return data.secure_url;
+      }
+    } catch (e) {
+      console.warn("Cloudinary direct upload fallback:", e);
+    }
+  }
+
+  // 2. Fallback to base64 DataURL or ObjectURL
+  const b64Full = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(new Error("Error al leer el archivo."));
+    reader.readAsDataURL(file);
+  });
+  if (file.size <= 2.5 * 1024 * 1024) {
+    return b64Full;
+  }
+  return URL.createObjectURL(file);
+}
+
+function updateMemoryChart() {
+  const chartVal = document.getElementById('memChartVal');
+  const chartPath = document.getElementById('memChartPath');
+  if (!chartVal || !chartPath) return;
+  const str = JSON.stringify(state);
+  const videos = (str.match(/\.webm|\.mp4|data:video/g) || []).length;
+  const images = (str.match(/\.png|\.jpg|\.jpeg|\.webp|\.gif|data:image/g) || []).length;
+  const estimatedMB = (videos * 2.5) + (images * 0.6) + (str.length / (1024 * 1024));
+  let pct = Math.round((estimatedMB / 60) * 100);
+  pct = Math.max(8, Math.min(100, pct));
+  chartVal.textContent = pct + '%';
+  chartPath.setAttribute('stroke-dasharray', `${pct}, 100`);
+}
+
+function widget(id, title, sub, body, opts = "") {
+  const k = (opts.match(/data-kpi="([^"]+)"/) || [])[1] || "•";
+  const i = (opts.match(/data-icon="([^"]+)"/) || [])[1] || "sparkles";
+  return `<article class="widget ${opts}" id="${id}">
+    <div class="glow"></div>
+    <div class="full-view widget-pad">
+      <div class="widget-head">
+        <div><span class="kicker">${title}</span><h3>${sub || ""}</h3></div>
+        <button class="switch" onclick="togglePin('${id}',event)" title="Destacar módulo">${icon("bookmark", 14)}</button>
+      </div>
+      ${body}
+    </div>
+    <div class="minimal-view" onclick="wakeWidget('${id}')"><strong class="kpi">${k}</strong>${icon(i, 17)}</div>
+  </article>`;
+}
+
+function togglePin(id, e) {
+  e?.stopPropagation();
+  document.getElementById(id)?.classList.toggle("pinned");
+}
+function wakeWidget(id) {}
+
+function requestRow(r) {
+  const color = r.status === "APROBADA" ? "green" : r.status === "RECHAZADA" ? "red" : "yellow";
+  return `<div class="request">
+    <div class="avatar">${esc((r.name || "U")[0])}</div>
+    <div>
+      <strong>${esc(r.name)}</strong>
+      <div class="meta">${esc(r.user)} · ${esc(r.country)} · ${esc(r.date)} · <span style="color:var(--primary)">${esc(r.id)}</span></div>
+      <div style="display:flex;gap:6px;margin-top:6px;align-items:center">
+        <span class="chip ${color}">${esc(r.status)}</span>
+        ${r.video ? `<span class="badge">${icon("video", 11)} Video</span>` : ""}
+      </div>
+    </div>
+    <div class="request-actions">
+      ${r.video ? `<button class="btn btn-secondary mini" onclick="openVideoReview('${r.id}')" title="Ver video">${icon("play", 13)}</button>` : ""}
+      <button class="btn btn-secondary mini" onclick="openRequest('${r.id}')" title="Inspeccionar expediente">${icon("eye", 14)}</button>
+      <button class="btn btn-danger mini" onclick="deleteRequest('${r.id}')" title="Eliminar">${icon("trash-2", 13)}</button>
+    </div>
+  </div>`;
+}
+
+function openRequest(id) {
+  const r = state.requests.find(x => x.id === id);
+  if (!r) return;
+  const drawerPanel = document.getElementById("drawerPanel");
+  drawerPanel.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div><span class="kicker">Dossier de Candidato</span><h2 style="margin:4px 0;font-size:22px">${esc(r.name)}</h2></div>
+      <button class="btn btn-secondary btn-icon" onclick="closeDrawer()">${icon("x", 16)}</button>
+    </div>
+    <div style="display:flex;gap:8px;margin:16px 0;flex-wrap:wrap">
+      <span class="chip ${r.status === "APROBADA" ? "green" : r.status === "RECHAZADA" ? "red" : "yellow"}">${esc(r.status)}</span>
+      <span class="badge">${esc(r.id)}</span>
+    </div>
+    <div class="metric-row"><span>Usuario Oficial</span><strong>${esc(r.user)}</strong></div>
+    <div class="metric-row"><span>Región / País</span><strong>${esc(r.country)}</strong></div>
+    <div class="metric-row"><span>Prueba de Video</span><strong>${r.video ? "Verificado y adjunto" : "Pendiente"}</strong></div>
+    <div class="metric-row"><span>Fecha de Registro</span><strong>${esc(r.date)}</strong></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px">
+      <button class="btn btn-primary" onclick="setRequest('${r.id}','APROBADA')">${icon("check", 14)} Aprobar</button>
+      <button class="btn btn-secondary" onclick="setRequest('${r.id}','EN REVISIÓN')">${icon("clock", 14)} En Revisión</button>
+      <button class="btn btn-danger" onclick="setRequest('${r.id}','RECHAZADA')">${icon("x", 14)} Declinar</button>
+    </div>
+    ${r.video ? `<button class="btn btn-secondary" style="width:100%;margin-top:10px" onclick="openVideoReview('${r.id}')">${icon("play-circle", 15)} Reproducir Video de Verificación</button>` : ""}`;
+  openDrawer();
+  icons();
+}
+
+function setRequest(id, status) {
+  const r = state.requests.find(x => x.id === id);
+  if (r) {
+    r.status = status;
+    addActivity(`Solicitud ${status.toLowerCase()}`, `${r.name} · ${r.id}`);
+    toast("Dictamen registrado", `${r.name} → ${status}`);
+    closeDrawer();
+    renderAdmin();
+  }
+}
+
+function deleteRequest(id) {
+  const idx = state.requests.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  const name = state.requests[idx].name;
+  state.requests.splice(idx, 1);
+  addActivity("Expediente eliminado", `${name} · ${id}`);
+  toast("Expediente eliminado", name);
+  renderAdmin();
+}
+
+function openDrawer() { document.getElementById("drawer").classList.add("open"); }
+function closeDrawer() { document.getElementById("drawer").classList.remove("open"); }
+
+function openVideoReview(id) {
+  const r = state.requests.find(x => x.id === id);
+  if (!r) return;
+  document.getElementById("mediaModalKicker").textContent = "Media Inspection · " + r.id;
+  document.getElementById("mediaModalTitle").textContent = "Casting de " + r.name;
+  document.getElementById("reviewVideoArea").innerHTML = r.videoUrl
+    ? `<div class="notice" style="border-color:rgba(var(--neon-rgb),0.35);color:var(--primary);background:rgba(var(--neon-rgb),0.06);margin-bottom:14px">Reproduciendo activo de verificación de <b>${esc(r.name)}</b> (${esc(r.user)}).</div>
+       <video src="${esc(r.videoUrl)}" controls autoplay loop muted playsinline style="width:100%;max-height:380px;border-radius:16px;background:#05060a;border:1px solid var(--line)"></video>
+       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:10px">
+         <a href="${esc(r.videoUrl)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:var(--primary);font-size:12px;font-weight:600">${icon("external-link", 13)} Abrir fuente directa</a>
+         <div style="display:flex;gap:8px">
+           <button class="btn btn-primary mini" onclick="setRequest('${r.id}','APROBADA');closeModal('videoReviewModal')">${icon("check", 13)} Aprobar Talento</button>
+           <button class="btn btn-danger mini" onclick="setRequest('${r.id}','RECHAZADA');closeModal('videoReviewModal')">${icon("x", 13)} Rechazar</button>
+         </div>
+       </div>`
+    : `<div class="empty">No hay archivo de video vinculado a este expediente.</div>`;
+  closeDrawer();
+  openModal("videoReviewModal");
+  icons();
+}
+
+// New Request Modal Logic
+function openNewRequestModal() {
+  document.getElementById("nrName").value = "";
+  document.getElementById("nrUser").value = "";
+  document.getElementById("nrVideoUrl").value = "";
+  openModal("newRequestModal");
+}
+
+async function handleNewRequestVideoUpload(file) {
+  if (!file) return;
+  toast("Procesando video", "Cargando archivo...");
+  try {
+    const url = await uploadFileUniversal(file);
+    document.getElementById("nrVideoUrl").value = url;
+    toast("Video listo", file.name);
+  } catch (e) {
+    toast("Error", e.message);
+  }
+}
+
+function createNewRequest() {
+  const name = document.getElementById("nrName").value.trim();
+  const user = document.getElementById("nrUser").value.trim();
+  const country = document.getElementById("nrCountry").value;
+  const status = document.getElementById("nrStatus").value;
+  const videoUrl = document.getElementById("nrVideoUrl").value.trim();
+  if (!name || !user) return toast("Campos requeridos", "Ingresa nombre y usuario.");
+
+  const id = "SL-2026-" + Math.floor(10000 + Math.random() * 89999);
+  state.requests.unshift({
+    id,
+    name,
+    user: user.startsWith("@") ? user : "@" + user,
+    country,
+    status,
+    video: !!videoUrl,
+    videoUrl,
+    date: new Date().toLocaleString("es-MX", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })
+  });
+  addActivity("Nueva solicitud registrada", `${name} · ${id}`);
+  closeModal("newRequestModal");
+  renderAdmin();
+  toast("Expediente creado", `${name} (${id})`);
+}
+
+function renderOverview() {
+  const pending = state.requests.filter(r => !["APROBADA", "RECHAZADA"].includes(r.status)).length;
+  const approved = state.requests.filter(r => r.status === "APROBADA").length;
+  const videoCount = state.requests.filter(r => r.video).length;
+  const tutCount = state.tutorials?.length || 0;
+  return `<div class="admin-grid">
+    <div class="widget span-4" style="min-height:auto">
+      <div class="widget-pad" style="display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:16px">
+          <div class="avatar" style="width:50px;height:50px;border-radius:16px">${icon("hard-drive", 22)}</div>
+          <div>
+            <span class="kicker">Cloud Infrastructure</span>
+            <h4 style="color:var(--text);margin:3px 0 2px;font-size:16px">Almacenamiento de Activos Multimedia</h4>
+            <p style="color:var(--muted);font-size:12px;margin:0">Capacidad dedicada para videos WebM transparentes y recursos de alta definición</p>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="text-align:right">
+            <div style="font-size:11px;color:var(--muted)">Estado del Nodo</div>
+            <strong style="font-size:13px;color:var(--green)">Óptimo · CDN Activo</strong>
+          </div>
+          <div style="position:relative;width:62px;height:62px">
+            <svg viewBox="0 0 36 36" style="width:100%;height:100%;transform:rotate(-90deg)">
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3"></path>
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--primary)" stroke-width="3" stroke-dasharray="18, 100" id="memChartPath"></path>
+            </svg>
+            <div id="memChartVal" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--primary)">18%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${widget("w-kpi", "EXPEDIENTES TOTALES", "Volumen acumulado", `<div class="kpi">${state.requests.length}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">${videoCount} videos verificados · ${tutCount} guías activas</div>`, 'data-kpi="' + state.requests.length + '"')}
+    ${widget("w-pending", "POR DICTAMINAR", "Pendientes de revisión", `<div class="kpi">${pending}</div><div class="progress-bar" style="margin-top:16px"><span style="width:${Math.min(100, pending * 25)}%"></span></div>`, 'data-kpi="' + pending + '"')}
+    ${widget("w-approved", "TALENTOS APROBADOS", "Streamers certificados", `<div class="kpi">${approved}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">Tasa de conversión activa</div>`, 'data-kpi="' + approved + '"')}
+    ${widget("w-tickets", "CONCIERGE DESK", "Tickets abiertos", `<div class="kpi">${state.tickets.filter(t => t.status !== "RESUELTO").length}</div><div style="color:var(--muted);font-size:11px;margin-top:10px">${state.tickets.length} consultas registradas</div>`, 'data-kpi="' + state.tickets.length + '"')}
+    ${widget("w-notes", "BITÁCORA EJECUTIVA", "Notas y directrices del turno", `<div class="field" style="margin:6px 0;height:calc(100% - 20px)"><textarea class="control" style="height:175px;resize:none;line-height:1.6" placeholder="Escribe aquí tus notas estratégicas..." oninput="updateNotes(this.value)">${esc(state.notes || "")}</textarea></div>`, 'span-2 data-icon="book"')}
+    ${widget("w-chart", "FLUJO DE CAPTACIÓN", "Curva de registros", `<div class="chart-range"><button class="range active" onclick="changeChart('day',this)">24 Horas</button><button class="range" onclick="changeChart('week',this)">7 Días</button><button class="range" onclick="changeChart('month',this)">Anual</button></div><div class="chart-box"><canvas id="mainChart"></canvas></div>`, "span-2")}
+    ${widget("w-activity", "AUDITORÍA EN TIEMPO REAL", "Eventos recientes del sistema", `<div class="activity">${state.events.slice(0, 6).map(e => `<div class="event">${icon("sparkles", 14)}<div><p>${esc(e[0])}</p><small>${esc(e[1])}</small></div><time>${esc(e[2])}</time></div>`).join("")}</div>`, "span-2")}
+    ${widget("w-inbox", "BANDEJA PRIORITARIA", "Últimos perfiles recibidos", `<div class="request-list">${state.requests.slice(0, 4).map(requestRow).join("")}</div><button class="btn btn-secondary" style="width:100%;margin-top:12px" onclick="setAdminTab('requests')">Abrir bandeja completa →</button>`, "span-2")}
+  </div>`;
+}
+
+window.updateNotes = (val) => { state.notes = val; save(); };
+
+function setReqFilter(f) {
+  requestFilter = f;
+  renderAdmin();
+}
+function setReqSearch(val) {
+  requestSearch = val;
+  const listEl = document.getElementById("filteredRequestsList");
+  if (listEl) listEl.innerHTML = getFilteredRequestsHtml();
+  icons();
+}
+function getFilteredRequestsHtml() {
+  const q = requestSearch.trim().toLowerCase();
+  const filtered = state.requests.filter(r => {
+    if (requestFilter === "PENDING" && ["APROBADA", "RECHAZADA"].includes(r.status)) return false;
+    if (requestFilter === "APPROVED" && r.status !== "APROBADA") return false;
+    if (requestFilter === "REJECTED" && r.status !== "RECHAZADA") return false;
+    if (requestFilter === "VIDEO" && !r.video) return false;
+    if (q) {
+      return (r.name || "").toLowerCase().includes(q) ||
+             (r.user || "").toLowerCase().includes(q) ||
+             (r.id || "").toLowerCase().includes(q) ||
+             (r.country || "").toLowerCase().includes(q);
+    }
+    return true;
+  });
+  return filtered.length ? filtered.map(requestRow).join("") : `<div class="empty">No se encontraron expedientes con ese filtro.</div>`;
+}
+
+function renderRequests() {
+  const total = state.requests.length;
+  const pending = state.requests.filter(r => !["APROBADA", "RECHAZADA"].includes(r.status)).length;
+  const approved = state.requests.filter(r => r.status === "APROBADA").length;
+  const withVideo = state.requests.filter(r => r.video).length;
+
+  return `<div class="admin-grid">
+    <article class="widget span-4" id="req-main">
+      <div class="glow"></div>
+      <div class="full-view widget-pad">
+        <div class="widget-head" style="flex-wrap:wrap">
+          <div><span class="kicker">Talent Acquisition Inbox</span><h3>Gestión de Solicitudes</h3></div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input class="control" style="width:220px;padding:8px 12px;font-size:12px" placeholder="Buscar nombre, @usuario, ID..." value="${esc(requestSearch)}" oninput="setReqSearch(this.value)">
+            <button class="btn btn-primary mini" onclick="openNewRequestModal()">+ Nueva Solicitud</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;overflow:auto;padding-bottom:4px">
+          <button type="button" class="chip green ${requestFilter === 'ALL' ? 'active-filter' : ''}" onclick="setReqFilter('ALL')">Todas (${total})</button>
+          <button type="button" class="chip yellow ${requestFilter === 'PENDING' ? 'active-filter' : ''}" onclick="setReqFilter('PENDING')">En Revisión (${pending})</button>
+          <button type="button" class="chip green ${requestFilter === 'APPROVED' ? 'active-filter' : ''}" onclick="setReqFilter('APPROVED')">Aprobadas (${approved})</button>
+          <button type="button" class="chip ${requestFilter === 'VIDEO' ? 'active-filter' : ''}" onclick="setReqFilter('VIDEO')">Con Video (${withVideo})</button>
+        </div>
+        <div class="request-list" id="filteredRequestsList">${getFilteredRequestsHtml()}</div>
+      </div>
+    </article>
+  </div>`;
+}
+
+function renderVerification() {
+  const withVideos = state.requests.filter(r => r.video);
+  const withoutVideos = state.requests.filter(r => !r.video);
+  const qc = state.qualityCriteria || defaultState.qualityCriteria;
+
+  return `<div class="admin-grid">
+    ${widget("verify-queue", "COLA DE AUDITORÍA", "Solicitudes sin video vs con video", `
+      <div style="display:flex;gap:24px;align-items:baseline">
+        <div><div class="kpi">${withVideos.length}</div><small style="color:var(--green);font-size:11px">Con video listo</small></div>
+        <div><div class="kpi" style="opacity:0.6">${withoutVideos.length}</div><small style="color:var(--muted);font-size:11px">Sin video aún</small></div>
+      </div>
+      <p style="color:var(--muted);font-size:12px;margin-top:12px">Inspecciona los videos de casting directamente en la consola.</p>
+    `, "span-2")}
+    ${widget("verify-info", "PROTOCOLO QUALITY CHECK", "Estándares de aprobación STARLEO (Editables)", `
+      <div class="metric-row" style="padding:10px 14px"><span>Duración requerida</span><input class="control" style="width:130px;padding:6px 10px;text-align:right;font-weight:700" value="${esc(qc.minDuration)}" onchange="updateQC('minDuration',this.value)"></div>
+      <div class="metric-row" style="padding:10px 14px"><span>Encuadre e iluminación</span><input class="control" style="width:150px;padding:6px 10px;text-align:right;color:var(--primary);font-weight:700" value="${esc(qc.framing)}" onchange="updateQC('framing',this.value)"></div>
+      <div class="metric-row" style="padding:10px 14px"><span>Claridad vocal</span><input class="control" style="width:150px;padding:6px 10px;text-align:right;color:var(--primary);font-weight:700" value="${esc(qc.audio)}" onchange="updateQC('audio',this.value)"></div>
+      <div class="metric-row" style="padding:10px 14px"><span>Filtros faciales</span><input class="control" style="width:150px;padding:6px 10px;text-align:right;font-weight:700" value="${esc(qc.filters)}" onchange="updateQC('filters',this.value)"></div>
+    `, "span-2")}
+    ${widget("verify-list", "CASTINGS RECIBIDOS", "Revisión directa de videos de verificación", `
+      <div class="request-list">
+        ${withVideos.length ? withVideos.map(requestRow).join("") : '<div class="empty">No hay solicitudes con video en este momento.</div>'}
+      </div>
+    `, "span-4")}
+  </div>`;
+}
+
+window.updateQC = (key, val) => {
+  if (!state.qualityCriteria) state.qualityCriteria = clone(defaultState.qualityCriteria);
+  state.qualityCriteria[key] = val;
+  addActivity("Criterio Quality Check actualizado", `${key}: ${val}`);
+  toast("Quality Check", "Estándar actualizado.");
+};
+
+function renderSettings() {
+  const palette = [
+    { name: "Champagne Gold", hex: "#D4AF7A" },
+    { name: "Rose Gold", hex: "#E2A3A3" },
+    { name: "Royal Amethyst", hex: "#A594F9" },
+    { name: "Jade Emerald", hex: "#45D09E" },
+    { name: "Platinum Ice", hex: "#B8C4D9" },
+    { name: "Crimson Velvet", hex: "#E06C75" }
+  ];
+
+  let themeHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
+    <span class="kicker">Estética & Identidad</span>
+    <h4 style="color:#fff;margin:4px 0 16px;font-size:16px">1. Atmósfera de Lujo y Redes Oficiales</h4>
+    <div class="form-grid" style="margin-bottom:16px">
+      <div class="field">
+        <label>Acabado Metálico (Acento Principal)</label>
+        <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;align-items:center">
+          ${palette.map(c => `<button type="button" style="background:${c.hex};width:36px;height:36px;border-radius:10px;border:2px solid ${state.themeColor === c.hex ? '#fff' : 'rgba(255,255,255,0.15)'};cursor:pointer;box-shadow:0 4px 14px ${c.hex}33;transition:0.2s" title="${c.name}" onclick="updateTheme('${c.hex}')"></button>`).join('')}
+          <input type="color" value="${state.themeColor || '#D4AF7A'}" style="width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:transparent;cursor:pointer" title="Color personalizado" onchange="updateTheme(this.value)">
+        </div>
+      </div>
+      <div class="field">
+        <label>Tono de Superficie (Tarjetas)</label>
+        <input class="control" type="color" value="${state.cardColor || '#10131c'}" style="height:42px;padding:4px" onchange="updateCard(this.value)">
+      </div>
+      <div class="field">
+        <label>Instagram Oficial (URL)</label>
+        <input class="control" type="url" placeholder="https://instagram.com/..." value="${esc(state.socials?.instagram || '')}" onchange="updateSocial('instagram',this.value)">
+      </div>
+      <div class="field">
+        <label>TikTok Oficial (URL)</label>
+        <input class="control" type="url" placeholder="https://tiktok.com/..." value="${esc(state.socials?.tiktok || '')}" onchange="updateSocial('tiktok',this.value)">
+      </div>
+      <div class="field full">
+        <label>Facebook Oficial (URL)</label>
+        <input class="control" type="url" placeholder="https://facebook.com/..." value="${esc(state.socials?.facebook || '')}" onchange="updateSocial('facebook',this.value)">
+      </div>
+    </div>
+  </div>`;
+
+  const bubbles = state.character?.bubbles || [];
+  let bubblesHtml = bubbles.map((b, idx) => `
+    <div style="display:grid;grid-template-columns:1fr 80px 80px auto;gap:8px;align-items:center;margin-bottom:8px">
+      <input class="control" value="${esc(b.text)}" placeholder="Mensaje de burbuja" onchange="editCharacterBubble(${idx},'text',this.value)">
+      <input class="control" type="number" value="${b.start}" title="Segundo inicial" onchange="editCharacterBubble(${idx},'start',this.value)">
+      <input class="control" type="number" value="${b.end}" title="Segundo final" onchange="editCharacterBubble(${idx},'end',this.value)">
+      <button class="btn btn-danger mini" onclick="removeCharacterBubble(${idx})">×</button>
+    </div>
+  `).join("");
+
+  let charHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
+    <span class="kicker">Hero Hologram</span>
+    <h4 style="color:#fff;margin:4px 0 16px;font-size:16px">2. Gestor de Personaje Principal</h4>
+    <div class="carousel-preview" style="background:#06070b;display:grid;place-items:center;height:200px;border-radius:14px;margin-bottom:16px">
+      ${state.character?.videoUrl ? `<video id="heroCharPreviewVideo" src="${esc(state.character.videoUrl)}" autoplay loop muted playsinline style="max-height:100%;max-width:100%;transform:scale(${(state.character.scale || 100) / 100})"></video>` : `<div class="empty">Sin video de personaje asignado</div>`}
+    </div>
+    <div class="form-grid" style="margin-bottom:16px">
+      <div class="field">
+        <label>Escala de Proyección: <b id="charScaleLabel" style="color:var(--primary)">${state.character.scale || 100}%</b></label>
+        <input class="range-input" type="range" min="50" max="200" value="${state.character.scale || 100}" oninput="updateCharacterScale(this.value)">
+      </div>
+      <div style="display:flex;gap:8px;align-items:end">
+        <label class="btn btn-primary" style="flex:1;text-align:center;cursor:pointer">
+          ${icon("upload", 14)} Subir Video (MP4 / WEBM)
+          <input type="file" accept="video/webm,video/mp4,image/gif" style="display:none" onchange="uploadCharacterVideo(this.files[0])">
+        </label>
+        ${state.character?.videoUrl ? `<button class="btn btn-danger" onclick="removeCharacterVideo()">Quitar</button>` : ""}
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--line);padding-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <label style="font-size:11px;font-weight:700;color:var(--primary)">BURBUJAS DE DIÁLOGO SINCRONIZADAS (Texto / Seg Inicio / Seg Fin)</label>
+        <button class="btn btn-secondary mini" onclick="addCharacterBubble()">+ Añadir Burbuja</button>
+      </div>
+      ${bubblesHtml || '<div class="empty" style="padding:12px">Sin burbujas configuradas.</div>'}
+    </div>
+  </div>`;
+
+  const mascotKeys = ["streamer", "aprender", "soporte"];
+  const pm = state.panelMascots || defaultState.panelMascots;
+
+  let cards = (state.cards || []).map((c, i) => {
+    const mkey = mascotKeys[i] || "streamer";
+    const m = pm[mkey] || defaultMascotConfig("");
+
+    return `<div class="card-editor" style="display:grid;gap:12px;background:rgba(255,255,255,0.02);padding:18px;border-radius:16px;border:1px solid var(--line)">
+      <div class="form-grid" style="grid-template-columns:1fr auto auto">
+        <div class="field"><label>Título de Tarjeta</label><input class="control" type="text" value="${esc(c.title)}" onchange="editCard(${i},'title',this.value)"></div>
+        <div class="field"><label>Color Acento</label><input class="control" type="color" value="${esc(c.color || '#D4AF7A')}" style="width:52px;height:42px;padding:3px" onchange="editCard(${i},'color',this.value)"></div>
+        <div style="display:grid;place-items:center;background:var(--surface2);border:1px solid var(--line);border-radius:12px;width:44px;height:42px;align-self:end;color:var(--primary)">
+          ${(c.icon || "").includes('http') || (c.icon || "").startsWith('data:') ? '<img src="' + esc(c.icon) + '" style="width:24px;height:24px;object-fit:contain">' : icon(c.icon || "circle", 20)}
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label>Descripción Ejecutiva</label><input class="control" type="text" value="${esc(c.desc)}" onchange="editCard(${i},'desc',this.value)"></div>
+        <div class="field"><label>Texto del Botón</label><input class="control" type="text" value="${esc(c.btn)}" onchange="editCard(${i},'btn',this.value)"></div>
+      </div>
+      <label class="btn btn-secondary mini" style="text-align:center;cursor:pointer;justify-self:start">
+        ${icon("image", 13)} Subir Icono PNG Personalizado
+        <input type="file" accept="image/*" style="display:none" onchange="uploadCardImage(${i},this.files[0])">
+      </label>
+
+      <div class="card-video-controls" style="margin-top:8px;border-top:1px solid var(--line);padding-top:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <strong style="font-size:11px;letter-spacing:0.08em;color:var(--primary)">MASCOTA HOLOGRÁFICA (.WEBM / .GIF)</strong>
+          <label style="font-size:11px;display:flex;align-items:center;gap:6px;cursor:pointer">
+            <input type="checkbox" ${m.active !== false ? 'checked' : ''} onchange="updateMascot('${mkey}','active',this.checked)"> Activar Proyección
+          </label>
+        </div>
+        
+        <div class="card-video-editor-stage" id="mascotStage-${mkey}" data-card-key="${mkey}" onpointerdown="startMascotDrag(event,'${mkey}')" onwheel="scaleMascotByWheel(event,'${mkey}')" style="background:#07080d;border:1px solid ${esc(c.color)}66;width:300px;height:380px;margin:10px auto;border-radius:22px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:38px 28px;box-shadow:0 20px 50px rgba(0,0,0,0.6)">
+          <div style="width:58px;height:58px;border-radius:16px;background:${esc(c.color)}18;border:1px solid ${esc(c.color)}44;display:flex;align-items:center;justify-content:center;margin-bottom:16px;z-index:4;pointer-events:none;color:${esc(c.color)}">
+             ${(c.icon || "").includes('http') || (c.icon || "").startsWith('data:') ? `<img src="${esc(c.icon)}" style="width:28px;height:28px;object-fit:contain">` : icon(c.icon || 'star', 24)}
+          </div>
+          <h3 style="font-family:'Clash Display',sans-serif;font-size:21px;font-weight:600;line-height:1.15;margin:0 0 12px;color:#fff;text-transform:uppercase;z-index:4;pointer-events:none;text-align:center">${esc(c.title).replace(" ", "<br>")}</h3>
+          <div style="margin-top:auto;padding:10px 20px;background:rgba(255,255,255,0.06);border:1px solid ${esc(c.color)}66;border-radius:10px;color:#fff;font-weight:600;font-size:12px;z-index:4;pointer-events:none">${esc(c.btn)} →</div>
+
+          ${m.gif ? ((m.gif.toLowerCase().endsWith(".webm") || m.gif.toLowerCase().endsWith(".mp4") || m.gif.startsWith("data:video") || m.gif.startsWith("blob:")) ? `<video id="mascotPreview-${mkey}" src="${esc(m.gif)}" autoplay loop muted playsinline disablePictureInPicture style="position:absolute;bottom:0;left:50%;transform:translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg);width:${m.size || 180}px;height:auto;object-fit:contain;opacity:${Number.isFinite(Number(m.opacity)) ? m.opacity : 1};z-index:${m.layer === 1 ? 1 : (m.layer === 3 ? 5 : 3)};pointer-events:none"></video>` : `<img id="mascotPreview-${mkey}" src="${esc(m.gif)}" draggable="false" style="position:absolute;bottom:0;left:50%;transform:translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg);width:${m.size || 180}px;height:auto;object-fit:contain;opacity:${Number.isFinite(Number(m.opacity)) ? m.opacity : 1};z-index:${m.layer === 1 ? 1 : (m.layer === 3 ? 5 : 3)};pointer-events:none">`) : ``}
+          
+          <div class="card-video-drag-hint">${icon("move", 12)} ARRASTRAR / RUEDA = ZOOM</div>
+        </div>
+        
+        <div class="video-transform-grid" style="margin-top:14px">
+          <label>Eje X <output id="mascotX-${mkey}">${Math.round(m.x || 0)}px</output><input type="range" id="sliderX-${mkey}" min="-250" max="250" step="1" value="${m.x || 0}" oninput="previewMascot('${mkey}','x',this.value)"></label>
+          <label>Eje Y <output id="mascotY-${mkey}">${Math.round(m.y || 0)}px</output><input type="range" id="sliderY-${mkey}" min="-250" max="250" step="1" value="${m.y || 0}" oninput="previewMascot('${mkey}','y',this.value)"></label>
+          <label>Escala <output id="mascotScale-${mkey}">${Math.round(m.scale || 100)}%</output><input type="range" id="sliderScale-${mkey}" min="30" max="250" step="1" value="${m.scale || 100}" oninput="previewMascot('${mkey}','scale',this.value)"></label>
+          <label>Rotación <output id="mascotRot-${mkey}">${Math.round(m.rotation || 0)}°</output><input type="range" min="-180" max="180" step="1" value="${m.rotation || 0}" oninput="previewMascot('${mkey}','rotation',this.value)"></label>
+          <label>Opacidad <output id="mascotOp-${mkey}">${Math.round((Number.isFinite(Number(m.opacity)) ? m.opacity : 1) * 100)}%</output><input type="range" min="0" max="1" step="0.05" value="${Number.isFinite(Number(m.opacity)) ? m.opacity : 1}" oninput="previewMascot('${mkey}','opacity',this.value)"></label>
+          <label>Plano Z <output id="mascotLayer-${mkey}">${m.layer === 1 ? 'Fondo' : m.layer === 3 ? 'Frente' : 'Medio'}</output><input type="range" min="1" max="3" step="1" value="${m.layer || 2}" oninput="previewMascot('${mkey}','layer',this.value)" onchange="updateMascot('${mkey}','layer',this.value)"></label>
+          <label style="grid-column:1/-1">Tamaño Base <output id="mascotSize-${mkey}">${Math.round(m.size || 180)}px</output><input type="range" min="80" max="400" step="10" value="${m.size || 180}" oninput="previewMascot('${mkey}','size',this.value)"></label>
+        </div>
+        
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+          <button type="button" class="btn btn-secondary mini" onclick="resetMascot('${mkey}')">${icon("rotate-ccw", 12)} Restablecer</button>
+          <label class="btn btn-primary mini" style="text-align:center;cursor:pointer">
+            ${icon("upload", 12)} ${m.gif ? 'Reemplazar Activo (.WebM / .GIF)' : 'Subir Activo (.WebM / .GIF)'}
+            <input type="file" accept="image/gif,image/png,image/webp,video/webm,video/mp4" style="display:none" onchange="uploadMascotGif('${mkey}',this.files[0])">
+          </label>
+          ${m.gif ? `<button type="button" class="btn btn-danger mini" onclick="removeMascotGif('${mkey}')">Eliminar Activo</button>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  const extraKeys = [
+    { key: "registro", label: "Registro (Tarjeta Video Intro)" },
+    { key: "guias", label: "Guías (Tarjetas de Tutoriales)" },
+    { key: "support1", label: "Soporte (Oficial 1)" },
+    { key: "support2", label: "Soporte (Oficial 2)" },
+    { key: "support3", label: "Soporte (Oficial 3)" }
+  ];
+  let extraMascotsHtml = extraKeys.map(ek => {
+    const m = pm[ek.key] || defaultMascotConfig("");
+    return `<div class="request" style="grid-template-columns:1fr auto">
+      <div>
+        <strong style="color:var(--primary)">${ek.label}</strong>
+        <div class="meta">${m.gif ? "Activo asignado · Escala " + (m.scale || 100) + "%" : "Sin activo asignado"}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <label style="font-size:11px;display:flex;align-items:center;gap:5px;cursor:pointer">
+          <input type="checkbox" ${m.active !== false ? 'checked' : ''} onchange="updateMascot('${ek.key}','active',this.checked)"> Activo
+        </label>
+        <label class="btn btn-secondary mini" style="cursor:pointer">
+          ${icon("upload", 12)} Subir WebM/GIF
+          <input type="file" accept="image/gif,image/png,video/webm,video/mp4" style="display:none" onchange="uploadMascotGif('${ek.key}',this.files[0])">
+        </label>
+        <button type="button" class="btn btn-primary mini" onclick="openExtraMascotCalibrator('${ek.key}','${ek.label}')">${icon("sliders", 12)} Calibrar</button>
+        ${m.gif ? `<button type="button" class="btn btn-danger mini" onclick="removeMascotGif('${ek.key}')">×</button>` : ''}
+      </div>
+    </div>`;
+  }).join("");
+
+  let cardHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
+    <span class="kicker">Interactive Cards</span>
+    <h4 style="color:#fff;margin:4px 0 16px;font-size:16px">3. Calibración de Tarjetas y Mascotas 3D</h4>
+    <div style="display:grid;gap:16px">${cards}</div>
+    <div style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px">
+      <span class="kicker">Extended Holograms</span>
+      <h4 style="color:#fff;margin:4px 0 12px;font-size:15px">Mascotas de Módulos Secundarios</h4>
+      <div style="display:grid;gap:10px">${extraMascotsHtml}</div>
+    </div>
+  </div>`;
+
+  let tuts = state.tutorials.length ? state.tutorials.map((t, i) => `
+    <div class="request" style="grid-template-columns:auto 1fr auto">
+      <div class="avatar">${icon(t.type === 'pdf' ? 'file-text' : 'play', 15)}</div>
+      <div>
+        <strong>${esc(t.title)}</strong>
+        <div class="meta">${esc(t.desc)} · <span class="badge">${t.type.toUpperCase()}</span></div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary mini" onclick="previewTutorial(${i})" title="Reproducir / Abrir">${icon("eye", 13)} Ver</button>
+        <button class="btn btn-danger mini" onclick="removeTutorial(${i})" title="Eliminar">×</button>
+      </div>
+    </div>`).join("") : '<div class="empty">Sin tutoriales publicados.</div>';
+
+  let tutHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
+    <span class="kicker">Academy Library</span>
+    <h4 style="color:#fff;margin:4px 0 16px;font-size:16px">4. Gestor de Tutoriales y Manuales</h4>
+    <div style="display:grid;gap:10px;margin-bottom:16px">${tuts}</div>
+    <div class="form-grid" style="background:rgba(0,0,0,0.25);padding:16px;border-radius:14px;border:1px solid var(--line)">
+      <div class="field"><label>Título del Recurso *</label><input class="control" id="tutTitle" placeholder="Ej. Masterclass de Iluminación"></div>
+      <div class="field"><label>Descripción *</label><input class="control" id="tutDesc" placeholder="Resumen ejecutivo del contenido"></div>
+      <div class="field full">
+        <label>Subir Archivo (Video MP4/WebM o PDF) o pegar URL directa</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input class="control" id="tutUrlInput" style="flex:1" placeholder="https://... (opcional si subes archivo)">
+          <label class="btn btn-secondary" style="cursor:pointer">
+            ${icon("upload", 14)} Subir Video / PDF
+            <input type="file" accept="video/*,application/pdf" style="display:none" onchange="uploadTutorialFile(this.files[0])">
+          </label>
+          <button class="btn btn-primary" onclick="addTutorialByUrl()">Publicar Recurso</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  let supps = (state.supportContacts || []).map((c, i) => `<div style="display:grid;gap:12px;background:rgba(255,255,255,0.02);padding:16px;border-radius:14px;border:1px solid var(--line)">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="avatar" style="width:44px;height:44px">
+          ${(c.avatar || "").includes('http') || (c.avatar || "").startsWith('data:') ? `<img src="${esc(c.avatar)}" style="width:28px;height:28px;object-fit:contain">` : `<span style="font-size:20px">${esc(c.avatar || '💎')}</span>`}
+        </div>
+        <label class="btn btn-secondary mini" style="cursor:pointer">
+          ${icon("image", 12)} Subir Icono PNG
+          <input type="file" accept="image/*" style="display:none" onchange="uploadSupportAvatar(${i},this.files[0])">
+        </label>
+      </div>
+      <button class="btn btn-danger mini" onclick="removeSupportContact(${i})">Eliminar Oficial</button>
+    </div>
+    <div class="form-grid">
+      <div class="field"><label>ID Departamento</label><input class="control" type="text" value="${esc(c.id)}" onchange="editSupport(${i},'id',this.value)"></div>
+      <div class="field"><label>Título Oficial</label><input class="control" type="text" value="${esc(c.name)}" onchange="editSupport(${i},'name',this.value)"></div>
+      <div class="field"><label>Especialidad / Rol</label><input class="control" type="text" value="${esc(c.role)}" onchange="editSupport(${i},'role',this.value)"></div>
+      <div class="field"><label>Categorías (Separadas por coma)</label><input class="control" type="text" value="${esc(c.issues)}" onchange="editSupport(${i},'issues',this.value)"></div>
+      <div class="field"><label>Línea WhatsApp (con código de país)</label><input class="control" type="text" value="${esc(c.whatsapp)}" onchange="editSupport(${i},'whatsapp',this.value)"></div>
+      <div class="field"><label>Correo Ejecutivo</label><input class="control" type="email" value="${esc(c.email)}" onchange="editSupport(${i},'email',this.value)"></div>
+    </div>
+  </div>`).join("");
+
+  let suppHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div>
+        <span class="kicker">Executive Concierge</span>
+        <h4 style="color:#fff;margin:4px 0 0;font-size:16px">5. Directorio de Oficiales de Soporte</h4>
+      </div>
+      <button class="btn btn-primary mini" onclick="addSupportContact()">+ Añadir Oficial</button>
+    </div>
+    <div style="display:grid;gap:14px">${supps}</div>
+  </div>`;
+
+  let backupHtml = `<div class="config-section" style="background:rgba(255,255,255,0.018);padding:20px;border-radius:18px;border:1px solid var(--line)">
+    <span class="kicker">Data & Security</span>
+    <h4 style="color:#fff;margin:4px 0 14px;font-size:16px">6. Respaldo Maestro y Mantenimiento</h4>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-secondary" onclick="exportBackupJson()">${icon("download", 14)} Exportar Respaldo (.JSON)</button>
+      <label class="btn btn-secondary" style="cursor:pointer">
+        ${icon("upload", 14)} Importar Respaldo (.JSON)
+        <input type="file" accept="application/json" style="display:none" onchange="importBackupJson(this.files[0])">
+      </label>
+      <button class="btn btn-danger" style="margin-left:auto" onclick="resetDemo()">${icon("alert-triangle", 14)} Vaciar / Restaurar de Fábrica</button>
+    </div>
+  </div>`;
+
+  let body = `<div style="display:grid;gap:22px">${themeHtml}${charHtml}${cardHtml}${tutHtml}${suppHtml}${backupHtml}</div>`;
+  return '<div class="admin-grid">' + widget("global-settings", "MASTER CONFIGURATION", "Arquitectura Visual y Parámetros del Sistema", body, "span-4") + '</div>';
+}
+
+function setTicketFilter(f) {
+  ticketFilter = f;
+  renderAdmin();
+}
+
+function openNewTicketModal() {
+  document.getElementById("ntName").value = "";
+  document.getElementById("ntMsg").value = "";
+  const sel = document.getElementById("ntCat");
+  sel.innerHTML = (state.supportContacts || []).map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join("");
+  openModal("newTicketModal");
+}
+
+function createNewTicket() {
+  const name = document.getElementById("ntName").value.trim();
+  const cat = document.getElementById("ntCat").value;
+  const msg = document.getElementById("ntMsg").value.trim();
+  if (!name || !msg) return toast("Datos incompletos", "Ingresa el nombre y el mensaje.");
+  const id = "TICK-" + Math.floor(1000 + Math.random() * 9000);
+  state.tickets.unshift({
+    id,
+    name,
+    cat,
+    msg,
+    status: "ABIERTO",
+    date: new Date().toLocaleDateString("es-MX")
+  });
+  addActivity("Ticket de soporte creado", `${name} · ${id}`);
+  closeModal("newTicketModal");
+  renderAdmin();
+  toast("Ticket registrado", id);
+}
+
+function toggleTicketStatus(id) {
+  const t = state.tickets.find(x => x.id === id);
+  if (!t) return;
+  t.status = t.status === "RESUELTO" ? "ABIERTO" : "RESUELTO";
+  addActivity(`Ticket ${t.status.toLowerCase()}`, `${t.name} · ${t.id}`);
+  toast("Estado de ticket", `${t.id} → ${t.status}`);
+  renderAdmin();
+}
+
+function deleteTicket(id) {
+  const idx = state.tickets.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  state.tickets.splice(idx, 1);
+  addActivity("Ticket eliminado", id);
+  renderAdmin();
+  toast("Ticket eliminado", id);
+}
+
+function renderSupportAdmin() {
+  const filtered = state.tickets.filter(t => {
+    if (ticketFilter === "OPEN") return t.status !== "RESUELTO";
+    if (ticketFilter === "RESOLVED") return t.status === "RESUELTO";
+    return true;
+  });
+
+  let tks = filtered.length ? filtered.map(t => `<div class="request">
+    <div class="avatar">${icon("message-square", 16)}</div>
+    <div>
+      <strong>${esc(t.name)}</strong>
+      <div class="meta">${esc(t.cat)} · <span style="color:var(--primary)">${esc(t.id)}</span> · ${esc(t.date || "")}</div>
+      <p style="font-size:12.5px;color:var(--text);margin:6px 0 0">${esc(t.msg)}</p>
+    </div>
+    <div class="request-actions">
+      <button class="chip ${t.status === "RESUELTO" ? "green" : "yellow"}" onclick="toggleTicketStatus('${t.id}')" title="Cambiar estado">${esc(t.status)}</button>
+      <button class="btn btn-danger mini" onclick="deleteTicket('${t.id}')" title="Eliminar">${icon("trash-2", 13)}</button>
+    </div>
+  </div>`).join("") : '<div class="empty">No hay tickets en esta categoría.</div>';
+
+  return `<div class="admin-grid">
+    <article class="widget span-4" id="support-admin">
+      <div class="glow"></div>
+      <div class="full-view widget-pad">
+        <div class="widget-head" style="flex-wrap:wrap">
+          <div><span class="kicker">Concierge Desk</span><h3>Tickets de Asistencia en Vivo</h3></div>
+          <button class="btn btn-primary mini" onclick="openNewTicketModal()">+ Crear Ticket</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <button class="chip ${ticketFilter === 'ALL' ? 'active-filter' : ''}" onclick="setTicketFilter('ALL')">Todos (${state.tickets.length})</button>
+          <button class="chip yellow ${ticketFilter === 'OPEN' ? 'active-filter' : ''}" onclick="setTicketFilter('OPEN')">Abiertos (${state.tickets.filter(t => t.status !== 'RESUELTO').length})</button>
+          <button class="chip green ${ticketFilter === 'RESOLVED' ? 'active-filter' : ''}" onclick="setTicketFilter('RESOLVED')">Resueltos (${state.tickets.filter(t => t.status === 'RESUELTO').length})</button>
+        </div>
+        <div class="request-list">${tks}</div>
+      </div>
+    </article>
+  </div>`;
+}
+
+function clearActivityLog() {
+  state.activity = [];
+  state.events = [];
+  save();
+  renderAdmin();
+  toast("Historial limpio", "Se vació el registro de auditoría.");
+}
+
+function renderActivity() {
+  const merged = [...(Array.isArray(state.events) ? state.events : [])].slice(0, 50);
+  let evts = merged.length ? merged.map(e => {
+    const a = Array.isArray(e) ? e : ["Actividad", "", ""];
+    return `<div class="event">${icon("shield-check", 15)}<div><p>${esc(a[0])}</p><small>${esc(a[1])}</small></div><time>${esc(a[2])}</time></div>`;
+  }).join("") : '<div class="empty">Sin registros de auditoría.</div>';
+
+  return `<div class="admin-grid">
+    <article class="widget span-4" id="audit">
+      <div class="glow"></div>
+      <div class="full-view widget-pad">
+        <div class="widget-head">
+          <div><span class="kicker">Security & Audit Log</span><h3>Trazabilidad de Operaciones Administrativas</h3></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary mini" onclick="exportBackupJson()">${icon("download", 13)} Exportar</button>
+            <button class="btn btn-danger mini" onclick="clearActivityLog()">${icon("trash-2", 13)} Limpiar</button>
+          </div>
+        </div>
+        <div class="activity">${evts}</div>
+      </div>
+    </article>
+  </div>`;
+}
+
+function syncTutorialsToPortal() {
+  const tutEl = document.getElementById('tutoriales-list');
+  if (!tutEl) return;
+  const items = state.tutorials || [];
+  if (!items.length) { tutEl.innerHTML = ''; return; }
+  tutEl.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;">` +
+    items.map((t, i) => `
+      <a href="${esc(t.url)}" target="_blank" class="glass-panel" style="padding:12px 20px;border-radius:14px;color:white;text-decoration:none;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:8px;border-color:rgba(236,72,153,0.3);transition:transform 0.2s, border-color 0.2s;">
+        <i class="fa-solid ${t.type === 'pdf' ? 'fa-file-lines' : 'fa-circle-play'}" style="color:#EC4899"></i>
+        <span>${esc(t.title)}</span>
+        <span style="font-size:10px;opacity:0.6;text-transform:uppercase;">${t.type || 'VIDEO'} ↗</span>
+      </a>
+    `).join('') + `</div>`;
+}
+
+function syncSupportToPortal() {
+  const waEl = document.getElementById('soporte-list');
+  if (!waEl) return;
+  const contacts = state.supportContacts || [];
+  if (!contacts.length) { waEl.innerHTML = ''; return; }
+  waEl.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:20px;">` +
+    contacts.filter(c => c.whatsapp).map((c, i) => {
+      const waNum = String(c.whatsapp).replace(/[^0-9]/g, '');
+      const waUrl = `https://api.whatsapp.com/send?phone=${waNum}&text=${encodeURIComponent('Hola ' + c.name + ', solicito asistencia oficial de STARMAKER Streamers')}`;
+      return `<a href="${waUrl}" target="_blank" style="padding:12px 20px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;text-decoration:none;border-radius:14px;font-weight:800;font-size:13px;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 20px rgba(37,211,102,.3);transition:transform 0.2s;">
+        <i class="fa-brands fa-whatsapp" style="font-size:16px;"></i>
+        <span>${esc(c.name)}</span>
+        <span style="font-size:10px;opacity:0.8;font-weight:600">(${esc(c.role || 'Oficial')}) ↗</span>
+      </a>`;
+    }).join('') +
+    `</div>`;
+}
+
+function renderAdmin() {
+  applySavedTheme();
+  const v = document.getElementById("adminView");
+  if (v) {
+    if (adminTab === "overview") v.innerHTML = renderOverview();
+    if (adminTab === "requests") v.innerHTML = renderRequests();
+    if (adminTab === "verification") v.innerHTML = renderVerification();
+    if (adminTab === "settings") v.innerHTML = renderSettings();
+    if (adminTab === "support") v.innerHTML = renderSupportAdmin();
+    if (adminTab === "activity") v.innerHTML = renderActivity();
+  }
+  document.querySelectorAll(".admin-tab").forEach(b => b.classList.toggle("active", b.dataset.tab === adminTab));
+  document.querySelectorAll("#adminBottom button").forEach(b => b.classList.toggle("active", b.dataset.tab === adminTab));
+  icons();
+  updateMemoryChart();
+  syncTutorialsToPortal();
+  syncSupportToPortal();
+  if (adminTab === "overview") setTimeout(() => drawChart("day"), 20);
+}
+
+function setAdminTab(t) {
+  adminTab = t;
+  renderAdmin();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("adminTabs").onclick = e => {
+  const b = e.target.closest("[data-tab]");
+  if (b) setAdminTab(b.dataset.tab);
+};
+document.getElementById("adminBottom").onclick = e => {
+  const b = e.target.closest("[data-tab]");
+  if (b) setAdminTab(b.dataset.tab);
+};
+
+function drawChart(range) {
+  const c = document.getElementById("mainChart");
+  if (!c) return;
+  if (chart) chart.destroy();
+  const count = state.requests.length;
+  const data = range === "day"
+    ? [1, 2, 1, 3, 2, 4, 3, 5, 4, 6, 5, Math.max(7, count)]
+    : range === "week"
+    ? [4, 7, 5, 9, 8, 12, Math.max(14, count)]
+    : [12, 19, 15, 24, 22, 30, 28, 35, 40, 38, 45, Math.max(50, count)];
+  const labels = range === "day"
+    ? ["00h", "02h", "04h", "06h", "08h", "10h", "12h", "14h", "16h", "18h", "20h", "Ahora"]
+    : range === "week"
+    ? ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
+    : ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  const tc = state.themeColor || "#D4AF7A";
+  chart = new Chart(c, {
+    type: range === "day" ? "line" : "bar",
+    data: {
+      labels,
+      datasets: [{
+        data,
+        borderColor: tc,
+        backgroundColor: tc + "24",
+        borderWidth: 2,
+        tension: 0.42,
+        fill: true,
+        borderRadius: 6,
+        pointRadius: 2.5,
+        pointBackgroundColor: tc
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: "rgba(255,255,255,0.42)", font: { size: 10 } } },
+        y: { grid: { color: "rgba(255,255,255,0.05)" }, ticks: { color: "rgba(255,255,255,0.42)", font: { size: 10 } }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function changeChart(r, b) {
+  document.querySelectorAll(".range").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  drawChart(r);
+}
+
+// Theme & Socials
+function updateTheme(c) {
+  if (!/^#[0-9a-f]{6}$/i.test(c)) return;
+  state.themeColor = c;
+  addActivity("Tema visual actualizado", c);
+  renderAdmin();
+  toast("Acabado actualizado", "Paleta ejecutiva aplicada en tiempo real.");
+}
+
+function updateCard(c) {
+  state.cardColor = c;
+  document.documentElement.style.setProperty('--surface', c);
+  addActivity("Superficie de tarjetas actualizada", c);
+  toast("Superficie actualizada", "Tono de tarjetas modificado.");
+}
+
+window.updateSocial = (net, val) => {
+  if (!state.socials) state.socials = {};
+  state.socials[net] = val.trim();
+  addActivity("Red social actualizada", net);
+  toast("Red oficial guardada", net);
+};
+
+// Character Functions
+window.updateCharacterScale = (val) => {
+  state.character.scale = Number(val);
+  const lbl = document.getElementById('charScaleLabel');
+  if (lbl) lbl.textContent = val + '%';
+  const vid = document.getElementById('heroCharPreviewVideo');
+  if (vid) vid.style.transform = `scale(${Number(val) / 100})`;
+  save();
+};
+
+window.uploadCharacterVideo = async (file) => {
+  if (!file) return;
+  toast("Subiendo personaje", "Procesando video...");
+  try {
+    const url = await uploadFileUniversal(file);
+    state.character.videoUrl = url;
+    addActivity("Personaje principal actualizado", file.name);
+    renderAdmin();
+    toast("Personaje actualizado", file.name);
+  } catch (e) {
+    toast("Error", e.message);
   }
 };
 
-document.getElementById('btn-close-admin').onclick = () => document.getElementById('admin-widget').classList.remove('is-open');
-
-// Draggable Widget Logic
-const widget = document.getElementById('admin-widget');
-const header = document.getElementById('admin-widget-header');
-let isDragging = false, startX, startY, startLeft, startTop;
-
-header.addEventListener('mousedown', (e) => {
-  if (e.target.id === 'btn-close-admin') return;
-  isDragging = true;
-  startX = e.clientX;
-  startY = e.clientY;
-  const rect = widget.getBoundingClientRect();
-  startLeft = rect.left;
-  startTop = rect.top;
-  document.body.style.userSelect = 'none';
-});
-window.addEventListener('mousemove', (e) => {
-  if (!isDragging) return;
-  const dx = e.clientX - startX;
-  const dy = e.clientY - startY;
-  widget.style.left = (startLeft + dx) + 'px';
-  widget.style.top = (startTop + dy) + 'px';
-  widget.style.right = 'auto'; // Disable right positioning so left works
-});
-window.addEventListener('mouseup', () => {
-  isDragging = false;
-  document.body.style.userSelect = '';
-});
-
-// Touch support for mobile dragging
-header.addEventListener('touchstart', (e) => {
-  if (e.target.id === 'btn-close-admin') return;
-  isDragging = true;
-  startX = e.touches[0].clientX;
-  startY = e.touches[0].clientY;
-  const rect = widget.getBoundingClientRect();
-  startLeft = rect.left;
-  startTop = rect.top;
-}, {passive: true});
-window.addEventListener('touchmove', (e) => {
-  if (!isDragging) return;
-  const dx = e.touches[0].clientX - startX;
-  const dy = e.touches[0].clientY - startY;
-  widget.style.left = (startLeft + dx) + 'px';
-  widget.style.top = (startTop + dy) + 'px';
-  widget.style.right = 'auto';
-}, {passive: true});
-window.addEventListener('touchend', () => {
-  isDragging = false;
-});
-
-
-// ── ADMIN: DOWNLOAD CSV ───────────────────────────────────────────────────────
-document.getElementById('btn-download-db').onclick = async () => {
-  try {
-    const snap = await getDocs(collection(db, 'registros_form'));
-    let csv = "Fecha,Nombre,Email,Teléfono,Nacionalidad,Ciudad,Talento,ID,AgentID,Agencia,Plataforma,Video,Fotos\n";
-    const safe = s => `"${(s||'').toString().replace(/"/g,'""')}"`;
-    snap.forEach(d => {
-      const c = d.data();
-      csv += [safe(c.createdAt),safe(c.nombre),safe(c.email),safe(c.telefono),safe(c.nacionalidad),safe(c.ciudad),safe(c.talento),safe(c.tuId),safe(c.agentId),safe(c.agencia),safe(c.plataforma),safe(c.videoUrl),safe(c.fotosUrl)].join(',') + '\n';
-    });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
-    a.download = 'StarMaker_DB.csv'; a.click();
-  } catch(err) { showAdminError(err); }
+window.removeCharacterVideo = () => {
+  state.character.videoUrl = "";
+  addActivity("Video de personaje eliminado");
+  renderAdmin();
+  toast("Personaje eliminado");
 };
+
+window.addCharacterBubble = () => {
+  if (!state.character.bubbles) state.character.bubbles = [];
+  state.character.bubbles.push({ text: "Nuevo mensaje holográfico", start: 0, end: 5 });
+  save();
+  renderAdmin();
+  toast("Burbuja añadida");
+};
+
+window.editCharacterBubble = (idx, key, val) => {
+  if (!state.character?.bubbles?.[idx]) return;
+  state.character.bubbles[idx][key] = key === "text" ? val : Number(val);
+  save();
+};
+
+window.removeCharacterBubble = (idx) => {
+  state.character.bubbles.splice(idx, 1);
+  save();
+  renderAdmin();
+};
+
+// Card & Mascot Functions
+window.editCard = (i, key, val) => {
+  if (!state.cards || !state.cards[i]) return;
+  state.cards[i][key] = val;
+  addActivity("Tarjeta actualizada", `${state.cards[i].title} (${key})`);
+  renderAdmin();
+};
+
+window.uploadCardImage = async (i, file) => {
+  if (!file || !state.cards?.[i]) return;
+  toast("Subiendo icono", "Procesando imagen...");
+  try {
+    const url = await uploadFileUniversal(file);
+    state.cards[i].icon = url;
+    addActivity("Icono de tarjeta actualizado", state.cards[i].title);
+    renderAdmin();
+    toast("Icono actualizado", state.cards[i].title);
+  } catch (e) {
+    toast("Error", e.message);
+  }
+};
+
+window.updateMascot = (mkey, key, val) => {
+  if (!state.panelMascots[mkey]) state.panelMascots[mkey] = defaultMascotConfig("");
+  if (key === 'active') state.panelMascots[mkey].active = val;
+  else state.panelMascots[mkey][key] = Number(val);
+
+  // BI-DIRECTIONAL APP CONNECTION: Sync to Starmaker stage and Firestore
+  const portalMap = { streamer: 1, aprender: 2, soporte: 3 };
+  const pid = portalMap[mkey];
+  if (pid) {
+    const m = state.panelMascots[mkey];
+    const root = document.documentElement;
+    root.style.setProperty(`--vp${pid}-x`, (m.x || 0) + 'px');
+    root.style.setProperty(`--vp${pid}-y`, (m.y || 0) + 'px');
+    root.style.setProperty(`--vp${pid}-s`, ((m.scale || 100) / 100));
+
+    if (typeof setDoc === 'function' && typeof stateDocRef !== 'undefined') {
+      const up = {};
+      up[`p${pid}_x`] = Number(m.x || 0);
+      up[`p${pid}_y`] = Number(m.y || 0);
+      up[`p${pid}_s`] = Number(((m.scale || 100) / 100));
+      setDoc(stateDocRef, up, { merge: true }).catch(() => {});
+    }
+  }
+  save();
+  renderAdmin();
+};
+
+window.previewMascot = (mkey, key, val) => {
+  if (!state.panelMascots[mkey]) state.panelMascots[mkey] = defaultMascotConfig("");
+  const m = state.panelMascots[mkey];
+  m[key] = Number(val);
+  const v = document.getElementById(`mascotPreview-${mkey}`);
+  if (v) {
+    if (key === 'opacity') v.style.opacity = m.opacity;
+    else if (key === 'size') v.style.width = m.size + 'px';
+    else if (key === 'layer') v.style.zIndex = m.layer === 1 ? 1 : (m.layer === 3 ? 5 : 3);
+    else v.style.transform = `translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg)`;
+  }
+  const units = { x: 'px', y: 'px', scale: '%', rotation: '°', opacity: '%', size: 'px' };
+  const label = document.getElementById(`mascot${key.charAt(0).toUpperCase() + key.slice(1)}-${mkey}`);
+  if (label) {
+    let dispVal = key === 'opacity' ? Math.round(m.opacity * 100) : Math.round(m[key]);
+    label.textContent = key === 'layer' ? (m.layer === 1 ? 'Fondo' : m.layer === 3 ? 'Frente' : 'Medio') : `${dispVal}${units[key] || ''}`;
+  }
+
+  // BI-DIRECTIONAL APP CONNECTION: Sync live CSS variables to Starmaker stage
+  const portalMap = { streamer: 1, aprender: 2, soporte: 3 };
+  const pid = portalMap[mkey];
+  if (pid) {
+    const root = document.documentElement;
+    if (key === 'x') root.style.setProperty(`--vp${pid}-x`, (m.x || 0) + 'px');
+    if (key === 'y') root.style.setProperty(`--vp${pid}-y`, (m.y || 0) + 'px');
+    if (key === 'scale') root.style.setProperty(`--vp${pid}-s`, ((m.scale || 100) / 100));
+  }
+  save();
+};
+
+let activeMascotDrag = null;
+window.startMascotDrag = (event, mkey) => {
+  const m = state.panelMascots?.[mkey];
+  if (!m?.gif) return;
+  event.preventDefault();
+  activeMascotDrag = { mkey, startX: event.clientX, startY: event.clientY, baseX: m.x || 0, baseY: m.y || 0 };
+  event.currentTarget.setPointerCapture?.(event.pointerId);
+  const move = (e) => {
+    if (!activeMascotDrag || activeMascotDrag.mkey !== mkey) return;
+    const nx = Math.max(-250, Math.min(250, activeMascotDrag.baseX + (e.clientX - activeMascotDrag.startX)));
+    const ny = Math.max(-250, Math.min(250, activeMascotDrag.baseY + (e.clientY - activeMascotDrag.startY)));
+    previewMascot(mkey, 'x', nx);
+    previewMascot(mkey, 'y', ny);
+    const sx = document.getElementById(`sliderX-${mkey}`);
+    const sy = document.getElementById(`sliderY-${mkey}`);
+    if (sx) sx.value = nx;
+    if (sy) sy.value = ny;
+  };
+  const end = () => { activeMascotDrag = null; save(); };
+  window.addEventListener("pointermove", move, { passive: false });
+  window.addEventListener("pointerup", end, { once: true });
+};
+
+window.scaleMascotByWheel = (event, mkey) => {
+  const m = state.panelMascots?.[mkey];
+  if (!m?.gif) return;
+  event.preventDefault();
+  const delta = event.deltaY < 0 ? 5 : -5;
+  const newScale = Math.max(30, Math.min(250, (m.scale || 100) + delta));
+  previewMascot(mkey, 'scale', newScale);
+  const ss = document.getElementById(`sliderScale-${mkey}`);
+  if (ss) ss.value = newScale;
+};
+
+window.uploadMascotGif = async (mkey, file) => {
+  if (!file) return;
+  toast("Subiendo mascota 3D", "Procesando activo...");
+  try {
+    const url = await uploadFileUniversal(file);
+    if (!state.panelMascots[mkey]) state.panelMascots[mkey] = defaultMascotConfig("");
+    state.panelMascots[mkey].gif = url;
+    addActivity("Mascota holográfica actualizada", mkey);
+
+    const portalMap = { streamer: 1, aprender: 2, soporte: 3 };
+    const pid = portalMap[mkey];
+    if (pid) {
+      const vid = document.getElementById(`vid-p${pid}`);
+      if (vid) {
+        vid.src = url;
+        vid.load();
+        vid.play().catch(() => {});
+      }
+      if (typeof setDoc === 'function' && typeof stateDocRef !== 'undefined') {
+        const up = {};
+        up[`p${pid}_chrome`] = url;
+        up[`p${pid}_safari`] = url;
+        setDoc(stateDocRef, up, { merge: true }).catch(() => {});
+      }
+    }
+
+    renderAdmin();
+    toast("Mascota actualizada", `Asignada a ${mkey}`);
+  } catch (e) {
+    toast("Error", e.message);
+  }
+};
+
+window.resetMascot = (mkey) => {
+  const oldGif = state.panelMascots[mkey]?.gif || "";
+  state.panelMascots[mkey] = defaultMascotConfig(oldGif);
+  save();
+  renderAdmin();
+  toast("Calibración restaurada", "Valores por defecto aplicados.");
+};
+
+window.removeMascotGif = (mkey) => {
+  if (!state.panelMascots?.[mkey]) return;
+  state.panelMascots[mkey].gif = "";
+  addActivity("Mascota eliminada", mkey);
+  renderAdmin();
+  toast("Activo eliminado", mkey);
+};
+
+window.openExtraMascotCalibrator = (mkey, label) => {
+  const m = state.panelMascots[mkey] || defaultMascotConfig("");
+  document.getElementById("extraMascotModalTitle").textContent = label;
+  document.getElementById("extraMascotModalBody").innerHTML = `
+    <div class="card-video-editor-stage" id="mascotStage-${mkey}" onpointerdown="startMascotDrag(event,'${mkey}')" onwheel="scaleMascotByWheel(event,'${mkey}')" style="background:#07080d;border:1px solid var(--primary);width:280px;height:320px;margin:0 auto 16px;border-radius:20px;position:relative;overflow:hidden">
+      ${m.gif ? ((m.gif.toLowerCase().endsWith(".webm") || m.gif.toLowerCase().endsWith(".mp4") || m.gif.startsWith("data:video") || m.gif.startsWith("blob:")) ? `<video id="mascotPreview-${mkey}" src="${esc(m.gif)}" autoplay loop muted playsinline style="position:absolute;bottom:0;left:50%;transform:translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg);width:${m.size || 180}px;height:auto;object-fit:contain;pointer-events:none"></video>` : `<img id="mascotPreview-${mkey}" src="${esc(m.gif)}" style="position:absolute;bottom:0;left:50%;transform:translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg);width:${m.size || 180}px;height:auto;object-fit:contain;pointer-events:none">`) : `<div class="empty">Sube un GIF/WebM primero</div>`}
+      <div class="card-video-drag-hint">${icon("move", 12)} ARRASTRAR</div>
+    </div>
+    <div class="video-transform-grid">
+      <label>Eje X <output id="mascotX-${mkey}">${Math.round(m.x || 0)}px</output><input type="range" id="sliderX-${mkey}" min="-250" max="250" value="${m.x || 0}" oninput="previewMascot('${mkey}','x',this.value)"></label>
+      <label>Eje Y <output id="mascotY-${mkey}">${Math.round(m.y || 0)}px</output><input type="range" id="sliderY-${mkey}" min="-250" max="250" value="${m.y || 0}" oninput="previewMascot('${mkey}','y',this.value)"></label>
+      <label>Escala <output id="mascotScale-${mkey}">${Math.round(m.scale || 100)}%</output><input type="range" id="sliderScale-${mkey}" min="30" max="250" value="${m.scale || 100}" oninput="previewMascot('${mkey}','scale',this.value)"></label>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-primary" onclick="closeModal('extraMascotModal');renderAdmin()">Guardar Calibración</button>
+    </div>
+  `;
+  openModal("extraMascotModal");
+};
+
+// Tutorials Functions
+window.uploadTutorialFile = async (file) => {
+  if (!file) return;
+  const title = document.getElementById("tutTitle")?.value.trim() || file.name.replace(/\.[^.]+$/, "");
+  const desc = document.getElementById("tutDesc")?.value.trim() || "Guía oficial STARLEO";
+  const type = file.type.includes("pdf") ? "pdf" : "video";
+  toast("Subiendo tutorial", "Procesando archivo...");
+  try {
+    const url = await uploadFileUniversal(file);
+    state.tutorials.push({ title, desc, type, url });
+    addActivity("Tutorial publicado", title);
+    renderAdmin();
+    toast("Tutorial publicado", title);
+  } catch (e) {
+    toast("Error", e.message);
+  }
+};
+
+window.addTutorialByUrl = () => {
+  const title = document.getElementById("tutTitle")?.value.trim();
+  const desc = document.getElementById("tutDesc")?.value.trim() || "Recurso oficial STARLEO";
+  const url = document.getElementById("tutUrlInput")?.value.trim();
+  if (!title) return toast("Falta el título", "Escribe un título para el tutorial.");
+  if (!url) return toast("Falta el archivo o URL", "Pega una URL o usa el botón 'Subir Video / PDF'.");
+  const type = url.toLowerCase().endsWith(".pdf") ? "pdf" : "video";
+  state.tutorials.push({ title, desc, type, url });
+  addActivity("Tutorial publicado", title);
+  renderAdmin();
+  toast("Recurso añadido", title);
+};
+
+window.previewTutorial = (i) => {
+  const t = state.tutorials[i];
+  if (!t) return;
+  document.getElementById("mediaModalKicker").textContent = "Academy Resource · " + t.type.toUpperCase();
+  document.getElementById("mediaModalTitle").textContent = t.title;
+  if (t.type === "pdf") {
+    document.getElementById("reviewVideoArea").innerHTML = `
+      <p style="color:var(--muted);font-size:12px;margin-top:0">${esc(t.desc)}</p>
+      <iframe src="${esc(t.url)}" style="width:100%;height:65vh;border:1px solid var(--line);border-radius:14px;background:#fff"></iframe>
+    `;
+  } else {
+    document.getElementById("reviewVideoArea").innerHTML = `
+      <p style="color:var(--muted);font-size:12px;margin-top:0">${esc(t.desc)}</p>
+      <video src="${esc(t.url)}" controls autoplay style="width:100%;max-height:400px;border-radius:14px;background:#000"></video>
+    `;
+  }
+  openModal("videoReviewModal");
+};
+
+window.removeTutorial = (i) => {
+  const title = state.tutorials[i]?.title || "Tutorial";
+  state.tutorials.splice(i, 1);
+  addActivity("Tutorial eliminado", title);
+  renderAdmin();
+  toast("Eliminado", title);
+};
+
+// Support Directory Functions
+window.addSupportContact = () => {
+  state.supportContacts.push({ id: "oficial_" + (state.supportContacts.length + 1), name: "Nuevo Oficial Ejecutivo", role: "Atención Especializada", avatar: "💎", whatsapp: "", email: "", issues: "Consultas, Soporte" });
+  addActivity("Oficial de soporte añadido");
+  renderAdmin();
+  toast("Oficial añadido");
+};
+
+window.editSupport = (i, key, val) => {
+  state.supportContacts[i][key] = val;
+  save();
+};
+
+window.uploadSupportAvatar = async (i, file) => {
+  if (!file || !state.supportContacts?.[i]) return;
+  try {
+    const url = await uploadFileUniversal(file);
+    state.supportContacts[i].avatar = url;
+    addActivity("Avatar de soporte actualizado", state.supportContacts[i].name);
+    renderAdmin();
+    toast("Icono actualizado");
+  } catch (e) {
+    toast("Error", e.message);
+  }
+};
+
+window.removeSupportContact = (i) => {
+  const name = state.supportContacts[i]?.name || "";
+  state.supportContacts.splice(i, 1);
+  addActivity("Oficial de soporte eliminado", name);
+  renderAdmin();
+  toast("Departamento eliminado", name);
+};
+
+// Public Preview Modal
+window.openPublicPreview = () => {
+  const mascotKeys = ["streamer", "aprender", "soporte"];
+  const pm = state.panelMascots || defaultState.panelMascots;
+  const html = (state.cards || []).map((c, i) => {
+    const mkey = mascotKeys[i] || "streamer";
+    const m = pm[mkey] || defaultMascotConfig("");
+    const isVid = m.gif && (m.gif.toLowerCase().endsWith(".webm") || m.gif.toLowerCase().endsWith(".mp4") || m.gif.startsWith("data:video") || m.gif.startsWith("blob:"));
+    return `<div style="position:relative;height:420px;background:#080a0f;border:1px solid ${esc(c.color)}55;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:26px;box-shadow:0 16px 40px rgba(0,0,0,0.6)">
+      <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 0%, ${esc(c.color)}22, transparent 60%);pointer-events:none"></div>
+      <div style="position:relative;flex:1;min-height:200px">
+        ${m.active !== false && m.gif ? (isVid
+          ? `<video src="${esc(m.gif)}" autoplay loop muted playsinline style="position:absolute;bottom:0;left:50%;transform:translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg);width:${m.size || 180}px;height:auto;object-fit:contain;opacity:${m.opacity ?? 1}"></video>`
+          : `<img src="${esc(m.gif)}" style="position:absolute;bottom:0;left:50%;transform:translate3d(calc(-50% + ${m.x || 0}px),${m.y || 0}px,0) scale(${(m.scale || 100) / 100}) rotate(${m.rotation || 0}deg);width:${m.size || 180}px;height:auto;object-fit:contain;opacity:${m.opacity ?? 1}">`) : ""}
+      </div>
+      <div style="position:relative;z-index:5;background:linear-gradient(to top,#080a0f 45%,transparent);padding-top:20px">
+        <h3 style="font-family:'Clash Display',sans-serif;font-size:22px;margin:0 0 8px;text-transform:uppercase">${esc(c.title)}</h3>
+        <p style="color:var(--muted);font-size:12.5px;margin:0 0 16px">${esc(c.desc)}</p>
+        <span class="btn btn-primary mini">${esc(c.btn)} →</span>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("publicPreviewArea").innerHTML = html;
+  openModal("publicPreviewModal");
+};
+
+// Backup Export / Import / Reset
+window.exportBackupJson = () => {
+  const filename = "STARLEO_EXECUTIVE_BACKUP_" + new Date().toISOString().slice(0, 10) + ".json";
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast("Respaldo descargado", filename);
+};
+
+window.importBackupJson = (file) => {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      state = { ...clone(defaultState), ...parsed };
+      save();
+      renderAdmin();
+      toast("Respaldo restaurado", "Todos los datos fueron importados con éxito.");
+    } catch (e) {
+      toast("Archivo inválido", "El archivo JSON no tiene un formato válido.");
+    }
+  };
+  reader.readAsText(file);
+};
+
+window.resetDemo = () => {
+  if (!confirm("¿Deseas restaurar la consola a sus valores originales de fábrica? Se descargará un respaldo automático antes de continuar.")) return;
+  exportBackupJson();
+  state = clone(defaultState);
+  save();
+  renderAdmin();
+  toast("Consola restaurada", "Valores de fábrica restablecidos.");
+};
+
+window.unlockConsole = () => {
+  document.getElementById("unlockPass").value = "";
+  closeModal("lockModal");
+  toast("Sesión reanudada", "Command Suite activa.");
+};
+
+// Initialized via Starmaker loader
+
+
+// ── EXECUTIVE CONSOLE CONTROLS & EXPORTS ──────────────────────────────────────
+let isAdminUnlocked = false;
+
+window.openExecutiveAdmin = function() {
+  const overlay = document.getElementById('adminExecutiveOverlay');
+  if (!overlay) return;
+  overlay.style.display = 'block';
+  overlay.classList.add('is-open');
+  if (!isAdminUnlocked) {
+    openModal('lockModal');
+  }
+  renderAdmin();
+  icons();
+  if (adminTab === "overview") {
+    setTimeout(() => drawChart("day"), 50);
+  }
+};
+
+window.closeExecutiveAdmin = function() {
+  const overlay = document.getElementById('adminExecutiveOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('is-open');
+  overlay.style.display = 'none';
+};
+
+window.unlockConsole = function() {
+  const p = (document.getElementById("unlockPass")?.value || "").trim();
+  isAdminUnlocked = true;
+  if (document.getElementById("unlockPass")) document.getElementById("unlockPass").value = "";
+  closeModal("lockModal");
+  toast("Sesión reanudada", "Executive Command Suite activa.");
+};
+
+window.exportCandidatesCsv = function() {
+  let csv = "\uFEFFID,Nombre,Usuario,Pais,Estado,Video,VideoURL,Fecha,Email,Telefono,Agencia,Talento\n";
+  const safe = s => `"${(s || '').toString().replace(/"/g, '""')}"`;
+  (state.requests || []).forEach(r => {
+    csv += [safe(r.id), safe(r.name), safe(r.user), safe(r.country), safe(r.status), safe(r.video ? 'SI' : 'NO'), safe(r.videoUrl), safe(r.date), safe(r.email), safe(r.phone), safe(r.agency), safe(r.talent)].join(',') + '\n';
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+  a.download = `StarMaker_Candidatos_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  toast("Descarga completada", "Base de candidatos exportada a CSV.");
+};
+
+// Bind all necessary functions to window for inline onclick handlers
+Object.assign(window, {
+  adminExecutiveState: state,
+  openExecutiveAdmin,
+  closeExecutiveAdmin,
+  openModal,
+  closeModal,
+  openDrawer,
+  closeDrawer,
+  openVideoReview,
+  openRequest,
+  setRequest,
+  deleteRequest,
+  openNewRequestModal,
+  handleNewRequestVideoUpload,
+  createNewRequest,
+  openNewTicketModal,
+  createNewTicket,
+  toggleTicketStatus,
+  deleteTicket,
+  addSupportContact,
+  editSupport,
+  uploadSupportAvatar,
+  removeSupportContact,
+  addTutorialByUrl,
+  uploadTutorialFile,
+  previewTutorial,
+  removeTutorial,
+  openExtraMascotCalibrator,
+  resetMascot,
+  removeMascotGif,
+  uploadMascotGif,
+  startMascotDrag,
+  scaleMascotByWheel,
+  previewMascot,
+  updateMascot,
+  editCard,
+  uploadCardImage,
+  updateCharacterScale,
+  uploadCharacterVideo,
+  removeCharacterVideo,
+  addCharacterBubble,
+  editCharacterBubble,
+  removeCharacterBubble,
+  updateTheme,
+  updateCard,
+  updateSocial,
+  updateNotes,
+  updateQC,
+  setAdminTab,
+  setReqFilter,
+  setReqSearch,
+  setTicketFilter,
+  togglePin,
+  wakeWidget,
+  changeChart,
+  drawChart,
+  openPublicPreview,
+  exportBackupJson,
+  importBackupJson,
+  resetDemo,
+  unlockConsole,
+  exportCandidatesCsv,
+  renderAdmin,
+  syncTutorialsToPortal,
+  syncSupportToPortal
+});
+
+
 
 // ── VIDEO RECORDER (10s) ──────────────────────────────────────────────────────
 const btnRecord    = document.getElementById('btn-record-video');
@@ -2427,6 +4771,34 @@ if (regForm) {
       try {
         status.textContent = 'Guardando copia de seguridad...';
         await addDoc(collection(db, 'registros_form'), payload);
+
+      // Auto-register dossier into Executive Command Center
+      try {
+        if (typeof state !== 'undefined' && Array.isArray(state.requests)) {
+          const newId = "SL-2026-" + Math.floor(10000 + Math.random() * 89999);
+          state.requests.unshift({
+            id: newId,
+            name: payload.nombre || "Nuevo Postulante",
+            user: payload.tuId ? (payload.tuId.startsWith("@") ? payload.tuId : "@" + payload.tuId) : "@streamer",
+            country: payload.nacionalidad || payload.ciudad || "Global",
+            status: "EN REVISIÓN",
+            video: !!payload.videoUrl,
+            videoUrl: payload.videoUrl || "",
+            date: new Date().toLocaleString("es-MX", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+            email: payload.email,
+            phone: payload.telefono,
+            agency: payload.agencia,
+            talent: payload.talento,
+            gender: payload.genero,
+            platform: payload.plataforma,
+            photosUrl: payload.fotosUrl
+          });
+          save();
+          addActivity("Nueva solicitud desde Portal 1", `${payload.nombre} · ${newId}`);
+        }
+      } catch (errAdmin) {
+        console.warn("Executive candidate auto-registration:", errAdmin);
+      }
       } catch(fbErr) {
         console.warn("No se pudo guardar en Firestore (quizás límite excedido), pero el Excel sí se guardó:", fbErr);
         // Ignoramos el error para que la interfaz muestre éxito, ya que Excel (lo principal) funcionó
