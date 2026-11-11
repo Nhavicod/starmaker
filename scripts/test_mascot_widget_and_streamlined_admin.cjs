@@ -97,14 +97,15 @@ async function runTest() {
   console.log("Live CSS var --vp1-x updated to:", rootVarX);
   if (rootVarX !== "55px") throw new Error("Live transform failed to update --vp1-x");
 
-  console.log("\n--- TEST 4: Clean Streamlined Admin Panel ---");
+  console.log("\n--- TEST 4: Clean Streamlined Admin Panel (Direct Access without Lock) ---");
   await page.click("#btn-open-admin");
   await new Promise(r => setTimeout(r, 200));
 
-  await page.evaluate(() => {
-    window.unlockConsole();
+  const lockModalExists = await page.evaluate(() => {
+    return !!document.getElementById("lockModal");
   });
-  await new Promise(r => setTimeout(r, 200));
+  console.log("Lock modal exists in DOM:", lockModalExists);
+  if (lockModalExists) throw new Error("lockModal should be completely removed from DOM");
 
   const adminStatus = await page.evaluate(() => {
     const overlay = document.getElementById("adminExecutiveOverlay");
@@ -152,6 +153,7 @@ async function runTest() {
   }
 
   console.log("\n🏆 ALL TESTS PASSED WITH 100% SUCCESS!");
+  process.exit(0);
 }
 
 runTest().catch(err => {

@@ -2311,7 +2311,6 @@
       <button class="btn btn-secondary mini" onclick="closeExecutiveAdmin();toggleMascotWidget()" style="background:rgba(241,141,121,0.12);border-color:rgba(241,141,121,0.3);color:#F18D79;" title="Abrir Calibrador Flotante de Mascota">🦁 Calibrar Mascota</button>
       <button class="btn btn-secondary mini" onclick="openNewRequestModal()" title="Registrar solicitud">+ Solicitud</button>
       <button class="btn btn-secondary mini" onclick="exportCandidatesCsv()" title="Exportar CSV de postulantes"><i data-lucide="download" width="14"></i> CSV</button>
-      <button class="btn btn-secondary btn-icon" id="adminExit" onclick="openModal('lockModal')" title="Bloquear Consola"><i data-lucide="lock" width="15"></i></button>
       <button class="btn btn-primary mini" onclick="closeExecutiveAdmin()" style="margin-left:8px;background:linear-gradient(135deg,#e06c75,#be3447);color:#fff;border-color:rgba(255,255,255,0.2)" title="Volver a la App"><i data-lucide="arrow-left" width="14"></i> Volver a la App</button>
     </div>
   </header>
@@ -2420,29 +2419,7 @@
   </div>
 </div>
 
-
-</div>
-
-<!-- Modal de Bloqueo Ejecutivo -->
-<div class="modal" id="lockModal">
-  <div class="modal-box" style="max-width:420px;text-align:center">
-    <div class="admin-crest" style="width:56px;height:56px;margin:0 auto 16px;border-radius:18px"><i data-lucide="shield-lock" width="26"></i></div>
-    <span class="kicker">Sesión Protegida</span>
-    <h3 style="margin:6px 0 8px;font-size:22px">Command Suite Bloqueada</h3>
-    <p style="color:var(--muted);font-size:12px;margin-bottom:20px">Ingresa tus credenciales administrativas o pulsa desbloquear para reanudar.</p>
-    <div class="field" style="text-align:left;margin-bottom:12px">
-      <label>Contraseña / PIN Master</label>
-      <input class="control" id="unlockPass" type="password" placeholder="••••••••" onkeypress="if(event.key==='Enter')unlockConsole()">
-    </div>
-    <div style="display:flex;gap:10px;margin-top:10px">
-      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('lockModal');closeExecutiveAdmin()">Volver a la App</button>
-      <button class="btn btn-primary" style="flex:2" onclick="unlockConsole()">Desbloquear Consola</button>
-    </div>
-  </div>
-</div>
-
 <div id="toastWrap"></div>
-
 
   </div>
 
@@ -4424,26 +4401,12 @@ window.resetDemo = () => {
   toast("Consola restaurada", "Valores de fábrica restablecidos.");
 };
 
-window.unlockConsole = () => {
-  document.getElementById("unlockPass").value = "";
-  closeModal("lockModal");
-  toast("Sesión reanudada", "Command Suite activa.");
-};
-
-// Initialized via Starmaker loader
-
-
 // ── EXECUTIVE CONSOLE CONTROLS & EXPORTS ──────────────────────────────────────
-let isAdminUnlocked = false;
-
 window.openExecutiveAdmin = function() {
   const overlay = document.getElementById('adminExecutiveOverlay');
   if (!overlay) return;
   overlay.style.display = 'block';
   overlay.classList.add('is-open');
-  if (!isAdminUnlocked) {
-    openModal('lockModal');
-  }
   renderAdmin();
   icons();
   if (adminTab === "overview") {
@@ -4456,14 +4419,6 @@ window.closeExecutiveAdmin = function() {
   if (!overlay) return;
   overlay.classList.remove('is-open');
   overlay.style.display = 'none';
-};
-
-window.unlockConsole = function() {
-  const p = (document.getElementById("unlockPass")?.value || "").trim();
-  isAdminUnlocked = true;
-  if (document.getElementById("unlockPass")) document.getElementById("unlockPass").value = "";
-  closeModal("lockModal");
-  toast("Sesión reanudada", "Executive Command Suite activa.");
 };
 
 window.exportCandidatesCsv = function() {
@@ -4516,7 +4471,6 @@ Object.assign(window, {
   setTicketFilter,
   exportBackupJson,
   importBackupJson,
-  unlockConsole,
   exportCandidatesCsv,
   renderAdmin,
   syncTutorialsToPortal,
