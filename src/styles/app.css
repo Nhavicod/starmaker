@@ -432,9 +432,9 @@ body.portal-open .mascot-wrapper {
   visibility: visible;
 }
 
-#vid-p1 { transform: translateX(calc(-50% + var(--vp1-x, 0px))) translateY(var(--vp1-y, 0px)) scale(var(--vp1-s, 1)); }
-#vid-p2 { transform: translateX(calc(-50% + var(--vp2-x, 0px))) translateY(var(--vp2-y, 0px)) scale(var(--vp2-s, 1)); }
-#vid-p3 { transform: translateX(calc(-50% + var(--vp3-x, 0px))) translateY(var(--vp3-y, 0px)) scale(var(--vp3-s, 1)); }
+#canvas-p1 { transform: translateX(calc(-50% + var(--vp1-x, 0px))) translateY(var(--vp1-y, 0px)) scale(var(--vp1-s, 1)); }
+#canvas-p2 { transform: translateX(calc(-50% + var(--vp2-x, 0px))) translateY(var(--vp2-y, 0px)) scale(var(--vp2-s, 1)); }
+#canvas-p3 { transform: translateX(calc(-50% + var(--vp3-x, 0px))) translateY(var(--vp3-y, 0px)) scale(var(--vp3-s, 1)); }
 
 /* ── CTA BUTTON ABOVE CAPSULE ── */
 .btn-magnetic {

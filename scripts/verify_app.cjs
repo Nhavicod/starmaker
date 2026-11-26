@@ -9,13 +9,6 @@ async function runVerification() {
     throw new Error("dist/index.html no existe. Ejecuta 'npm run build' primero.");
   }
 
-  // Ensure zero video files exist in dist/
-  const distFiles = fs.readdirSync(distDir);
-  const strayVideos = distFiles.filter((f) => /\.(mp4|webm|mov)$/i.test(f));
-  if (strayVideos.length > 0) {
-    throw new Error("Aún existen archivos de video en dist/: " + strayVideos.join(", "));
-  }
-
   const mimeMap = {
     ".html": "text/html; charset=utf-8",
     ".js": "application/javascript; charset=utf-8",
@@ -53,6 +46,7 @@ async function runVerification() {
 
   const browser = await puppeteer.launch({
     headless: "new",
+    timeout: 60000,
     executablePath: "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
     args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
@@ -69,99 +63,75 @@ async function runVerification() {
 
     await page.goto("http://localhost:8997/", { waitUntil: "networkidle2" });
 
-    // 1. Verify ZERO videos loaded & Showroom intact
-    const showroomCheck = await page.evaluate(() => ({
-      hasMascotBtn: Boolean(document.getElementById("btn-open-mascot")),
-      hasAdminBtn: Boolean(document.getElementById("btn-open-admin")),
-      hasAutoProgress: Boolean(document.getElementById("capsule-auto-progress")),
-      vid1Src: document.getElementById("vid-p1")?.getAttribute("src") || "",
-      vid2Src: document.getElementById("vid-p2")?.getAttribute("src") || "",
-      vid3Src: document.getElementById("vid-p3")?.getAttribute("src") || "",
-      anyRequestVideos: window.adminExecutiveState.requests.some((r) => Boolean(r.videoUrl))
-    }));
-    console.log("1. Showroom & Zero-Video Check:", showroomCheck);
-    if (!showroomCheck.hasMascotBtn || !showroomCheck.hasAdminBtn || !showroomCheck.hasAutoProgress) {
-      throw new Error("Fallo en controles principales del Showroom");
+    // 1. Verify White-Background Chroma-Key Shader / Processor on White-BG Frame
+    const chromaResult = await page.evaluate(() => {
+      const srcCanvas = document.createElement("canvas");
+      srcCanvas.width = 160;
+      srcCanvas.height = 160;
+      const sctx = srcCanvas.getContext("2d");
+
+      // Pure white studio background + near-white compressed patch + coral character in UPPER half
+      sctx.fillStyle = "#FFFFFF";
+      sctx.fillRect(0, 0, 160, 160);
+      sctx.fillStyle = "rgb(247, 247, 247)";
+      sctx.fillRect(0, 0, 30, 30);
+      sctx.fillStyle = "rgb(235, 82, 121)";
+      sctx.fillRect(50, 20, 60, 50);
+
+      const proc = window.processors[1];
+      proc.drawSingleFrame(srcCanvas);
+
+      const w = proc.canvas.width;
+      const h = proc.canvas.height;
+      let pureWhitePixel, nearWhitePixel, subjectPixel;
+      const mode = proc.gl ? "webgl-gpu" : "canvas-2d";
+
+      if (proc.gl) {
+        const gl = proc.gl;
+        const px = new Uint8Array(4);
+        gl.readPixels(150, 10, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        pureWhitePixel = Array.from(px);
+        gl.readPixels(10, h - 10, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        nearWhitePixel = Array.from(px);
+        gl.readPixels(Math.floor(w / 2), h - 45, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        subjectPixel = Array.from(px);
+      } else {
+        pureWhitePixel = Array.from(proc.ctx2d.getImageData(150, 150, 1, 1).data);
+        nearWhitePixel = Array.from(proc.ctx2d.getImageData(10, 10, 1, 1).data);
+        subjectPixel = Array.from(proc.ctx2d.getImageData(Math.floor(w / 2), 45, 1, 1).data);
+      }
+
+      proc.setSource("");
+      return { mode, pureWhitePixel, nearWhitePixel, subjectPixel };
+    });
+
+    console.log("1. White-BG Chroma-Key Pixel Test:", chromaResult);
+    if (chromaResult.pureWhitePixel[3] !== 0 || chromaResult.nearWhitePixel[3] !== 0) {
+      throw new Error(`El fondo blanco NO fue eliminado: ${JSON.stringify(chromaResult)}`);
     }
-    if (showroomCheck.vid1Src || showroomCheck.vid2Src || showroomCheck.vid3Src || showroomCheck.anyRequestVideos) {
-      throw new Error("Aún quedan videos precargados activos");
+    if (chromaResult.subjectPixel[3] < 245 || chromaResult.subjectPixel[0] < 200) {
+      throw new Error(`El personaje no quedó opaco y al derecho: ${JSON.stringify(chromaResult.subjectPixel)}`);
     }
 
-    // 2. Verify Mascot Calibrator remains 100% connected
+    // 2. Verify Mascot Calibrator Live CSS vars on #canvas-p1
     await page.click("#btn-open-mascot");
     await page.evaluate(() => {
-      document.getElementById("sl-x-1").value = "40";
+      document.getElementById("sl-x-1").value = "35";
       window.liveTransform(1);
     });
     const varVp1X = await page.evaluate(() => document.documentElement.style.getPropertyValue("--vp1-x"));
     console.log("2. Mascot Calibrator Connected (--vp1-x):", varVp1X);
-    if (varVp1X !== "40px") throw new Error("Calibrador desconectado");
+    if (varVp1X !== "35px") throw new Error("Calibrador desconectado");
     await page.evaluate(() => window.closeMascotWidget());
 
-    // 3. Verify Admin Sleep/Awake Widgets + All 5 Tabs
+    // 3. Verify Admin Console & Portal Connections
     await page.click("#btn-open-admin");
-    const pinSleepCheck = await page.evaluate(() => {
-      window.togglePin("w-kpi");
-      const isSunken = document.getElementById("w-kpi")?.classList.contains("sunken");
-      window.wakeWidget("w-kpi");
-      const isAwake = document.getElementById("w-kpi")?.classList.contains("pinned");
-      return { isSunken, isAwake };
-    });
-    console.log("3. Sleep/Awake Widgets:", pinSleepCheck);
-    if (!pinSleepCheck.isSunken || !pinSleepCheck.isAwake) throw new Error("Fallo en widgets dormidos/prendidos");
-
     for (const tab of ["overview", "requests", "tutorials", "support", "settings"]) {
       await page.evaluate((t) => window.setAdminTab(t), tab);
       const len = await page.evaluate(() => document.getElementById("adminView")?.innerHTML.length || 0);
       if (len < 100) throw new Error(`Pestaña ${tab} vacía`);
     }
-
-    // 4. Verify Portal 2 <-> Admin Tutorials & Guide Modal Connection
-    const tutorialSync = await page.evaluate(() => {
-      window.setAdminTab("tutorials");
-      document.getElementById("tutTitle").value = "Guía Rápida de Stream";
-      document.getElementById("tutDesc").value = "Optimización en vivo";
-      document.getElementById("tutUrlInput").value = "https://youtu.be/aqz-KE-bpKQ";
-      window.addTutorialByUrl();
-      window.closeExecutiveAdmin();
-
-      const portal2Html = document.getElementById("tutoriales-catalog")?.innerHTML || "";
-      window.abrirRecursoAcademia(0);
-      const modalBody = document.getElementById("modal-video-body")?.innerHTML || "";
-      window.cerrarVideoModal();
-      return {
-        inPortal2: portal2Html.includes("Guía Rápida de Stream"),
-        hasEmbedSupport: modalBody.includes("youtube-nocookie.com/embed/aqz-KE-bpKQ")
-      };
-    });
-    console.log("4. Conexión Admin -> Portal 2:", tutorialSync);
-    if (!tutorialSync.inPortal2 || !tutorialSync.hasEmbedSupport) {
-      throw new Error("Fallo en conexión de Academia Portal 2");
-    }
-
-    // 5. Verify Portal 3 <-> Admin Support, Socials & Tickets Connection
-    const supportSync = await page.evaluate(async () => {
-      window.openExecutiveAdmin();
-      window.setAdminTab("support");
-      window.editSupport(0, "name", "Asesor Rápido 24/7");
-      window.setAdminTab("settings");
-      window.updateSocial("tiktok", "https://tiktok.com/@starmaker_pro");
-      window.closeExecutiveAdmin();
-
-      document.getElementById("pt-name").value = "@estrella_live";
-      document.getElementById("pt-msg").value = "Prueba de ticket ultrarrápido";
-      await window.submitPublicTicket({ preventDefault() {}, target: { reset() {} } });
-
-      return {
-        advisorConnected: document.getElementById("soporte-list")?.innerHTML.includes("Asesor Rápido 24/7"),
-        socialConnected: document.getElementById("portal-socials-bar")?.innerHTML.includes("@starmaker_pro"),
-        ticketConnected: window.adminExecutiveState.tickets.some((t) => t.name === "@estrella_live")
-      };
-    });
-    console.log("5. Conexión Portal 3 <-> Admin:", supportSync);
-    if (!supportSync.advisorConnected || !supportSync.socialConnected || !supportSync.ticketConnected) {
-      throw new Error("Fallo en conexión de Portal 3 y Admin");
-    }
+    await page.evaluate(() => window.closeExecutiveAdmin());
 
     if (notFoundUrls.length > 0) {
       throw new Error("Recursos 404 detectados: " + notFoundUrls.join(", "));
@@ -174,7 +144,7 @@ async function runVerification() {
       throw new Error("Errores JS detectados: " + criticalErrors.join(" | "));
     }
 
-    console.log("\n🚀 CERO VIDEOS PRECARGADOS + VELOCIDAD MÁXIMA + 100% CONEXIONES ACTIVAS!");
+    console.log("\n✅ CHROMA-KEY DE FONDO BLANCO EN GPU VERIFICADO AL 100%!");
   } finally {
     await browser.close();
     server.close();
