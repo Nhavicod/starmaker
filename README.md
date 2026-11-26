@@ -1,76 +1,42 @@
-# STARMAKER — Plataforma Web Serverless Premium
+# STARMAKER — Universo Digital de Creadores (v2.0)
 
-STARMAKER es una plataforma digital de streaming espacial, interactiva e inmersiva. Utiliza una arquitectura serverless sin dependencias de frameworks frontend (Vanilla JS ES6+), alimentada en tiempo real mediante **Firebase Firestore** (`onSnapshot`) y desplegada sobre **Vercel**.
+Plataforma web interactiva con Showroom 3D, Cápsula Trackpad Automatizada, Portales de Registro/Academia/Soporte AI y Consola Ejecutiva en tiempo real.
 
----
-
-## 1. Stack Tecnológico
-
-- **Frontend Core**: Vanilla JavaScript ES6+ (ES Modules), HTML5 semántico, CSS3 moderno.
-- **Build Tool**: [Vite](https://vitejs.dev/) v5+.
-- **Backend as a Service (BaaS)**: [Firebase](https://firebase.google.com/) v10+ (Authentication & Firestore).
-- **Hosting & Serverless**: [Vercel](https://vercel.com/) (Frontend Hosting + Serverless Functions).
-- **Almacenamiento Multimedia**: [YourImageShare API](https://yourimageshare.com/) conectado mediante proxy Serverless seguro.
-
----
-
-## 2. Estructura del Proyecto
+## Arquitectura Modular
 
 ```text
-starmaker/
+├── index.html                  # Estructura semántica limpia (Showroom, Portales y Consola)
 ├── api/
-│   └── upload-image.js          # Serverless Function: Multipart proxy a YourImageShare
+│   ├── submit-excel.js         # Webhook Serverless hacia Power Automate / Excel Online
+│   └── upload-file.js          # Relay Serverless de subida de archivos multimedia
 ├── public/
-│   ├── favicon.svg              # Isotipo vectorial
-│   └── assets/                  # Fallbacks y media estática
+│   ├── leonsito.webm           # Mascota StarLeo con canal alfa (Chrome / Android)
+│   ├── LEON2.mp4               # Mascota StarLeo compatible con Safari / iOS
+│   └── favicon.svg
 ├── src/
-│   ├── main.js                  # Entry point de la app y orquestador reactivo
-│   ├── db.js                    # Inicialización Firestore, saveState y normalización
-│   ├── state.js                 # Reactive Store ligero (patrón Observer)
-│   ├── router.js                # Router Hash Vanilla JS (#/, #/admin, etc.)
-│   ├── components/
-│   │   ├── Header.js            # Navegación y branding espacial
-│   │   ├── Hero.js              # Sección principal cinematográfica
-│   │   ├── CardGrid.js          # Grid de módulos destacados
-│   │   ├── HolographicCard.js   # Tarjeta con WebM alpha y triple fallback
-│   │   ├── Carousel.js          # Carrusel espacial interactivo
-│   │   ├── ActivityFeed.js      # Radar de telemetría en tiempo real
-│   │   ├── MascotLayer.js       # Mascota flotante reactiva
-│   │   └── LoadingScreen.js     # Pantalla de carga cuántica
+│   ├── main.js                 # Punto de entrada y puente reactivo de la aplicación
+│   ├── config/
+│   │   └── defaults.js         # Configuración de portales, catálogo inicial y estado base
+│   ├── services/
+│   │   └── bridge.js           # Sincronización bidireccional Firestore + LocalStorage + Uploads
+│   ├── showroom/
+│   │   └── stage.js            # Motor de partículas, Chroma-Key 30fps y Capsule Trackpad
+│   ├── portals/
+│   │   └── portals.js          # Registro 10s, Academia dinámica y Soporte AI + Tickets
 │   ├── admin/
-│   │   ├── admin.js             # Controlador del panel y Dirty State
-│   │   ├── auth.js              # Firebase Auth v10 modular
-│   │   ├── AdminLayout.js       # Shell admin e indicador de guardado de 5 estados
-│   │   ├── SettingsEditor.js    # Editor cromático y del carrusel
-│   │   ├── CardEditor.js        # CRUD reactivo de tarjetas
-│   │   └── MediaUploader.js     # Subida binaria con barra de progreso
+│   │   ├── mascotWidget.js     # Calibrador flotante 3D de mascota por portal
+│   │   └── console.js          # Consola Ejecutiva con widgets prendidos/dormidos y CRUD
 │   └── styles/
-│       ├── variables.css        # Paleta oficial STARMAKER, radios y tipografía
-│       ├── global.css           # Reset, fondo cósmico CSS puro y accesibilidad
-│       ├── components.css       # Estilos modulares de componentes
-│       ├── animations.css       # Animaciones optimizadas con aceleración GPU
-│       └── responsive.css       # Breakpoints móviles, tablet y ultrawide
-├── firestore.rules              # Reglas de seguridad para Firestore
-├── .env.example                 # Plantilla de variables de entorno
-├── index.html                   # Shell HTML5 semántico
-├── package.json
-└── vite.config.js
+│       ├── app.css             # Estilos del Showroom, Trackpad y Portales
+│       └── admin.css           # Estilos aislados de la Consola Ejecutiva y Calibrador
+└── scripts/
+    └── verify_app.cjs          # Suite de verificación E2E con Puppeteer
 ```
 
----
+## Comandos
 
-## 3. Configuración Local
-
-1. Instalar dependencias:
-   ```bash
-   npm install
-   ```
-2. Crear archivo `.env` tomando como base `.env.example`:
-   ```bash
-   cp .env.example .env
-   ```
-3. Completar las credenciales en `.env`.
-4. Iniciar el servidor local:
-   ```bash
-   npm run dev
-   ```
+```bash
+npm run dev       # Servidor local Vite (http://localhost:3000)
+npm run build     # Compilación optimizada de producción en dist/
+npm test          # Verificación integral E2E en navegador headless
+```

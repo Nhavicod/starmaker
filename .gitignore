@@ -1,5 +1,16 @@
 node_modules
 dist
 .env
+.env.*
+!.env.example
 .DS_Store
 .vercel
+panel_admin_original.html
+panel_stock_ropa.html
+matriz_tecnica_starmaker.html
+propuesta_comercial_starmaker.html
+navicode_3d_mobile.html
+public/ejemplos-hub.html
+public/temario-starmaker-navi.html
+tiktok_overlay_server/
+titulacion_umb/

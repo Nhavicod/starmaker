@@ -1,22 +1,17 @@
 {
   "name": "starmaker",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "STARMAKER — Plataforma Web Serverless Premium con experiencia inmersiva y reactiva en tiempo real",
+  "description": "STARMAKER — Ecosistema Oficial de Creadores y Consola Ejecutiva en Tiempo Real",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@vercel/blob": "^2.8.0",
-    "dotenv": "^18.0.4",
-    "ffmpeg-static": "^5.3.0",
-    "firebase": "^10.14.1",
-    "puppeteer": "^25.12.0"
+    "preview": "vite preview",
+    "test": "node scripts/verify_app.cjs"
   },
   "devDependencies": {
+    "puppeteer": "^25.12.0",
     "vite": "^5.4.8"
   },
   "engines": {

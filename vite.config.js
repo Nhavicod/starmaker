@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   server: {
@@ -6,6 +6,11 @@ export default defineConfig({
     open: true,
     fs: {
       strict: true
+    }
+  },
+  build: {
+    rollupOptions: {
+      external: [/^https?:\/\//]
     }
   }
 });
