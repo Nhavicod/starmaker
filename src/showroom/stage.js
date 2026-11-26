@@ -5,10 +5,7 @@ const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 window.puntoActualId = "card-registro";
 window.currentPortal = 1;
-window.State = {
-  isTransitioning: false,
-  targetPortalCenter: null
-};
+window.State = { isTransitioning: false };
 
 let currentPortalIndex = 0;
 let sliderInterval = null;
@@ -23,7 +20,7 @@ export function isOverlayBlockingShortcuts() {
   return Boolean(adminOpen || mascotOpen || vidModalOpen);
 }
 
-// ── HERO HEADLINE SLIDER ──
+// ── HERO HEADLINE SLIDER (PURE OPACITY/TRANSFORM, ZERO REPAINT) ──
 export function playSlider(portalId) {
   clearInterval(sliderInterval);
   const texts = Array.from(document.querySelectorAll(`.hero-slide[data-portal="${portalId}"]`));
@@ -58,238 +55,59 @@ export function playSlider(portalId) {
   }, 4000);
 }
 
-// ── GPU PARTICLE ENGINE ──
-class ParticleEngine {
-  constructor() {
-    this.canvas = document.getElementById("ctx-background");
-    if (!this.canvas) return;
-    this.ctx = this.canvas.getContext("2d", { alpha: true });
-    this.particles = [];
-    this.currentColor = "139, 92, 246";
-    this.isRunning = false;
-    this.rafId = null;
-    this.w = window.innerWidth;
-    this.h = window.innerHeight;
-
-    window.addEventListener("resize", () => this.resize(), { passive: true });
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) this.stop();
-      else if (!document.body.classList.contains("portal-open")) this.start();
-    });
-
-    this.resize();
-    this.spawnParticles();
-    this.start();
+// ── HARDWARE-ACCELERATED NATIVE GPU MASCOT CONTROLLER (ZERO CPU PIXEL LOOPS) ──
+class NativeGpuMascotSlot {
+  constructor(id, videoId) {
+    this.id = id;
+    this.videoId = videoId;
   }
 
-  resize() {
-    if (!this.canvas) return;
-    this.w = window.innerWidth;
-    this.h = window.innerHeight;
-    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    this.canvas.width = Math.round(this.w * dpr);
-    this.canvas.height = Math.round(this.h * dpr);
-    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  get video() {
+    return document.getElementById(this.videoId);
   }
 
-  setColor(rgbString) {
-    this.currentColor = rgbString;
-  }
+  setSource(src) {
+    const vid = this.video;
+    if (!vid) return;
 
-  spawnParticles() {
-    this.particles = [];
-    const count = window.innerWidth < 768 ? 14 : 24;
-    for (let i = 0; i < count; i++) {
-      this.particles.push({
-        x: Math.random() * this.w,
-        y: Math.random() * this.h,
-        size: Math.random() * 2 + 0.8,
-        speed: Math.random() * 0.4 + 0.15,
-        opacity: Math.random() * 0.5 + 0.25,
-        angle: Math.random() * Math.PI * 2,
-        wobble: Math.random() * 0.02 + 0.005
-      });
+    const cleanSrc = src && src !== "NONE" ? String(src).trim() : "";
+    const currentAttr = vid.getAttribute("src") || "";
+
+    if (!cleanSrc) {
+      if (currentAttr) {
+        vid.pause();
+        vid.removeAttribute("src");
+        vid.load();
+      }
+      vid.classList.remove("is-active");
+      updateMascotShadowVisibility();
+      return;
     }
-  }
 
-  start() {
-    if (!this.canvas || this.isRunning) return;
-    this.isRunning = true;
-    this.render();
-  }
-
-  stop() {
-    this.isRunning = false;
-    if (this.rafId) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
+    if (currentAttr !== cleanSrc) {
+      vid.setAttribute("src", cleanSrc);
+      vid.load();
     }
-  }
 
-  render() {
-    if (!this.isRunning) return;
-    this.ctx.clearRect(0, 0, this.w, this.h);
-
-    const rgb = this.currentColor;
-    for (let i = 0; i < this.particles.length; i++) {
-      const p = this.particles[i];
-      p.y -= p.speed;
-      p.x += Math.sin(p.angle) * 0.5;
-      p.angle += p.wobble;
-
-      if (p.y < -10) p.y = this.h + 10;
-      if (p.x < -10) p.x = this.w + 10;
-      if (p.x > this.w + 10) p.x = -10;
-
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
-      this.ctx.fillStyle = `rgba(${rgb}, ${p.opacity * 0.22})`;
-      this.ctx.fill();
-
-      this.ctx.beginPath();
-      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      this.ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity * 0.85})`;
-      this.ctx.fill();
+    if (window.currentPortal === this.id && !document.body.classList.contains("portal-open")) {
+      vid.classList.add("is-active");
+      vid.play().catch(() => {});
+    } else {
+      vid.classList.remove("is-active");
+      vid.pause();
     }
-    this.rafId = requestAnimationFrame(() => this.render());
+    updateMascotShadowVisibility();
   }
 }
 
-// ── CHROMA KEY + ALPHA VIDEO PROCESSOR (30FPS THROTTLED) ──
-class VideoProcessor {
-  constructor(id, videoId, canvasId) {
-    this.id = id;
-    this.canvas = document.getElementById(canvasId);
-    this.video = document.getElementById(videoId);
-    this.isPlaying = false;
-    this.lastFrameTime = 0;
-    this.lastVideoTime = -1;
-    this.rafId = null;
-    this.canReadPixels = true;
+function updateMascotShadowVisibility() {
+  const shadow = document.getElementById("mascot-shadow");
+  const floatInner = document.querySelector(".mascot-float-inner");
+  const activeVid = document.getElementById(`vid-p${window.currentPortal}`);
+  const hasActiveVideo = Boolean(activeVid?.getAttribute("src"));
 
-    if (!this.canvas || !this.video) return;
-    this.ctx = this.canvas.getContext("2d", { willReadFrequently: true, alpha: true });
-    this.bindVideo();
-  }
-
-  bindVideo() {
-    if (!this.video) return;
-    this.canReadPixels = true;
-
-    this.video.addEventListener("loadedmetadata", () => {
-      const maxW = 340;
-      const ratio = this.video.videoWidth / this.video.videoHeight || 1;
-      this.canvas.width = Math.min(this.video.videoWidth || maxW, maxW);
-      this.canvas.height = Math.round(this.canvas.width / ratio);
-    });
-
-    this.video.addEventListener("play", () => {
-      this.isPlaying = true;
-      this.processFrame();
-    });
-
-    const onStop = () => {
-      this.isPlaying = false;
-      if (this.rafId) cancelAnimationFrame(this.rafId);
-    };
-
-    this.video.addEventListener("pause", onStop);
-    this.video.addEventListener("ended", onStop);
-  }
-
-  setSource(src, { localBlob = false } = {}) {
-    const oldVid = document.getElementById("vid-p" + this.id);
-    if (!oldVid) return;
-
-    if (!src || src === "NONE") {
-      oldVid.removeAttribute("src");
-      oldVid.load();
-      this.canvas?.classList.remove("is-active");
-      return;
-    }
-
-    const currentAttr = oldVid.getAttribute("src") || "";
-    if (currentAttr === src && !localBlob) {
-      if (window.currentPortal === this.id && !document.body.classList.contains("portal-open")) {
-        this.canvas?.classList.add("is-active");
-        oldVid.play().catch(() => {});
-      }
-      return;
-    }
-
-    const cloneVid = oldVid.cloneNode(false);
-    if (localBlob || src.startsWith("blob:") || src.startsWith("data:")) {
-      cloneVid.removeAttribute("crossorigin");
-    } else {
-      cloneVid.setAttribute("crossorigin", "anonymous");
-    }
-    cloneVid.setAttribute("src", src);
-    oldVid.parentNode.replaceChild(cloneVid, oldVid);
-
-    this.video = cloneVid;
-    this.isPlaying = false;
-    this.lastVideoTime = -1;
-    this.bindVideo();
-    cloneVid.load();
-
-    if (window.currentPortal === this.id && !document.body.classList.contains("portal-open")) {
-      this.canvas?.classList.add("is-active");
-      cloneVid.play().catch(() => {});
-    }
-  }
-
-  processFrame() {
-    if (!this.isPlaying || !this.video || this.video.paused || this.video.ended) return;
-
-    if (
-      window.currentPortal !== this.id ||
-      document.body.classList.contains("portal-open") ||
-      document.hidden
-    ) {
-      this.isPlaying = false;
-      return;
-    }
-
-    const now = performance.now();
-    if (now - this.lastFrameTime < 32 || this.video.currentTime === this.lastVideoTime) {
-      this.rafId = requestAnimationFrame(() => this.processFrame());
-      return;
-    }
-
-    this.lastFrameTime = now;
-    this.lastVideoTime = this.video.currentTime;
-
-    const w = this.canvas.width;
-    const h = this.canvas.height;
-    if (w > 0 && h > 0) {
-      this.ctx.clearRect(0, 0, w, h);
-      this.ctx.drawImage(this.video, 0, 0, w, h);
-
-      if (this.canReadPixels) {
-        try {
-          const frameData = this.ctx.getImageData(0, 0, w, h);
-          const data = frameData.data;
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-            if (r > 235 && g > 235 && b > 235) {
-              const max = Math.max(r, g, b);
-              const min = Math.min(r, g, b);
-              if (max - min < 15) {
-                data[i + 3] = min > 245 ? 0 : Math.round(255 * (1 - (min - 235) / 10));
-              }
-            }
-          }
-          this.ctx.putImageData(frameData, 0, 0);
-        } catch (_) {
-          this.canReadPixels = false;
-        }
-      }
-    }
-
-    this.rafId = requestAnimationFrame(() => this.processFrame());
-  }
+  if (shadow) shadow.classList.toggle("is-active", hasActiveVideo);
+  if (floatInner) floatInner.classList.toggle("has-video", hasActiveVideo);
 }
 
 export function syncMascotStageFromState() {
@@ -325,8 +143,8 @@ export function seleccionarPunto(portalId, targetId, ctaText, accent, glow, rgb,
     puckIcon.className = `fa-solid ${pData.icon} puck-icon`;
     puckTitle.innerText = pData.name;
     if (puck) {
-      puck.style.background = `linear-gradient(135deg, rgba(${rgb}, 0.35) 0%, rgba(20, 15, 30, 0.88) 100%)`;
-      puck.style.boxShadow = `0 0 25px rgba(${rgb}, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.4)`;
+      puck.style.background = `linear-gradient(135deg, rgba(${rgb}, 0.35) 0%, rgba(20, 15, 30, 0.92) 100%)`;
+      puck.style.boxShadow = `0 0 22px rgba(${rgb}, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.35)`;
     }
   }
 
@@ -336,9 +154,6 @@ export function seleccionarPunto(portalId, targetId, ctaText, accent, glow, rgb,
 
   window.puntoActualId = targetId;
   window.currentPortal = Number(portalId);
-
-  window.State.isTransitioning = true;
-  if (window.particleSys) window.particleSys.setColor(rgb);
 
   const mainContent = document.getElementById("main-content");
   if (mainContent && document.body.classList.contains("portal-open")) {
@@ -363,12 +178,8 @@ export function seleccionarPunto(portalId, targetId, ctaText, accent, glow, rgb,
         card.style.display = "block";
         card.classList.add("is-active");
       }
-    }, 210);
+    }, 180);
   }
-
-  setTimeout(() => {
-    window.State.isTransitioning = false;
-  }, 550);
 
   const root = document.documentElement;
   root.style.setProperty("--theme-accent", accent);
@@ -382,36 +193,27 @@ export function seleccionarPunto(portalId, targetId, ctaText, accent, glow, rgb,
 
   [1, 2, 3].forEach((id) => {
     const v = document.getElementById("vid-p" + id);
-    const c = document.getElementById("canvas-p" + id);
-    if (!v || !c) return;
-    const hasValidSrc = v.getAttribute("src") && v.getAttribute("src") !== "NONE";
+    if (!v) return;
+    const hasValidSrc = Boolean(v.getAttribute("src"));
     if (id === Number(portalId) && hasValidSrc) {
-      c.classList.add("is-active");
+      v.classList.add("is-active");
       if (!document.body.classList.contains("portal-open")) {
         v.play().catch(() => {});
       }
     } else {
-      c.classList.remove("is-active");
-      v.pause();
+      v.classList.remove("is-active");
+      if (hasValidSrc) v.pause();
     }
   });
-
-  const stage = document.getElementById("stage-container");
-  const mascot = document.getElementById("mascot-wrapper");
-  if (stage && mascot) {
-    stage.classList.add("portal-prep");
-    mascot.classList.add("portal-prep");
-    setTimeout(() => {
-      stage.classList.remove("portal-prep");
-      mascot.classList.remove("portal-prep");
-    }, 320);
-  }
+  updateMascotShadowVisibility();
 }
 
 export function irAlPuntoActual() {
-  if (window.particleSys) window.particleSys.stop();
   if (window.capsuleDock) window.capsuleDock.pauseAutoplay();
-  [1, 2, 3].forEach((id) => document.getElementById("vid-p" + id)?.pause());
+  [1, 2, 3].forEach((id) => {
+    const v = document.getElementById("vid-p" + id);
+    if (v?.getAttribute("src")) v.pause();
+  });
 
   document.body.classList.remove("in-showroom");
   document.body.classList.add("portal-open");
@@ -433,7 +235,6 @@ export function irAlPuntoActual() {
 }
 
 export function volverAlShowroom() {
-  if (window.particleSys) window.particleSys.start();
   if (window.capsuleDock) window.capsuleDock.resetAutoplay();
 
   document.body.classList.remove("portal-open");
@@ -444,20 +245,19 @@ export function volverAlShowroom() {
     document.body.classList.add("in-showroom");
     playSlider(window.currentPortal);
     const v = document.getElementById("vid-p" + window.currentPortal);
-    if (v && v.getAttribute("src") && v.getAttribute("src") !== "NONE") {
+    if (v?.getAttribute("src")) {
       v.play().catch(() => {});
     }
-  }, 400);
+  }, 300);
 }
 
-// ── AUTOMATED DYNAMIC CAPSULE TRACKPAD ──
+// ── AUTOMATED DYNAMIC CAPSULE TRACKPAD (0-CPU GPU SCALEX PROGRESS BAR) ──
 class AutomatedCapsuleTrackpad {
   constructor() {
     this.puck = document.getElementById("capsule-puck");
     this.trackpad = document.getElementById("capsule-trackpad");
     this.btnPrev = document.getElementById("capsule-btn-prev");
     this.btnNext = document.getElementById("capsule-btn-next");
-    this.dots = document.querySelectorAll(".capsule-dot");
     this.progressBar = document.getElementById("capsule-auto-progress");
     this.stageEl = document.getElementById("stage-container");
     this.mascotEl = document.getElementById("mascot-wrapper");
@@ -476,9 +276,8 @@ class AutomatedCapsuleTrackpad {
 
     this.autoplayInterval = 5500;
     this.idleResumeDelay = 6500;
+    this.autoplayTimer = null;
     this.idleTimer = null;
-    this.progressRaf = null;
-    this.progressStart = 0;
     this.isAutoplayActive = true;
 
     if (!this.puck || !this.trackpad) return;
@@ -489,7 +288,7 @@ class AutomatedCapsuleTrackpad {
 
   initEvents() {
     this.puck.addEventListener("pointerdown", (e) => this.onPointerDown(e));
-    window.addEventListener("pointermove", (e) => this.onPointerMove(e), { passive: false });
+    window.addEventListener("pointermove", (e) => this.onPointerMove(e), { passive: true });
     window.addEventListener("pointerup", (e) => this.onPointerUp(e));
     window.addEventListener("pointercancel", (e) => this.onPointerUp(e));
 
@@ -527,6 +326,11 @@ class AutomatedCapsuleTrackpad {
       if (!document.body.classList.contains("portal-open")) {
         this.scheduleAutoplayResume();
       }
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) this.pauseAutoplay();
+      else if (!document.body.classList.contains("portal-open")) this.startAutoplay();
     });
 
     window.addEventListener("keydown", (e) => {
@@ -582,31 +386,33 @@ class AutomatedCapsuleTrackpad {
     });
   }
 
+  // Zero-JS-RAF GPU CSS transition for autoplay bar
   startAutoplay() {
-    if (!this.isAutoplayActive || document.body.classList.contains("portal-open")) return;
+    if (!this.isAutoplayActive || document.body.classList.contains("portal-open") || document.hidden) return;
     this.clearAutoplay();
     this.trackpad.classList.add("is-autoplay");
 
-    this.progressStart = performance.now();
-    const updateProgress = (now) => {
-      const elapsed = now - this.progressStart;
-      const progress = Math.min(100, (elapsed / this.autoplayInterval) * 100);
-      if (this.progressBar) this.progressBar.style.width = `${progress}%`;
+    if (this.progressBar) {
+      this.progressBar.style.transition = "none";
+      this.progressBar.style.transform = "scaleX(0)";
+      // Force single cheap style flush then delegate 5.5s animation to GPU compositor
+      void this.progressBar.offsetWidth;
+      this.progressBar.style.transition = `transform ${this.autoplayInterval}ms linear`;
+      this.progressBar.style.transform = "scaleX(1)";
+    }
 
-      if (elapsed < this.autoplayInterval) {
-        this.progressRaf = requestAnimationFrame(updateProgress);
-      } else {
-        this.next();
-        this.startAutoplay();
-      }
-    };
-    this.progressRaf = requestAnimationFrame(updateProgress);
+    this.autoplayTimer = setTimeout(() => {
+      this.next();
+    }, this.autoplayInterval);
   }
 
   pauseAutoplay() {
     this.clearAutoplay();
     this.trackpad.classList.remove("is-autoplay");
-    if (this.progressBar) this.progressBar.style.width = "0%";
+    if (this.progressBar) {
+      this.progressBar.style.transition = "none";
+      this.progressBar.style.transform = "scaleX(0)";
+    }
   }
 
   scheduleAutoplayResume() {
@@ -620,10 +426,7 @@ class AutomatedCapsuleTrackpad {
   }
 
   clearAutoplay() {
-    if (this.progressRaf) {
-      cancelAnimationFrame(this.progressRaf);
-      this.progressRaf = null;
-    }
+    clearTimeout(this.autoplayTimer);
     clearTimeout(this.idleTimer);
   }
 
@@ -635,7 +438,7 @@ class AutomatedCapsuleTrackpad {
   pulseButton(btn) {
     if (!btn) return;
     btn.classList.add("glow-active");
-    setTimeout(() => btn.classList.remove("glow-active"), 260);
+    setTimeout(() => btn.classList.remove("glow-active"), 240);
   }
 
   onPointerDown(e) {
@@ -705,7 +508,7 @@ class AutomatedCapsuleTrackpad {
       if (!this.puck.classList.contains("is-armed")) {
         this.puck.classList.add("is-armed");
         if (!this.hasVibrated && navigator.vibrate) {
-          navigator.vibrate(15);
+          navigator.vibrate(12);
           this.hasVibrated = true;
         }
       }
@@ -750,16 +553,16 @@ class AutomatedCapsuleTrackpad {
 
   resetPuckSpring() {
     this.puck.style.transition =
-      "transform 420ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 300ms ease, border-color 300ms ease";
+      "transform 360ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 250ms ease, border-color 250ms ease";
     this.puck.style.transform = "translate(-50%, -50%) scaleX(1)";
     this.puck.classList.remove("is-armed");
 
     if (this.stageEl) {
-      this.stageEl.style.transition = "transform 420ms cubic-bezier(0.25, 1, 0.5, 1)";
+      this.stageEl.style.transition = "transform 360ms cubic-bezier(0.25, 1, 0.5, 1)";
       this.stageEl.style.transform = "translateX(-50%) rotateX(72deg)";
     }
     if (this.mascotEl) {
-      this.mascotEl.style.transition = "transform 420ms cubic-bezier(0.25, 1, 0.5, 1)";
+      this.mascotEl.style.transition = "transform 360ms cubic-bezier(0.25, 1, 0.5, 1)";
       this.mascotEl.style.transform = "translateX(-50%)";
     }
   }
@@ -778,28 +581,28 @@ class AutomatedCapsuleTrackpad {
     const p = PORTALES[currentPortalIndex];
 
     if (this.stageEl && this.mascotEl && !document.body.classList.contains("portal-open")) {
-      this.stageEl.style.transition = "transform 175ms cubic-bezier(0.4, 0, 0.8, 1), opacity 175ms ease";
-      this.mascotEl.style.transition = "transform 175ms cubic-bezier(0.4, 0, 0.8, 1), opacity 175ms ease";
-      this.stageEl.style.transform = `translateX(calc(-50% + ${-dir * 85}px)) rotateX(72deg)`;
-      this.mascotEl.style.transform = `translateX(calc(-50% + ${-dir * 105}px))`;
-      this.stageEl.style.opacity = "0.2";
-      this.mascotEl.style.opacity = "0.2";
+      this.stageEl.style.transition = "transform 150ms cubic-bezier(0.4, 0, 0.8, 1), opacity 150ms ease";
+      this.mascotEl.style.transition = "transform 150ms cubic-bezier(0.4, 0, 0.8, 1), opacity 150ms ease";
+      this.stageEl.style.transform = `translateX(calc(-50% + ${-dir * 75}px)) rotateX(72deg)`;
+      this.mascotEl.style.transform = `translateX(calc(-50% + ${-dir * 95}px))`;
+      this.stageEl.style.opacity = "0.25";
+      this.mascotEl.style.opacity = "0.25";
 
       setTimeout(() => {
         this.stageEl.style.transition = "none";
         this.mascotEl.style.transition = "none";
-        this.stageEl.style.transform = `translateX(calc(-50% + ${dir * 85}px)) rotateX(72deg)`;
-        this.mascotEl.style.transform = `translateX(calc(-50% + ${dir * 105}px))`;
+        this.stageEl.style.transform = `translateX(calc(-50% + ${dir * 75}px)) rotateX(72deg)`;
+        this.mascotEl.style.transform = `translateX(calc(-50% + ${dir * 95}px))`;
 
         requestAnimationFrame(() => {
-          this.stageEl.style.transition = "transform 330ms cubic-bezier(0.16, 1, 0.3, 1), opacity 330ms ease";
-          this.mascotEl.style.transition = "transform 330ms cubic-bezier(0.16, 1, 0.3, 1), opacity 330ms ease";
+          this.stageEl.style.transition = "transform 280ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms ease";
+          this.mascotEl.style.transition = "transform 280ms cubic-bezier(0.16, 1, 0.3, 1), opacity 280ms ease";
           this.stageEl.style.transform = "translateX(-50%) rotateX(72deg)";
           this.mascotEl.style.transform = "translateX(-50%)";
           this.stageEl.style.opacity = "1";
           this.mascotEl.style.opacity = "1";
         });
-      }, 180);
+      }, 155);
     }
 
     seleccionarPunto(p.id, p.targetId, p.ctaText, p.accent, p.glow, p.rgb, null, dir);
@@ -815,8 +618,8 @@ class AutomatedCapsuleTrackpad {
         if (puckTitle) puckTitle.innerText = p.name;
         puckContent.classList.remove("puck-flip-out");
         puckContent.classList.add("puck-flip-in");
-        setTimeout(() => puckContent.classList.remove("puck-flip-in"), 180);
-      }, 105);
+        setTimeout(() => puckContent.classList.remove("puck-flip-in"), 160);
+      }, 95);
     }
 
     if (this.isAutoplayActive && !document.body.classList.contains("portal-open")) {
@@ -839,14 +642,13 @@ class AutomatedCapsuleTrackpad {
 }
 
 export function initShowroomStage() {
-  window.particleSys = new ParticleEngine();
   window.processors = {
-    1: new VideoProcessor(1, "vid-p1", "canvas-p1"),
-    2: new VideoProcessor(2, "vid-p2", "canvas-p2"),
-    3: new VideoProcessor(3, "vid-p3", "canvas-p3")
+    1: new NativeGpuMascotSlot(1, "vid-p1"),
+    2: new NativeGpuMascotSlot(2, "vid-p2"),
+    3: new NativeGpuMascotSlot(3, "vid-p3")
   };
 
   syncMascotStageFromState();
   window.capsuleDock = new AutomatedCapsuleTrackpad();
-  setTimeout(() => playSlider(0), 700);
+  setTimeout(() => playSlider(0), 400);
 }

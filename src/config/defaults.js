@@ -46,12 +46,13 @@ export const PORTALES = [
 ];
 
 export const DEFAULT_MASCOT_PORTALS = {
-  1: { safari: "/LEON2.mp4", chrome: "/leonsito.webm", s: 1, x: 0, y: 0 },
-  2: { safari: "/LEON2.mp4", chrome: "/leonsito.webm", s: 1, x: 0, y: 0 },
-  3: { safari: "/LEON2.mp4", chrome: "/leonsito.webm", s: 1, x: 0, y: 0 }
+  1: { safari: "", chrome: "", s: 1, x: 0, y: 0 },
+  2: { safari: "", chrome: "", s: 1, x: 0, y: 0 },
+  3: { safari: "", chrome: "", s: 1, x: 0, y: 0 }
 };
 
 export const DEFAULT_STATE = {
+  videoPurgeVersion: 2,
   themeColor: "#D4AF7A",
   mascotPortals: JSON.parse(JSON.stringify(DEFAULT_MASCOT_PORTALS)),
   pinnedWidgets: {
@@ -69,8 +70,8 @@ export const DEFAULT_STATE = {
       country: "México",
       city: "CDMX",
       status: "EN REVISIÓN",
-      video: true,
-      videoUrl: "/LEON2.mp4",
+      video: false,
+      videoUrl: "",
       date: "25/09/2026, 18:30",
       email: "valeria@starmaker.app",
       phone: "+52 55 4829 1020",
@@ -87,8 +88,8 @@ export const DEFAULT_STATE = {
       country: "Colombia",
       city: "Medellín",
       status: "APROBADA",
-      video: true,
-      videoUrl: "/LEON2.mp4",
+      video: false,
+      videoUrl: "",
       date: "24/09/2026, 14:15",
       email: "charly@starmaker.app",
       phone: "+57 300 194 0211",
@@ -123,11 +124,11 @@ export const DEFAULT_STATE = {
       title: "Configura tu Set-up Pro",
       desc: "Aprende a usar luces, cámara y encuadre vertical a tu favor antes de salir en vivo.",
       category: "Fundamentos del Live",
-      duration: "04:20",
+      duration: "GUÍA",
       badge: "",
       progress: 100,
       type: "guide",
-      thumb: "https://images.unsplash.com/photo-1516280440502-a2f0729792bf?w=600&q=80",
+      thumb: "https://images.unsplash.com/photo-1516280440502-a2f0729792bf?w=480&q=75",
       url: "",
       points: [
         "Coloca tu luz principal a 45° frente a tu rostro, ligeramente por encima del nivel de los ojos.",
@@ -140,11 +141,11 @@ export const DEFAULT_STATE = {
       title: "Retención de Audiencia",
       desc: "Técnicas probadas para enganchar espectadores en los primeros 15 segundos de tu Live.",
       category: "Fundamentos del Live",
-      duration: "12:15",
+      duration: "GUÍA",
       badge: "",
       progress: 55,
       type: "guide",
-      thumb: "https://images.unsplash.com/photo-1580519542014-2252848ff70c?w=600&q=80",
+      thumb: "https://images.unsplash.com/photo-1580519542014-2252848ff70c?w=480&q=75",
       url: "",
       points: [
         "Saluda por su nombre a cada usuario que entra a la sala en menos de 5 segundos.",
@@ -157,11 +158,11 @@ export const DEFAULT_STATE = {
       title: "Audio y Micrófonos",
       desc: "Ecualización, monitoreo con audífonos y control de ganancia para una voz nítida.",
       category: "Fundamentos del Live",
-      duration: "08:45",
+      duration: "GUÍA",
       badge: "Popular",
       progress: 30,
       type: "guide",
-      thumb: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=600&q=80",
+      thumb: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=480&q=75",
       url: "",
       points: [
         "Usa siempre audífonos alámbricos o interfaz dedicada para evitar eco durante batallas PK.",
@@ -174,11 +175,11 @@ export const DEFAULT_STATE = {
       title: "Iluminación Escénica RGB",
       desc: "Crea atmósfera visual de estudio usando esquemas de dos y tres puntos de luz.",
       category: "Fundamentos del Live",
-      duration: "06:10",
+      duration: "GUÍA",
       badge: "",
       progress: 15,
       type: "guide",
-      thumb: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=600&q=80",
+      thumb: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=480&q=75",
       url: "",
       points: [
         "Evita contraluces de ventanas abiertas detrás de ti; la luz clave siempre va al frente.",
@@ -191,11 +192,11 @@ export const DEFAULT_STATE = {
       title: "Ganar Batallas PK",
       desc: "Estrategias de equipo, gestión de guantes/multiplicadores y cierre en los últimos 30s.",
       category: "Monetización y Batallas PK",
-      duration: "08:50",
+      duration: "GUÍA",
       badge: "Nuevo",
       progress: 80,
       type: "guide",
-      thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&q=80",
+      thumb: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=480&q=75",
       url: "",
       points: [
         "Coordina previamente con tu comunidad los primeros 30 segundos para activar bonos de velocidad.",
@@ -208,11 +209,11 @@ export const DEFAULT_STATE = {
       title: "Multiplicador de Diamantes",
       desc: "Aprovecha horarios estelares, metas semanales de agencia y bonificaciones oficiales.",
       category: "Monetización y Batallas PK",
-      duration: "15:30",
+      duration: "GUÍA",
       badge: "",
       progress: 40,
       type: "guide",
-      thumb: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&q=80",
+      thumb: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=480&q=75",
       url: "",
       points: [
         "Transmite con constancia en un horario fijo mínimo 5 días por semana para entrenar al algoritmo.",
@@ -225,11 +226,11 @@ export const DEFAULT_STATE = {
       title: "Fidelizar Donadores VIP",
       desc: "Cómo construir una comunidad leal y reconocer a tus principales patrocinadores.",
       category: "Monetización y Batallas PK",
-      duration: "10:15",
+      duration: "GUÍA",
       badge: "",
       progress: 20,
       type: "guide",
-      thumb: "https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?w=600&q=80",
+      thumb: "https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?w=480&q=75",
       url: "",
       points: [
         "Personaliza tus agradecimientos mencionando el logro que ayudaron a desbloquear.",
@@ -288,7 +289,7 @@ export const DEFAULT_STATE = {
     facebook: "https://facebook.com"
   },
   events: [
-    ["Sistema inicializado", "Consola Ejecutiva conectada", "Hoy"]
+    ["Sistema optimizado", "Videos previos depurados y conexiones activas", "Hoy"]
   ],
-  notes: "• Revisar solicitudes con video pendientes antes de las 20:00.\n• Validar métricas de retención de nuevos streamers."
+  notes: "• Revisar solicitudes pendientes antes de las 20:00.\n• Validar métricas de retención de nuevos streamers."
 };

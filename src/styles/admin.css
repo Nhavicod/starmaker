@@ -163,7 +163,7 @@
   font-weight: 700;
   background: linear-gradient(135deg, #EAD1AA 0%, var(--primary) 55%, #B68D52 100%);
   border-color: rgba(255, 255, 255, 0.22);
-  animation: pulseGlow 4s ease-in-out infinite;
+  box-shadow: 0 6px 20px rgba(var(--neon-rgb), 0.22);
 }
 
 #adminExecutiveOverlay .btn-primary:hover {
@@ -485,10 +485,9 @@
   overflow: hidden;
   border-radius: 22px;
   min-height: 155px;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.25s ease, border-color 0.25s ease;
   border: 1px solid var(--line);
-  background: linear-gradient(155deg, rgba(22, 26, 38, 0.75) 0%, rgba(12, 14, 22, 0.85) 100%);
-  backdrop-filter: blur(20px);
+  background: linear-gradient(155deg, rgba(20, 24, 36, 0.95) 0%, rgba(11, 13, 20, 0.96) 100%);
   box-shadow: var(--shadow);
 }
 

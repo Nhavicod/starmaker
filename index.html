@@ -7,12 +7,13 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <title>STARMAKER — Universo Digital de Creadores</title>
 
-  <!-- Fonts & Icons -->
+  <!-- Fonts & Icons (Non-blocking) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+  <script src="https://unpkg.com/lucide@latest" defer></script>
 
   <!-- Modular Styles -->
   <link rel="stylesheet" href="/src/styles/app.css" />
@@ -20,8 +21,7 @@
 </head>
 <body class="in-showroom">
 
-  <!-- REACTIVE AMBIENT BACKGROUND -->
-  <canvas id="ctx-background"></canvas>
+  <!-- GPU STATIC STARFIELD (ZERO MAIN-THREAD CANVAS REPAINTS) -->
   <div class="stars"></div>
 
   <!-- TOP NAVIGATION HEADER -->
@@ -73,18 +73,13 @@
       </div>
     </div>
 
-    <!-- MASCOT 3D LAYER -->
+    <!-- MASCOT 3D LAYER (PURE GPU NATIVE VIDEO, ZERO CPU PIXEL COPY) -->
     <div class="mascot-wrapper" id="mascot-wrapper">
       <div id="mascot-shadow" class="mascot-ground-shadow"></div>
       <div class="mascot-float-inner">
-        <video id="vid-p1" loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
-        <canvas id="canvas-p1" class="media-webm is-active"></canvas>
-
-        <video id="vid-p2" loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
-        <canvas id="canvas-p2" class="media-webm"></canvas>
-
-        <video id="vid-p3" loop muted playsinline crossorigin="anonymous" style="display:none;"></video>
-        <canvas id="canvas-p3" class="media-webm"></canvas>
+        <video id="vid-p1" class="media-webm" loop muted playsinline></video>
+        <video id="vid-p2" class="media-webm" loop muted playsinline></video>
+        <video id="vid-p3" class="media-webm" loop muted playsinline></video>
       </div>
     </div>
 

@@ -47,7 +47,7 @@ export function renderMascotControls() {
         </label>
 
         <button type="button" onclick="deleteVideo(${p.id})" style="width:100%;padding:9px;margin-bottom:14px;background:rgba(255,100,100,0.1);color:#ff7b7b;border:1px solid rgba(255,100,100,0.22);border-radius:8px;cursor:pointer;font-size:11.5px;font-weight:800;">
-          🔄 Restaurar Mascota Base del Portal
+          🗑️ Eliminar Video de este Portal
         </button>
 
         <p style="font-size:11px;color:#b9b0ba;margin-bottom:8px;">Ajuste espacial en tiempo real</p>
@@ -170,8 +170,8 @@ export async function uploadVideo(input, fieldName, ext, lblId) {
   const portalObj = PORTALES.find((p) => p.id === portalId) || PORTALES[0];
   const previewBlobUrl = URL.createObjectURL(file);
 
-  // Instant live preview on the 3D stage
-  window.processors?.[portalId]?.setSource(previewBlobUrl, { localBlob: true });
+  // Instant live GPU preview on the 3D stage
+  window.processors?.[portalId]?.setSource(previewBlobUrl);
   const vidEl = document.getElementById(`vid-p${portalId}`);
   if (vidEl) vidEl.dataset.uploading = "true";
 
@@ -219,9 +219,10 @@ export async function uploadVideo(input, fieldName, ext, lblId) {
 }
 
 export async function deleteVideo(id) {
-  if (!confirm("¿Restaurar el video de mascota por defecto para este portal?")) return;
+  if (!confirm("¿Eliminar el video asignado a este portal?")) return;
   state.mascotPortals[id] = {
-    ...DEFAULT_MASCOT_PORTALS[id],
+    safari: "",
+    chrome: "",
     s: state.mascotPortals[id]?.s ?? 1,
     x: state.mascotPortals[id]?.x ?? 0,
     y: state.mascotPortals[id]?.y ?? 0
@@ -233,7 +234,7 @@ export async function deleteVideo(id) {
     [`p${id}_safari`]: null,
     [`p${id}_chrome`]: null
   });
-  toast(`Portal ${id} restaurado`, "Se restableció la mascota oficial StarLeo.");
+  toast(`Video eliminado`, `Portal ${id} limpio y sin video activo.`);
 }
 
 export function initMascotWidget() {
